@@ -8,7 +8,7 @@ obj/
 
 #Makefile stuff
 *.o
-MinecraftWeek
+Empire/
 
 #.dll stuff
 *.dll
