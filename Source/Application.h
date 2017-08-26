@@ -16,7 +16,6 @@ class Application
 
     private:
         void pollEvents();
-        void setCellColour(int x, int y, sf::Uint8 colour);
         void update();
 
         sf::RenderWindow m_window;

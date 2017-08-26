@@ -3,15 +3,15 @@
 
 #include <cstdint>
 
-constexpr unsigned REPRODUCE_THRESHOLD = 100;
+constexpr unsigned REPRODUCE_THRESHOLD = 4;
 
 struct PersonData
 {
-    uint8_t     isAlive             = false;
-    uint8_t     reproduceThreshold  = 0;
     uint16_t    colony              = 0;
     uint16_t    age                 = 0;
     uint16_t    strength            = 0;
+    uint8_t     isAlive             = false;
+    uint8_t     productionCount     = 0;
 };
 
 class Person
@@ -24,6 +24,7 @@ class Person
         void update();
 
         void kill();
+        void fight(Person& other);
 
         PersonData getChild();
 

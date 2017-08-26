@@ -4,7 +4,7 @@ Application::Application()
 :   m_window    ({WIDTH, HEIGHT}, "Empire")
 ,   m_pixels    (WIDTH * HEIGHT)
 {
-    m_window.setFramerateLimit(60);
+    m_window.setFramerateLimit(100);
     cellForEach([&](int x, int y)
     {
         auto& p     = m_pixels[getIndex(x, y)];
@@ -43,12 +43,27 @@ void Application::pollEvents()
     }
 }
 
-void Application::setCellColour(int x, int y, sf::Uint8 colour)
-{
-
-}
-
 void Application::update()
 {
-
+    m_world.update();
+    cellForEach([&](unsigned x, unsigned y)
+    {
+        m_pixels[getIndex(x, y)].color = m_world.getColorAt(x, y);
+    });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
