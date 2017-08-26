@@ -1,12 +1,14 @@
 #ifndef PERSON_H_INCLUDED
 #define PERSON_H_INCLUDED
 
+#include <cstdint>
+
 struct PersonData
 {
-    int     colony;
-    int     age;
-    int     strength;
-    bool    isAlive = false;
+    uint16_t    isAlive     = false;
+    uint16_t    colony      = 0;
+    uint16_t    age         = 0;
+    uint16_t    strength    = 0;
 };
 
 class Person

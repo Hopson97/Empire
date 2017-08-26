@@ -5,9 +5,7 @@
 #include <vector>
 
 #include "World.h"
-
-constexpr unsigned WIDTH = 1280;
-constexpr unsigned HEIGHT = 720;
+#include "Common.h"
 
 class Application
 {
@@ -17,21 +15,6 @@ class Application
         void run();
 
     private:
-        template<typename F>
-        void cellForEach(F f)
-        {
-            for (unsigned y = 0; y < HEIGHT; y++)
-            {
-                for (unsigned x = 0; x < WIDTH; x++)
-                {
-                    f(x, y);
-                }
-            }
-        }
-
-
-        int getIndex(int x, int y);
-
         void pollEvents();
         void setCellColour(int x, int y, sf::Uint8 colour);
         void update();

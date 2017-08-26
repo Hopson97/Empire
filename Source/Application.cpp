@@ -9,7 +9,7 @@ Application::Application()
     {
         auto& p     = m_pixels[getIndex(x, y)];
         p.position  = {(float)x, (float)y};
-        p.color     = sf::Color::Red;
+        p.color     = m_world.getColorAt(x, y);
     });
 }
 
@@ -22,7 +22,7 @@ void Application::run()
         update();
 
         m_world.draw(m_window);
-        //m_window.draw(m_pixels.data(), m_pixels.size(), sf::Points);
+        m_window.draw(m_pixels.data(), m_pixels.size(), sf::Points);
 
         m_window.display();
         pollEvents();
@@ -30,10 +30,6 @@ void Application::run()
     }
 }
 
-int Application::getIndex(int x, int y)
-{
-    return y * WIDTH + x;
-}
 
 void Application::pollEvents()
 {
