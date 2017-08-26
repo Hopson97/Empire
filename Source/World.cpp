@@ -34,8 +34,8 @@ void World::update()
     for (unsigned y = 0; y < m_pConfig->height; y++)
     for (unsigned x = 0; x < m_pConfig->width; x++)
     {
-        auto& person = m_people[getIndex(m_pConfig->width, x, y)];
-        auto& counter = m_colonyCount[person.getData().colony];
+        auto& person    = m_people[getIndex(m_pConfig->width, x, y)];
+        auto& counter   = m_colonyCount[person.getData().colony];
 
         if (!person.getData().isAlive)
             continue;
@@ -134,9 +134,9 @@ void World::drawText(sf::RenderWindow& window)
     {
         std::ostringstream stream;
 
-        int averageStr = (counter.members > 0) ?
+        int averageStr = abs((counter.members > 0) ?
             counter.strength / counter.members :
-            0;
+            0);
 
 
         stream  << std::left
@@ -163,6 +163,8 @@ void World::createColonies()
         auto& colony    = m_colonies[i];
         colony.id       = id++;
         colony.colour   = getColour(id);
+        //colony.startStrLow  = 500;
+        //colony.startStrHigh = Random::get().intInRange(900, 2000);
 
         //Find a on-land location for the colony to originate from
         int x, y;
@@ -212,7 +214,7 @@ void World::createColonies()
 
 void World::initText()
 {
-    int charSize = 18;
+    int charSize = 17;
     m_counterFont.loadFromFile("res/arial.ttf");
 
     for (int i = 0; i < NUM_COLONIES; i++)

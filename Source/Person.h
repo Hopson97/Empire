@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-constexpr unsigned REPRODUCE_THRESHOLD = 75;
+constexpr unsigned REPRODUCE_THRESHOLD = 12;
 
 struct PersonData
 {
@@ -12,6 +12,7 @@ struct PersonData
     uint8_t     colony          = 0;
     uint8_t     isAlive         = false;
     uint8_t     productionCount = 0;
+    //int8_t      isDiseased      = 0;
 };
 
 class Person

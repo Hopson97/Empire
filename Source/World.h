@@ -10,8 +10,10 @@ struct Config;
 
 struct Colony
 {
-    uint8_t id;
-    sf::Color colour;
+    uint8_t     id;
+    uint16_t    startStrLow;
+    uint16_t    startStrHigh;
+    sf::Color   colour;
 };
 
 struct ColonyCount

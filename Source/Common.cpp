@@ -28,5 +28,10 @@ const sf::Color& getColour(int i)
         {128,   128,    128},
     };
 
+    while (i > colours.size() - 1)
+    {
+        i /= 2;
+    }
+
     return colours[i];
 }
