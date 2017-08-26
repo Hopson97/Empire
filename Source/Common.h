@@ -7,7 +7,7 @@
 constexpr unsigned WIDTH = 1280;
 constexpr unsigned HEIGHT = 720;
 
-const sf::Color& getRandomColour();
+const sf::Color& getColour(int i);
 
 unsigned getIndex(unsigned x, unsigned y);
 

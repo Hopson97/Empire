@@ -14,7 +14,8 @@ struct Colony
 
 struct ColonyCount
 {
-    int members = 0;
+    int strength    = 0;
+    int members     = 0;
     sf::Text text;
     std::string name;
 };
@@ -24,8 +25,9 @@ class World
     public:
         World();
 
-        void update ();
-        void draw   (sf::RenderWindow& window);
+        void update     ();
+        void draw       (sf::RenderWindow& window);
+        void drawText   (sf::RenderWindow& window);
 
         const sf::Color& getColorAt(unsigned x, unsigned y);
 

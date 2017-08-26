@@ -22,7 +22,11 @@ World::World()
 
 void World::update()
 {
-    for (auto& c : m_colonyCount) c.members = 0;
+    for (auto& c : m_colonyCount)
+    {
+        c.members = 0;
+        c.strength = 0;
+    }
 
     std::vector<Person> newPeople(WIDTH * HEIGHT);
 
@@ -32,56 +36,68 @@ void World::update()
         auto& person = m_people[getIndex(x, y)];
         auto& counter = m_colonyCount[person.getData().colony];
 
-        if (!person.getData().isAlive) continue;
 
+        if (!person.getData().isAlive)
+            continue;
         person.update();
+        if (!person.getData().isAlive)
+            continue;
 
+
+        //Get new location to move to
         int xMoveTo = x + Random::get().intInRange(-1, 1);
         int yMoveTo = y + Random::get().intInRange(-1, 1);
-
         if (xMoveTo < 0 || xMoveTo >= (int)WIDTH) continue;
         if (yMoveTo < 0 || yMoveTo >= (int)HEIGHT) continue;
+
+        //Store this for the counter to use at the end of the loop
+        auto  strength      = person.getData().strength;
+        auto& counterMems   = counter.members;
+        auto& counterStr    = counter.strength;
+        auto& movePerson    = m_people[getIndex(xMoveTo, yMoveTo)];
+
+        //If trying to move onto water, stay put
         if (m_worldImage.getPixel(xMoveTo, yMoveTo).b > 0)
         {
-            //if it is going to be water (blue > 0) then the person stays put
-            //But, the person still needs to be copied into the new array
-            counter.members++;
             newPeople[getIndex(x, y)] = person;
             continue;
         }
-        else
+
+        //Try move to new spot
+        //Fight other person if need be
+        if (movePerson.getData().colony != person.getData().colony)
         {
-            //Try move to new location
-            auto& other = m_people[getIndex(xMoveTo, yMoveTo)];
-            if (other.getData().colony != person.getData().colony)
+            if (movePerson.getData().isAlive)
             {
-                person.fight(other);
+                person.fight(movePerson);
                 if (!person.getData().isAlive)
+                {
                     continue;
-                else
-                    counter.members++;
+                }
             }
         }
-
-        //if it is not water, then the person moves there
-        counter.members++;
+        //if the fight is survived, then good news!
         newPeople[getIndex(xMoveTo, yMoveTo)] = person;
 
-        //Try give birth
+        //try give birth
         if (person.getData().productionCount >= REPRODUCE_THRESHOLD)
         {
-            counter.members++;
+            //The person itself has moved to a new spot, so it is ok to mess with it's data now
             person.init(person.getChild());
         }
         else
         {
-            counter.members--;
-            //Because they move somewhere else, the person who was there is "dead" #solution
+            //Kill the old person, the current person has now moved
             person.kill();
         }
 
         //This will either be a dead person, or a newborn
         newPeople[getIndex(x, y)] = person;
+
+
+        //Finally, do stuff for the counter
+        counterMems ++;
+        counterStr  += strength;
 
     }
     m_people = std::move(newPeople);
@@ -96,10 +112,20 @@ const sf::Color& World::getColorAt(unsigned x, unsigned y)
 void World::draw(sf::RenderWindow& window)
 {
     window.draw(m_world);
+}
 
+void World::drawText(sf::RenderWindow& window)
+{
     for (auto& counter : m_colonyCount)
     {
-        counter.text.setString(counter.name + std::to_string(counter.members));
+        auto members            = std::to_string(counter.members);
+        std::string strength    = "0";
+        if (counter.members > 0)
+        {
+            strength = std::to_string(counter.strength / counter.members);
+        }
+
+        counter.text.setString(counter.name + members + ", Avg str: " + strength);
         window.draw(counter.text);
     }
 }
@@ -115,9 +141,9 @@ void World::createColonies()
     std::array<sf::Vector2i, NUM_COLONIES> colonyLocations;
     for (unsigned i = 1; i < m_colonies.size(); i++)
     {
-        auto& colony = m_colonies[i];
-        colony.id = id++;
-        colony.colour = getRandomColour();
+        auto& colony    = m_colonies[i];
+        colony.id       = id++;
+        colony.colour   = getColour(id);
 
         //Find a on-land location for the colony to originate from
         int x, y;

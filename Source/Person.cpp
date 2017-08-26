@@ -44,7 +44,7 @@ PersonData Person::getChild()
     int mutation = Random::get().intInRange(0, 1000);
     if (mutation >= 995) //Big mutation
     {
-        uint16_t newStrength = m_data.strength * Random::get().floatInRange(0.93, 1.20);
+        uint16_t newStrength = m_data.strength * Random::get().floatInRange(0.93, 2.20);
         PersonData child;
         child.isAlive   = true;
         child.colony    = m_data.colony;
@@ -53,7 +53,7 @@ PersonData Person::getChild()
     }
     else if (mutation >= 975) //Small mutation
     {
-        uint16_t newStrength = m_data.strength * Random::get().floatInRange(0.98, 1.05);
+        uint16_t newStrength = m_data.strength * Random::get().floatInRange(0.98, 2.05);
         PersonData child;
         child.isAlive   = true;
         child.colony    = m_data.colony;

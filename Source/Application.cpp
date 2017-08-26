@@ -23,6 +23,7 @@ void Application::run()
 
         m_world.draw(m_window);
         m_window.draw(m_pixels.data(), m_pixels.size(), sf::Points);
+        m_world.drawText(m_window);
 
         m_window.display();
         pollEvents();
