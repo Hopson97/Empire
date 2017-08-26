@@ -22,6 +22,8 @@ class World
 
     private:
         void createColonies();
+        void initColonyTypes();
+        void placeColonies();
 
         sf::RectangleShape  m_world;
         sf::Texture         m_worldTexture;

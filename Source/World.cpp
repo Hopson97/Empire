@@ -6,6 +6,7 @@
 #include "Common.h"
 
 World::World()
+:   m_people(WIDTH * HEIGHT)
 {
     m_worldTexture.loadFromFile("res/world_map.png");
     m_world.setTexture  (&m_worldTexture);
@@ -14,12 +15,32 @@ World::World()
     m_worldImage.loadFromFile("res/world_map.png");
     m_worldTexture.loadFromImage(m_worldImage);
 
+    //Fill the map with dead people (no colour)
     createColonies();
 }
 
 void World::update()
 {
+    std::vector<Person> newPeople(WIDTH * HEIGHT);
 
+    for (unsigned y = 0; y < HEIGHT; y++)
+    for (unsigned x = 0; x < WIDTH; x++)
+    {
+        auto& person = m_people[getIndex(x, y)];
+
+        if (!person.getData().isAlive)
+            continue;
+
+
+        int xMoveTo = x + Random::get().intInRange(-1, 1);
+        int yMoveTo = y + Random::get().intInRange(-1, 1);
+
+        if (xMoveTo < 0 || xMoveTo >= (int)WIDTH) continue;
+        if (yMoveTo < 0 || yMoveTo >= (int)HEIGHT) continue;
+
+
+
+    }
 }
 
 const sf::Color& World::getColorAt(unsigned x, unsigned y)
@@ -35,21 +56,35 @@ void World::draw(sf::RenderWindow& window)
 
 void World::createColonies()
 {
-    //First colony is just nothingness
+    //First colony type is just nothingness
     int id = 0;
     m_colonies[0].colour = {0, 0, 0, 0};
     m_colonies[0].id = id++;
 
-    //Set up the colony data
+    //Set up the colony data and choose locations for the colonies
     std::array<sf::Vector2i, 10> colonyLocations;
     for (unsigned i = 1; i < m_colonies.size(); i++)
     {
         auto& colony = m_colonies[i];
-
-        uint8_t colour = static_cast<uint8_t>(Random::get().intInRange(50, 200));
-
         colony.id = id++;
-        colony.colour = {colour, colour, colour};
+
+        //Get colony colour, randomly decide the "colour type" of it
+        auto colour = (uint8_t)Random::get().intInRange(50, 200);
+        switch (Random::get().intInRange(0, 2))
+        {
+            case 0:
+                colony.colour = {colour / 2, colour, colour};
+                break;
+
+            case 1:
+                colony.colour = {colour, colour / 2, colour};
+                break;
+
+            case 2:
+                colony.colour = {colour, colour, colour / 2};
+                break;
+
+        }
 
 
         //Find a on-land location for the colony to originate from
@@ -68,14 +103,6 @@ void World::createColonies()
             }
         }
     }
-
-    //Fill the map with dead people (no colour)
-    PersonData deadData;
-    m_people.reserve(WIDTH * HEIGHT);
-    cellForEach([&](unsigned x, unsigned y)
-    {
-        m_people.emplace_back(deadData);
-    });
 
     //Place colonies at the locations
     for (unsigned i = 1; i < m_colonies.size(); i++)
@@ -96,7 +123,7 @@ void World::createColonies()
 
             PersonData data;
             data.age        = 0;
-            data.strength   = Random::get().intInRange(10, 20);
+            data.strength   = Random::get().intInRange(400, 500);
             data.isAlive    = true;
             data.colony     = i;
 
@@ -105,8 +132,6 @@ void World::createColonies()
         }
     }
 }
-
-
 
 
 
