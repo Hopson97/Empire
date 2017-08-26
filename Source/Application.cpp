@@ -4,6 +4,7 @@ Application::Application()
 :   m_window    ({WIDTH, HEIGHT}, "Empire")
 ,   m_pixels    (WIDTH * HEIGHT)
 {
+    m_window.setFramerateLimit(60);
     cellForEach([&](int x, int y)
     {
         auto& p     = m_pixels[getIndex(x, y)];
