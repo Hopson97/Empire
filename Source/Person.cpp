@@ -24,7 +24,7 @@ void Person::update()
 
     if (m_data.isDiseased)
     {
-        m_data.strength *= 0.5;
+        m_data.age *= 1.5;
     }
 }
 
@@ -63,12 +63,12 @@ PersonData Person::getChild()
     //5% the child is cured of disease
     if (m_data.isDiseased)
     {
-        child.isDiseased = Random::get().intInRange(0, 100) >= 95;
+        child.isDiseased = Random::get().intInRange(0, 100) >= 85;
     }
 
     //Chance of the child getting a mutated strength value
     int mutation = Random::get().intInRange(0, 1000);
-    if (mutation >= 995) //rekt
+    if (mutation >= 999) //rekt
     {
         child.isDiseased = true;
         if (child.strength > 0)
@@ -82,7 +82,6 @@ PersonData Person::getChild()
     {
         child.strength  *= Random::get().floatInRange(0.99, 1.5);
     }
-
 
     return child;
 }
