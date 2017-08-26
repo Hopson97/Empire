@@ -31,8 +31,7 @@ class World
 
     private:
         void createColonies();
-        void initColonyTypes();
-        void placeColonies();
+        void initText();
 
         sf::RectangleShape  m_world;
         sf::Texture         m_worldTexture;

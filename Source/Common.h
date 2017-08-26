@@ -1,8 +1,13 @@
 #ifndef COMMON_H_INCLUDED
 #define COMMON_H_INCLUDED
 
+#include <SFML/Graphics.hpp>
+
+
 constexpr unsigned WIDTH = 1280;
 constexpr unsigned HEIGHT = 720;
+
+const sf::Color& getRandomColour();
 
 unsigned getIndex(unsigned x, unsigned y);
 

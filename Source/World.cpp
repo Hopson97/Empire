@@ -15,40 +15,24 @@ World::World()
     m_worldImage.loadFromFile("res/world_map.png");
     m_worldTexture.loadFromImage(m_worldImage);
 
-    //Fill the map with dead people (no colour)
+
     createColonies();
-
-    for (int i = 0; i < NUM_COLONIES; i++)
-    {
-        ColonyCount& counter = m_colonyCount[i];
-        counter.name = "Colony " + std::to_string(i) + ": ";
-        counter.text.setCharacterSize(10);
-        counter.text.move(i * 12 + 5);
-        counter.text.setOutlineColor(sf::Color::Black);
-        counter.text.setFillColor(m_colonies[i].colour);
-        counter.text.setOutlineThickness(1);
-    }
-
+    initText();
 }
 
 void World::update()
 {
-    for (auto& c : m_colonyCount)
-    {
-        c.members = 0;
-    }
-
+    for (auto& c : m_colonyCount) c.members = 0;
 
     std::vector<Person> newPeople(WIDTH * HEIGHT);
 
     for (unsigned y = 0; y < HEIGHT; y++)
     for (unsigned x = 0; x < WIDTH; x++)
     {
-        Person& person = m_people[getIndex(x, y)];
-        ColonyCount& counter = m_colonyCount[person.getData().colony];
+        auto& person = m_people[getIndex(x, y)];
+        auto& counter = m_colonyCount[person.getData().colony];
 
-        if (!person.getData().isAlive)
-            continue;
+        if (!person.getData().isAlive) continue;
 
         person.update();
 
@@ -59,11 +43,28 @@ void World::update()
         if (yMoveTo < 0 || yMoveTo >= (int)HEIGHT) continue;
         if (m_worldImage.getPixel(xMoveTo, yMoveTo).b > 0)
         {
+            //if it is going to be water (blue > 0) then the person stays put
+            //But, the person still needs to be copied into the new array
             counter.members++;
             newPeople[getIndex(x, y)] = person;
             continue;
         }
+        else
+        {
+            //Try move to new location
+            auto& other = m_people[getIndex(xMoveTo, yMoveTo)];
+            if (other.getData().colony != person.getData().colony)
+            {
+                person.fight(other);
+                if (!person.getData().isAlive)
+                    continue;
+                else
+                    counter.members++;
+            }
+        }
 
+        //if it is not water, then the person moves there
+        counter.members++;
         newPeople[getIndex(xMoveTo, yMoveTo)] = person;
 
         //Try give birth
@@ -74,6 +75,7 @@ void World::update()
         }
         else
         {
+            counter.members--;
             //Because they move somewhere else, the person who was there is "dead" #solution
             person.kill();
         }
@@ -94,6 +96,12 @@ const sf::Color& World::getColorAt(unsigned x, unsigned y)
 void World::draw(sf::RenderWindow& window)
 {
     window.draw(m_world);
+
+    for (auto& counter : m_colonyCount)
+    {
+        counter.text.setString(counter.name + std::to_string(counter.members));
+        window.draw(counter.text);
+    }
 }
 
 void World::createColonies()
@@ -109,25 +117,7 @@ void World::createColonies()
     {
         auto& colony = m_colonies[i];
         colony.id = id++;
-
-        //Get colony colour, randomly decide the "colour type" of it
-        auto colour = (uint8_t)Random::get().intInRange(50, 200);
-        switch (Random::get().intInRange(0, 2))
-        {
-            case 0:
-                colony.colour = {colour / 2, colour, colour};
-                break;
-
-            case 1:
-                colony.colour = {colour, colour / 2, colour};
-                break;
-
-            case 2:
-                colony.colour = {colour, colour, colour / 2};
-                break;
-
-        }
-
+        colony.colour = getRandomColour();
 
         //Find a on-land location for the colony to originate from
         int x, y;
@@ -175,7 +165,23 @@ void World::createColonies()
     }
 }
 
+void World::initText()
+{
+    int charSize = 15;
+    m_counterFont.loadFromFile("res/arial.ttf");
 
+    for (int i = 0; i < NUM_COLONIES; i++)
+    {
+        ColonyCount& counter = m_colonyCount[i];
+        counter.name = "Colony " + std::to_string(i) + ": ";
+        counter.text.setCharacterSize(charSize);
+        counter.text.move(0, i * charSize + 5);
+        counter.text.setOutlineColor(sf::Color::Black);
+        counter.text.setFillColor(m_colonies[i].colour);
+        counter.text.setOutlineThickness(1);
+        counter.text.setFont(m_counterFont);
+    }
+}
 
 
 
