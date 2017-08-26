@@ -58,10 +58,23 @@ void World::update()
 
         //If trying to move onto water or onto square where person of same colony is
         //, stay put
-        if (isWater(xMoveTo, yMoveTo) || movePerson.getData().colony == person.getData().colony)
+        if (isWater(xMoveTo, yMoveTo))
         {
             counterStr  += strength;
             counterMems ++;
+            newPeople[getIndex(m_pConfig->width, x, y)] = person;
+            continue;
+        }
+        else if (movePerson.getData().colony == person.getData().colony)
+        {
+            counterStr  += strength;
+            counterMems ++;
+
+            if (movePerson.getData().isDiseased)
+            {
+                person.giveDisease();
+            }
+
             newPeople[getIndex(m_pConfig->width, x, y)] = person;
             continue;
         }

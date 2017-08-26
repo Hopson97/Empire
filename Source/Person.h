@@ -9,10 +9,11 @@ struct PersonData
 {
     uint32_t    age             = 0;
     uint32_t    strength        = 0;
-    uint8_t     colony          = 0;
-    uint8_t     isAlive         = false;
-    uint8_t     productionCount = 0;
-    //int8_t      isDiseased      = 0;
+
+    uint8_t colony          = 0;
+    uint8_t isAlive         = false;
+    uint8_t productionCount = 0;
+    uint8_t isDiseased      = 0;
 };
 
 class Person
@@ -25,6 +26,7 @@ class Person
         void update();
 
         void kill();
+        void giveDisease();
         void fight(Person& other);
 
         PersonData getChild();

@@ -21,6 +21,11 @@ void Person::update()
     {
         kill();
     }
+
+    if (m_data.isDiseased)
+    {
+        m_data.strength *= 0.5;
+    }
 }
 
 void Person::fight(Person& other)
@@ -30,6 +35,10 @@ void Person::fight(Person& other)
     {
         kill();
     }
+    else
+    {
+        other.kill();
+    }
 }
 
 void Person::kill()
@@ -37,37 +46,43 @@ void Person::kill()
     m_data = PersonData();
 }
 
+void Person::giveDisease()
+{
+    m_data.isDiseased = true;
+}
+
 PersonData Person::getChild()
 {
     m_data.productionCount = 0;
 
-    //Chance of the child getting a mutated strength value
-    int mutation = Random::get().intInRange(0, 100);
+    PersonData child;
+    child.isAlive   = true;
+    child.colony    = m_data.colony;
+    child.strength  = m_data.strength;
 
-    if (mutation >= 99) //Big mutation
+    //5% the child is cured of disease
+    if (m_data.isDiseased)
     {
-        uint16_t newStrength = m_data.strength * Random::get().floatInRange(0.98, 2.5);
-        PersonData child;
-        child.isAlive   = true;
-        child.colony    = m_data.colony;
-        child.strength  = newStrength;
-        return child;
+        child.isDiseased = Random::get().intInRange(0, 100) >= 95;
     }
-    else if (mutation >= 75) //Small mutation
+
+    //Chance of the child getting a mutated strength value
+    int mutation = Random::get().intInRange(0, 1000);
+    if (mutation >= 995) //rekt
     {
-        uint16_t newStrength = m_data.strength * Random::get().floatInRange(0.99, 1.5);
-        PersonData child;
-        child.isAlive   = true;
-        child.colony    = m_data.colony;
-        child.strength  = newStrength;
-        return child;
+        child.isDiseased = true;
+        if (child.strength > 0)
+        child.strength /= 2;
     }
-    else
+    else if (mutation >= 960) //Big mutation
     {
-        PersonData child;
-        child.isAlive   = true;
-        child.colony    = m_data.colony;
-        child.strength  = m_data.strength;
-        return child;
+        child.strength *= Random::get().floatInRange(0.98, 2.5);
     }
+    else if (mutation >= 750) //Small mutation
+    {
+        child.strength  *= Random::get().floatInRange(0.99, 1.5);
+    }
+
+
+    return child;
 }
