@@ -21,7 +21,6 @@ int main(int argc, char** argv)
         config.height   = config.image.getSize().y;
     }
 
-
     Application app(config);
     app.run();
 }

@@ -25,6 +25,7 @@ void Person::update()
 
 void Person::fight(Person& other)
 {
+    if (other.getData().colony == 0) return;
     if (other.getData().strength >= getData().strength)
     {
         kill();
@@ -41,19 +42,20 @@ PersonData Person::getChild()
     m_data.productionCount = 0;
 
     //Chance of the child getting a mutated strength value
-    int mutation = Random::get().intInRange(0, 1000);
-    if (mutation >= 995) //Big mutation
+    int mutation = Random::get().intInRange(0, 100);
+
+    if (mutation >= 99) //Big mutation
     {
-        uint16_t newStrength = m_data.strength * Random::get().floatInRange(0.93, 2.20);
+        uint16_t newStrength = m_data.strength * Random::get().floatInRange(0.90, 2.5);
         PersonData child;
         child.isAlive   = true;
         child.colony    = m_data.colony;
         child.strength  = newStrength;
         return child;
     }
-    else if (mutation >= 975) //Small mutation
+    else if (mutation >= 85) //Small mutation
     {
-        uint16_t newStrength = m_data.strength * Random::get().floatInRange(0.98, 2.05);
+        uint16_t newStrength = m_data.strength * Random::get().floatInRange(0.95, 1.5);
         PersonData child;
         child.isAlive   = true;
         child.colony    = m_data.colony;

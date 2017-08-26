@@ -15,9 +15,8 @@ World::World(const Config& config)
 {
     m_worldTexture.loadFromImage(config.image);
     m_world.setTexture  (&m_worldTexture);
-    m_world.setSize     ({config.width, config.height});
-
-
+    m_world.setSize     ({(float)config.width,
+                          (float)config.height});
     createColonies();
     initText();
 }
@@ -38,7 +37,6 @@ void World::update()
         auto& person = m_people[getIndex(m_pConfig->width, x, y)];
         auto& counter = m_colonyCount[person.getData().colony];
 
-
         if (!person.getData().isAlive)
             continue;
         person.update();
@@ -58,12 +56,16 @@ void World::update()
         auto& counterStr    = counter.strength;
         auto& movePerson    = m_people[getIndex(m_pConfig->width, xMoveTo, yMoveTo)];
 
-        //If trying to move onto water, stay put
-        if (m_pConfig->image.getPixel(xMoveTo, yMoveTo).b > 0)
+        //If trying to move onto water or onto square where person of same colony is
+        //, stay put
+        if (isWater(xMoveTo, yMoveTo) || movePerson.getData().colony == person.getData().colony)
         {
+            counterStr  += strength;
+            counterMems ++;
             newPeople[getIndex(m_pConfig->width, x, y)] = person;
             continue;
         }
+
 
         //Try move to new spot
         //Fight other person if need be
@@ -100,7 +102,6 @@ void World::update()
         //Finally, do stuff for the counter
         counterMems ++;
         counterStr  += strength;
-
     }
     m_people = std::move(newPeople);
 }
@@ -109,6 +110,17 @@ const sf::Color& World::getColorAt(unsigned x, unsigned y)
 {
     return m_colonies[m_people[getIndex(m_pConfig->width, x, y)].getData().colony].colour;
 }
+
+bool World::isGrass(unsigned x, unsigned y) const
+{
+    return m_pConfig->image.getPixel(x, y).g > 235;
+}
+
+bool World::isWater(unsigned x, unsigned y) const
+{
+    return m_pConfig->image.getPixel(x, y).b > 235;
+}
+
 
 
 void World::draw(sf::RenderWindow& window)
@@ -184,7 +196,7 @@ void World::createColonies()
 
             if (newLocationX < 0 || newLocationX >= (int)m_pConfig->width) continue;
             if (newLocationY < 0 || newLocationY >= (int)m_pConfig->height) continue;
-            if (m_pConfig->image.getPixel(newLocationX, newLocationY).g < 250) continue;
+            if (isWater(newLocationX, newLocationY)) continue;
 
             PersonData data;
             data.age        = 0;
