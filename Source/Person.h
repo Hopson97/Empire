@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-constexpr unsigned REPRODUCE_THRESHOLD = 5;
+constexpr unsigned REPRODUCE_THRESHOLD = 3;
 
 struct PersonData
 {

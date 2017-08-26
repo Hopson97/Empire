@@ -4,7 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include "Person.h"
 
-constexpr int NUM_COLONIES = 10;
+constexpr int NUM_COLONIES = 12;
+
+struct Config;
 
 struct Colony
 {
@@ -23,7 +25,7 @@ struct ColonyCount
 class World
 {
     public:
-        World();
+        World(const Config& config);
 
         void update     ();
         void draw       (sf::RenderWindow& window);
@@ -37,12 +39,13 @@ class World
 
         sf::RectangleShape  m_world;
         sf::Texture         m_worldTexture;
-        sf::Image           m_worldImage;
         sf::Font            m_counterFont;
 
         std::vector<Person> m_people;
         std::array<Colony,      NUM_COLONIES> m_colonies;
         std::array<ColonyCount, NUM_COLONIES> m_colonyCount;
+
+        const Config* m_pConfig;
 
 };
 

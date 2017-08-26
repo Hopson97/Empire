@@ -1,19 +1,21 @@
 #include "World.h"
 
 #include <iostream>
+#include <iomanip>
 
 #include "Random.h"
 #include "Common.h"
+#include "Config.h"
 
-World::World()
-:   m_people(WIDTH * HEIGHT)
+
+
+World::World(const Config& config)
+:   m_people    (config.width * config.height)
+,   m_pConfig   (&config)
 {
-    m_worldTexture.loadFromFile("res/world_map.png");
+    m_worldTexture.loadFromImage(config.image);
     m_world.setTexture  (&m_worldTexture);
-    m_world.setSize     ({1280, 720});
-
-    m_worldImage.loadFromFile("res/world_map.png");
-    m_worldTexture.loadFromImage(m_worldImage);
+    m_world.setSize     ({config.width, config.height});
 
 
     createColonies();
@@ -28,12 +30,12 @@ void World::update()
         c.strength = 0;
     }
 
-    std::vector<Person> newPeople(WIDTH * HEIGHT);
+    std::vector<Person> newPeople(m_pConfig->width * m_pConfig->height);
 
-    for (unsigned y = 0; y < HEIGHT; y++)
-    for (unsigned x = 0; x < WIDTH; x++)
+    for (unsigned y = 0; y < m_pConfig->height; y++)
+    for (unsigned x = 0; x < m_pConfig->width; x++)
     {
-        auto& person = m_people[getIndex(x, y)];
+        auto& person = m_people[getIndex(m_pConfig->width, x, y)];
         auto& counter = m_colonyCount[person.getData().colony];
 
 
@@ -47,19 +49,19 @@ void World::update()
         //Get new location to move to
         int xMoveTo = x + Random::get().intInRange(-1, 1);
         int yMoveTo = y + Random::get().intInRange(-1, 1);
-        if (xMoveTo < 0 || xMoveTo >= (int)WIDTH) continue;
-        if (yMoveTo < 0 || yMoveTo >= (int)HEIGHT) continue;
+        if (xMoveTo < 0 || xMoveTo >= (int)m_pConfig->width) continue;
+        if (yMoveTo < 0 || yMoveTo >= (int)m_pConfig->height) continue;
 
         //Store this for the counter to use at the end of the loop
         auto  strength      = person.getData().strength;
         auto& counterMems   = counter.members;
         auto& counterStr    = counter.strength;
-        auto& movePerson    = m_people[getIndex(xMoveTo, yMoveTo)];
+        auto& movePerson    = m_people[getIndex(m_pConfig->width, xMoveTo, yMoveTo)];
 
         //If trying to move onto water, stay put
-        if (m_worldImage.getPixel(xMoveTo, yMoveTo).b > 0)
+        if (m_pConfig->image.getPixel(xMoveTo, yMoveTo).b > 0)
         {
-            newPeople[getIndex(x, y)] = person;
+            newPeople[getIndex(m_pConfig->width, x, y)] = person;
             continue;
         }
 
@@ -77,7 +79,7 @@ void World::update()
             }
         }
         //if the fight is survived, then good news!
-        newPeople[getIndex(xMoveTo, yMoveTo)] = person;
+        newPeople[getIndex(m_pConfig->width, xMoveTo, yMoveTo)] = person;
 
         //try give birth
         if (person.getData().productionCount >= REPRODUCE_THRESHOLD)
@@ -92,7 +94,7 @@ void World::update()
         }
 
         //This will either be a dead person, or a newborn
-        newPeople[getIndex(x, y)] = person;
+        newPeople[getIndex(m_pConfig->width, x, y)] = person;
 
 
         //Finally, do stuff for the counter
@@ -105,7 +107,7 @@ void World::update()
 
 const sf::Color& World::getColorAt(unsigned x, unsigned y)
 {
-    return m_colonies[m_people[getIndex(x, y)].getData().colony].colour;
+    return m_colonies[m_people[getIndex(m_pConfig->width, x, y)].getData().colony].colour;
 }
 
 
@@ -118,14 +120,19 @@ void World::drawText(sf::RenderWindow& window)
 {
     for (auto& counter : m_colonyCount)
     {
-        auto members            = std::to_string(counter.members);
-        std::string strength    = "0";
-        if (counter.members > 0)
-        {
-            strength = std::to_string(counter.strength / counter.members);
-        }
+        std::ostringstream stream;
 
-        counter.text.setString(counter.name + members + ", Avg str: " + strength);
+        int averageStr = (counter.members > 0) ?
+            counter.strength / counter.members :
+            0;
+
+
+        stream  << std::left
+                << std::setw(10)    << counter.name
+                << std::setw(7)     << counter.members
+                << std::setw(10)    << " Avg Str: " << averageStr << '\n';
+
+        counter.text.setString(stream.str());
         window.draw(counter.text);
     }
 }
@@ -150,10 +157,10 @@ void World::createColonies()
         bool locationFound = false;
         while (!locationFound)
         {
-            x = Random::get().intInRange(0, WIDTH);
-            y = Random::get().intInRange(0, HEIGHT);
+            x = Random::get().intInRange(0, m_pConfig->width);
+            y = Random::get().intInRange(0, m_pConfig->height);
 
-            auto pixel = m_worldImage.getPixel(x, y);
+            auto pixel = m_pConfig->image.getPixel(x, y);
             if (pixel.g >= 250)
             {
                 locationFound = true;
@@ -175,9 +182,9 @@ void World::createColonies()
             int newLocationX = xOffset + location.x;
             int newLocationY = yOffset + location.y;
 
-            if (newLocationX < 0 || newLocationX >= (int)WIDTH) continue;
-            if (newLocationY < 0 || newLocationY >= (int)HEIGHT) continue;
-            if (m_worldImage.getPixel(newLocationX, newLocationY).g < 250) continue;
+            if (newLocationX < 0 || newLocationX >= (int)m_pConfig->width) continue;
+            if (newLocationY < 0 || newLocationY >= (int)m_pConfig->height) continue;
+            if (m_pConfig->image.getPixel(newLocationX, newLocationY).g < 250) continue;
 
             PersonData data;
             data.age        = 0;
@@ -185,7 +192,7 @@ void World::createColonies()
             data.isAlive    = true;
             data.colony     = i;
 
-            m_people[getIndex(newLocationX, newLocationY)].init(data);
+            m_people[getIndex(m_pConfig->width, newLocationX, newLocationY)].init(data);
 
         }
     }
@@ -193,7 +200,7 @@ void World::createColonies()
 
 void World::initText()
 {
-    int charSize = 15;
+    int charSize = 18;
     m_counterFont.loadFromFile("res/arial.ttf");
 
     for (int i = 0; i < NUM_COLONIES; i++)
@@ -201,7 +208,7 @@ void World::initText()
         ColonyCount& counter = m_colonyCount[i];
         counter.name = "Colony " + std::to_string(i) + ": ";
         counter.text.setCharacterSize(charSize);
-        counter.text.move(0, i * charSize + 5);
+        counter.text.move(10, m_pConfig->height - i * charSize - 30);
         counter.text.setOutlineColor(sf::Color::Black);
         counter.text.setFillColor(m_colonies[i].colour);
         counter.text.setOutlineThickness(1);

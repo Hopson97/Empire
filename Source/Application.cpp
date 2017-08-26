@@ -1,13 +1,15 @@
 #include "Application.h"
 
-Application::Application()
-:   m_window    ({WIDTH, HEIGHT}, "Empire")
-,   m_pixels    (WIDTH * HEIGHT)
+Application::Application(const Config& config)
+:   m_window    ({config.width, config.height}, "Empire")
+,   m_pixels    (config.width * config.height)
+,   m_world     (config)
+,   m_pConfig   (&config)
 {
     m_window.setFramerateLimit(100);
-    cellForEach([&](int x, int y)
+    cellForEach(*m_pConfig, [&](int x, int y)
     {
-        auto& p     = m_pixels[getIndex(x, y)];
+        auto& p     = m_pixels[getIndex(m_pConfig->width, x, y)];
         p.position  = {(float)x, (float)y};
         p.color     = m_world.getColorAt(x, y);
     });
@@ -47,9 +49,9 @@ void Application::pollEvents()
 void Application::update()
 {
     m_world.update();
-    cellForEach([&](unsigned x, unsigned y)
+    cellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
-        m_pixels[getIndex(x, y)].color = m_world.getColorAt(x, y);
+        m_pixels[getIndex(m_pConfig->width, x, y)].color = m_world.getColorAt(x, y);
     });
 }
 

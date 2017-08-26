@@ -3,20 +3,19 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Config.h"
 
-constexpr unsigned WIDTH = 1280;
-constexpr unsigned HEIGHT = 720;
 
 const sf::Color& getColour(int i);
 
-unsigned getIndex(unsigned x, unsigned y);
+unsigned getIndex(unsigned width, unsigned x, unsigned y);
 
 template<typename F>
-void cellForEach(F f)
+void cellForEach(const Config& config, F f)
 {
-    for (unsigned y = 0; y < HEIGHT; y++)
+    for (unsigned y = 0; y < config.height; y++)
     {
-        for (unsigned x = 0; x < WIDTH; x++)
+        for (unsigned x = 0; x < config.width; x++)
         {
             f(x, y);
         }

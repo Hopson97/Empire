@@ -4,9 +4,9 @@
 
 #include "Random.h"
 
-unsigned getIndex(unsigned x, unsigned y)
+unsigned getIndex(unsigned width, unsigned x, unsigned y)
 {
-    return y * WIDTH + x;
+    return y * width + x;
 }
 
 const sf::Color& getColour(int i)
@@ -24,6 +24,8 @@ const sf::Color& getColour(int i)
         {0,     0,      0},
         {255,   150,    0},
         {145,   85,     26},
+        {245,   85,     26},
+        {128,   128,    128},
     };
 
     return colours[i];

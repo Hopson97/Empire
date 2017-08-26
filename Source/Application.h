@@ -6,11 +6,12 @@
 
 #include "World.h"
 #include "Common.h"
+#include "Config.h"
 
 class Application
 {
     public:
-        Application();
+        Application(const Config& config);
 
         void run();
 
@@ -24,6 +25,8 @@ class Application
         World m_world;
 
         int m_frameCount = 0;
+
+        const Config* m_pConfig;
 };
 
 #endif // APPLICATION_H_INCLUDED
