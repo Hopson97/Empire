@@ -76,11 +76,11 @@ PersonData Person::getChild()
     }
     else if (mutation >= 960) //Big mutation
     {
-        child.strength *= Random::get().floatInRange(0.90, 1.6);
+        child.strength *= Random::get().floatInRange(0.90, 1.8);
     }
     else if (mutation >= 750) //Small mutation
     {
-        child.strength  *= Random::get().floatInRange(0.95, 1.3);
+        child.strength  *= Random::get().floatInRange(0.95, 1.4);
     }
 
     return child;

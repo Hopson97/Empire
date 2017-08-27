@@ -3,9 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-
-
-int main(int argc, char** argv)
+int main()
 {
     Config configFile;
 

@@ -23,19 +23,19 @@ World::World(const Config& config)
 
 void World::update()
 {
-    for (auto& c : m_colonyCount)
+    std::vector<Person> newPeople(m_pConfig->width * m_pConfig->height);
+
+    for (auto& c : m_colonyStats)
     {
         c.members = 0;
         c.strength = 0;
     }
 
-    std::vector<Person> newPeople(m_pConfig->width * m_pConfig->height);
-
     for (unsigned y = 0; y < m_pConfig->height; y++)
     for (unsigned x = 0; x < m_pConfig->width; x++)
     {
         auto& person    = m_people[getIndex(m_pConfig->width, x, y)];
-        auto& counter   = m_colonyCount[person.getData().colony];
+        auto& stats   = m_colonyStats[person.getData().colony];
 
         if (!person.getData().isAlive)
             continue;
@@ -50,25 +50,23 @@ void World::update()
         if (xMoveTo < 0 || xMoveTo >= (int)m_pConfig->width) continue;
         if (yMoveTo < 0 || yMoveTo >= (int)m_pConfig->height) continue;
 
-        //Store this for the counter to use at the end of the loop
+        //Store this for the stats to use at the end of the loop
         auto  strength      = person.getData().strength;
-        auto& counterMems   = counter.members;
-        auto& counterStr    = counter.strength;
         auto& movePerson    = m_people[getIndex(m_pConfig->width, xMoveTo, yMoveTo)];
 
         //If trying to move onto water or onto square where person of same colony is
         //, stay put
         if (isWater(xMoveTo, yMoveTo))
         {
-            counterStr  += strength;
-            counterMems ++;
+            stats.strength    += strength;
+            stats.members     ++;
             newPeople[getIndex(m_pConfig->width, x, y)] = person;
             continue;
         }
         else if (movePerson.getData().colony == person.getData().colony)
         {
-            counterStr  += strength;
-            counterMems ++;
+            stats.strength  += strength;
+            stats.members ++;
 
             if (movePerson.getData().isDiseased)
             {
@@ -112,14 +110,14 @@ void World::update()
         newPeople[getIndex(m_pConfig->width, x, y)] = person;
 
 
-        //Finally, do stuff for the counter
-        counterMems ++;
-        counterStr  += strength;
+        //Finally, do stuff for the stats
+        stats.members ++;
+        stats.strength  += strength;
     }
     m_people = std::move(newPeople);
 }
 
-const sf::Color& World::getColorAt(unsigned x, unsigned y)
+const sf::Color& World::getColorAt(unsigned x, unsigned y) const
 {
     return m_colonies[m_people[getIndex(m_pConfig->width, x, y)].getData().colony].colour;
 }
@@ -134,31 +132,29 @@ bool World::isWater(unsigned x, unsigned y) const
     return m_pConfig->image.getPixel(x, y).b > 235;
 }
 
-
-
-void World::draw(sf::RenderWindow& window)
+void World::draw(sf::RenderWindow& window) const
 {
     window.draw(m_world);
 }
 
 void World::drawText(sf::RenderWindow& window)
 {
-    for (auto& counter : m_colonyCount)
+    for (auto& stats : m_colonyStats)
     {
         std::ostringstream stream;
 
-        int averageStr = abs((counter.members > 0) ?
-            counter.strength / counter.members :
+        int averageStr = abs((stats.members > 0) ?
+            stats.strength / stats.members :
             0);
 
 
         stream  << std::left
-                << std::setw(10)    << counter.name
-                << std::setw(7)     << counter.members
+                << std::setw(10)    << stats.name
+                << std::setw(7)     << stats.members
                 << std::setw(10)    << " Avg Str: " << averageStr << '\n';
 
-        counter.text.setString(stream.str());
-        window.draw(counter.text);
+        stats.text.setString(stream.str());
+        window.draw(stats.text);
     }
 }
 
@@ -228,18 +224,18 @@ void World::createColonies()
 void World::initText()
 {
     int charSize = 17;
-    m_counterFont.loadFromFile("res/arial.ttf");
+    m_statsFont.loadFromFile("res/arial.ttf");
 
     for (int i = 0; i < NUM_COLONIES; i++)
     {
-        ColonyCount& counter = m_colonyCount[i];
-        counter.name = "Colony " + std::to_string(i) + ": ";
-        counter.text.setCharacterSize(charSize);
-        counter.text.move(10, m_pConfig->height - i * charSize - 30);
-        counter.text.setOutlineColor(sf::Color::Black);
-        counter.text.setFillColor(m_colonies[i].colour);
-        counter.text.setOutlineThickness(1);
-        counter.text.setFont(m_counterFont);
+        auto& stats = m_colonyStats[i];
+        stats.name = "Colony " + std::to_string(i) + ": ";
+        stats.text.setCharacterSize(charSize);
+        stats.text.move(10, m_pConfig->height - i * charSize - 30);
+        stats.text.setOutlineColor(sf::Color::Black);
+        stats.text.setFillColor(m_colonies[i].colour);
+        stats.text.setOutlineThickness(1);
+        stats.text.setFont(m_statsFont);
     }
 }
 
