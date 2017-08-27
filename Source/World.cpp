@@ -162,8 +162,8 @@ void World::createColonies()
 {
     ColonyCreator creator(m_pConfig->image);
 
-    auto locations   = creator.createColonyLocations(m_pConfig->width, m_pConfig->height);
-    m_colonies  = creator.createColonyStats();
+    auto locations  = creator.createColonyLocations(m_pConfig->width, m_pConfig->height);
+    m_colonies      = creator.createColonyStats();
 
     //Place colonies at the locations
     for (unsigned i = 1; i < NUM_COLONIES; i++)
@@ -211,26 +211,6 @@ void World::initText()
         stats.text.setFont(m_statsFont);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

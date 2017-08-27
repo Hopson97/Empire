@@ -1,7 +1,7 @@
 #include "Application.h"
 
 Application::Application(const Config& config)
-:   m_window    ({config.width, config.height}, "Empire")
+:   m_window    ({config.width, config.height}, "Empire", sf::Style::Close)
 ,   m_pixels    (config.width * config.height)
 ,   m_world     (config)
 ,   m_pConfig   (&config)

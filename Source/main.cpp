@@ -30,8 +30,7 @@ int main()
         }
     }
 
-    std::cout   << "\nI tried to make it work with cmd args, but .dll errors happened\n"
-                << "If you want change the map, add an image to the res folder and\n"
+    std::cout   << "\n If you want change the map, add an image to the res folder and\n"
                 << "change the image name in \"config.txt\". Enjoy!\n"
                 << "Note: Your map must be green and blue!\n";
 

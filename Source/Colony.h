@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <array>
 
-constexpr int NUM_COLONIES = 12;
+constexpr int NUM_COLONIES = 10;
 
 struct Colony
 {

@@ -5,15 +5,19 @@
 
 constexpr unsigned REPRODUCE_THRESHOLD = 8;
 
-struct PersonData
-{
-    uint32_t    age             = 0;
-    uint32_t    strength        = 0;
 
-    uint8_t colony          = 0;
-    uint8_t isAlive         = false;
-    uint8_t productionCount = 0;
-    uint8_t isDiseased      = 0;
+struct
+#ifdef __GNUC__
+__attribute__((packed, aligned(4)))
+#endif // __GNUC__
+PersonData
+{
+    uint16_t    age             = 0;
+    uint16_t    strength        = 0;
+    uint8_t     colony          = 0;
+    uint8_t     isAlive         = false;
+    uint8_t     productionCount = 0;
+    uint8_t     isDiseased      = 0;
 };
 
 class Person

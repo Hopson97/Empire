@@ -26,7 +26,6 @@ ColonyCreator::ColonyCreator(const sf::Image& image)
     }
 }
 
-
 std::array<sf::Vector2i, NUM_COLONIES> ColonyCreator::createColonyLocations(unsigned mapWidth, unsigned mapHeight) const
 {
     std::array<sf::Vector2i, NUM_COLONIES> locations;
@@ -69,32 +68,3 @@ std::array<Colony, NUM_COLONIES> ColonyCreator::createColonyStats() const
     return colonies;
 }
 
-
-/*
-    //Set up the colony data and choose locations for the colonies
-    std::array<sf::Vector2i, NUM_COLONIES> colonyLocations;
-    for (unsigned i = 1; i < NUM_COLONIES; i++)
-    {
-        auto& colony    = m_colonies[i];
-        colony.id       = id++;
-        colony.colour   = getColour(id);
-        //colony.startStrLow  = 500;
-        //colony.startStrHigh = Random::get().intInRange(900, 2000);
-
-        //Find a on-land location for the colony to originate from
-        int x, y;
-        bool locationFound = false;
-        while (!locationFound)
-        {
-            x = Random::get().intInRange(0, m_pConfig->width);
-            y = Random::get().intInRange(0, m_pConfig->height);
-
-            auto pixel = m_pConfig->image.getPixel(x, y);
-            if (pixel.g >= 250)
-            {
-                locationFound = true;
-                colonyLocations[i] = {x, y};
-            }
-        }
-    }
-*/
