@@ -7,8 +7,8 @@
 struct Colony
 {
     uint8_t     id;
-    uint16_t    startStrLow;
-    uint16_t    startStrHigh;
+    //uint16_t    startStrLow;
+    //uint16_t    startStrHigh;
     sf::Color   colour;
 };
 
