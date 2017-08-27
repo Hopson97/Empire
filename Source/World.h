@@ -28,9 +28,9 @@ class World
         sf::Texture         m_worldTexture;
         sf::Font            m_statsFont;
 
-        std::vector<Person> m_people;
-        std::array<Colony,              NUM_COLONIES> m_colonies;
-        std::array<ColonyStatistics,    NUM_COLONIES> m_colonyStats;
+        std::vector<Person>             m_people;
+        std::vector<Colony>             m_colonies;
+        std::vector<ColonyStatistics>   m_colonyStats;
 
         const Config* m_pConfig;
 

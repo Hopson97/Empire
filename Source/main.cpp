@@ -3,6 +3,40 @@
 #include <iostream>
 #include <fstream>
 
+void parseConfig(std::ifstream& inFile, Config& configFile)
+{
+
+    std::string str;
+    while (std::getline(inFile, str))
+    {
+        if (str == "IMAGE")
+        {
+            inFile >> str;
+            if (!configFile.image.loadFromFile("res/" + str))
+            {
+                std::cerr << "Unable to open \"" << str << "\", using default.\n\n";
+                configFile.image.loadFromFile("res/world_map_large.png");
+            }
+            else
+            {
+                std::cout << "Success! Using " << str << ".\n\n";
+            }
+        }
+        else if (str == "REPRODUCTION")
+        {
+            inFile >> configFile.reproductionThreshold;
+            std::cout   << "Reproduction Threshold loaded, set to: "
+                        << configFile.reproductionThreshold << ".\n\n";
+        }
+        else if (str == "COLONIES")
+        {
+            inFile >> configFile.colonies;
+            std::cout   << "Colony Count loaded, set to: "
+                        << configFile.colonies << ".\n\n";
+        }
+    }
+}
+
 int main()
 {
     Config configFile;
@@ -17,22 +51,14 @@ int main()
     }
     else
     {
-        std::string file;
-        inFile >> file;
-        if (!configFile.image.loadFromFile("res/" + file))
-        {
-            std::cerr << "Unable to open \"" << file << "\", using default.\n";
-            configFile.image.loadFromFile("res/world_map_large.png");
-        }
-        else
-        {
-            std::cout << "Success! Using " << file << "!\n";
-        }
+        parseConfig(inFile, configFile);
     }
 
-    std::cout   << "\n If you want change the map, add an image to the res folder and\n"
-                << "change the image name in \"config.txt\". Enjoy!\n"
-                << "Note: Your map must be green and blue!\n";
+    std::cout   << "\nIf you want to customise your experience, then simply edit the values in config.txt. \nRecommended:\n"
+                << "Image:          world_map_full.png\n"
+                << "Reproduction:   8  [This is the threshold of reproduction, lower = higher birthrate]\n"
+                << "Colonies:       10 [This is the number of colonies the simulation begins with]\n"
+                << "Enjoy!\n";
 
     configFile.width    = configFile.image.getSize().x;
     configFile.height   = configFile.image.getSize().y;

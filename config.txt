@@ -1,1 +1,9 @@
+IMAGE
 world_map_large.png
+
+REPRODUCTION
+8
+
+COLONIES
+10
+

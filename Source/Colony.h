@@ -4,8 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include <array>
 
-constexpr int NUM_COLONIES = 10;
-
 struct Colony
 {
     uint8_t     id;
@@ -25,13 +23,14 @@ struct ColonyStatistics
 class ColonyCreator
 {
     public:
-        ColonyCreator(const sf::Image& image);
+        ColonyCreator(const sf::Image& image, int numColonies);
 
-        std::array<sf::Vector2i, NUM_COLONIES>  createColonyLocations(unsigned mapWidth, unsigned mapHeight) const;
-        std::array<Colony, NUM_COLONIES>        createColonyStats() const;
+        std::vector<sf::Vector2i>  createColonyLocations(unsigned mapWidth, unsigned mapHeight) const;
+        std::vector<Colony>        createColonyStats() const;
 
     private:
         const sf::Image* m_pImage;
+        int m_numColonies;
 
         std::vector<sf::Color> m_colours;
 

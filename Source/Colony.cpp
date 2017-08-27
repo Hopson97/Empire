@@ -5,8 +5,9 @@
 
 #include "Random.h"
 
-ColonyCreator::ColonyCreator(const sf::Image& image)
-:   m_pImage    (&image)
+ColonyCreator::ColonyCreator(const sf::Image& image, int colonies)
+:   m_pImage        (&image)
+,   m_numColonies   (colonies)
 {
     std::ifstream inFile("colours.txt");
     if (!inFile.is_open())
@@ -26,12 +27,12 @@ ColonyCreator::ColonyCreator(const sf::Image& image)
     }
 }
 
-std::array<sf::Vector2i, NUM_COLONIES> ColonyCreator::createColonyLocations(unsigned mapWidth, unsigned mapHeight) const
+std::vector<sf::Vector2i> ColonyCreator::createColonyLocations(unsigned mapWidth, unsigned mapHeight) const
 {
-    std::array<sf::Vector2i, NUM_COLONIES> locations;
+    std::vector<sf::Vector2i> locations(m_numColonies);
 
     //skip over colony 0
-    for (unsigned i = 1; i < NUM_COLONIES; i++)
+    for (unsigned i = 1; i < m_numColonies; i++)
     {
         int x, y;
         while (true)
@@ -49,16 +50,16 @@ std::array<sf::Vector2i, NUM_COLONIES> ColonyCreator::createColonyLocations(unsi
     return locations;
 }
 
-std::array<Colony, NUM_COLONIES> ColonyCreator::createColonyStats() const
+std::vector<Colony> ColonyCreator::createColonyStats() const
 {
-    std::array<Colony, NUM_COLONIES> colonies;
+    std::vector<Colony> colonies(m_numColonies);
 
     //Colony 0 is reserved for the dead
     colonies[0].colour  = {0, 0, 0, 0};
     colonies[0].id      = 0;
 
     //skip over colony 0
-    for (unsigned i = 1; i < NUM_COLONIES; i++)
+    for (unsigned i = 1; i < m_numColonies; i++)
     {
         auto& col    = colonies[i];
         col.colour   = m_colours[i];

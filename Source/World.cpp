@@ -10,8 +10,10 @@
 
 
 World::World(const Config& config)
-:   m_people    (config.width * config.height)
-,   m_pConfig   (&config)
+:   m_people        (config.width * config.height)
+,   m_colonies      (config.colonies)
+,   m_colonyStats   (config.colonies)
+,   m_pConfig       (&config)
 {
     m_worldTexture.loadFromImage(config.image);
     m_world.setTexture  (&m_worldTexture);
@@ -95,7 +97,7 @@ void World::update()
         newPeople[getIndex(m_pConfig->width, xMoveTo, yMoveTo)] = person;
 
         //try give birth
-        if (person.getData().productionCount >= REPRODUCE_THRESHOLD)
+        if (person.getData().productionCount >= m_pConfig->reproductionThreshold)
         {
             //The person itself has moved to a new spot, so it is ok to mess with it's data now
             person.init(person.getChild());
@@ -160,13 +162,13 @@ void World::drawText(sf::RenderWindow& window)
 
 void World::createColonies()
 {
-    ColonyCreator creator(m_pConfig->image);
+    ColonyCreator creator(m_pConfig->image, m_pConfig->colonies);
 
     auto locations  = creator.createColonyLocations(m_pConfig->width, m_pConfig->height);
     m_colonies      = creator.createColonyStats();
 
     //Place colonies at the locations
-    for (unsigned i = 1; i < NUM_COLONIES; i++)
+    for (unsigned i = 1; i < (unsigned)m_pConfig->colonies; i++)
     {
         auto& location = locations[i];
         //place up to 50 people at the location
@@ -199,7 +201,7 @@ void World::initText()
     int charSize = 17;
     m_statsFont.loadFromFile("res/arial.ttf");
 
-    for (int i = 0; i < NUM_COLONIES; i++)
+    for (int i = 0; i < m_pConfig->colonies; i++)
     {
         auto& stats = m_colonyStats[i];
         stats.name = "Colony " + std::to_string(i) + ": ";
