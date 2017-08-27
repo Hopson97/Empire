@@ -10,42 +10,43 @@ The rules are as follows:
         -Strength
         -Reproduction Value
         -Colony ID
-   
+
     -Each person also holds some booleans
         -Whether they are alive or dead
         -Whether they are diseased or not
-        
+
     -At the start:
         -A few "colonies" are set up. Each colony has their own colour value
         -A few random locations around a map are set up, for each colony to originate from
-        -50 people are placed are each of these locations, and are given the respective colony ID 
-        
+        -50 people are placed are each of these locations, and are given the respective colony ID
+
     SIMULATTION BEGINS
         -Each step:
             -Each person:
                 - Increases in "Age" and "Reproduction Value"
                 - Has a 50% chance of being cured of disease, given they have it
                 - Tries to move to a random spot around them:
-                    -If they try move onto water, they will not move 
+                    -If they try move onto water, they will not move
                     -If they try move onto land, they will move there
-                    
+
                     -If they try move to a place where someone of a DIFFERENT colony is:
                         -They fight:
                             -Person with higher strength value stays fine.
                             -Person with lower strength value dies.
-                            
+
                     -If they try move to a place where someone of the SAME colony is:
                         -If the person is diseased, then there is a 50% chance of giving/ catching it
-                        
+
                 -If the person's "Reproduction Value" is greater than a "Reproduction Threshold"
                     -The person gives birth
                     -The child:
-                        -Inherits the parent's strength value, and disease if the parent has it
+                        -Inherits the parent's Colony ID
+                        -Inherits the parent's Strength value
+                        -Inherits the parent's Disease (if parent is diseased)
                         -Has a chance of mutating:
                             -Slim Chance        -> Gets diseased
                             -Very Small Chance  -> Gets their strength value increased or decreased a lot
                             -Small Chance       -> Gets their strength value increased or decreased a small amount
-                        
-   
-                    
-            
+
+
+
