@@ -8,7 +8,7 @@ int main(int argc, char** argv)
     if (argc == 1)
     {
         std::cout << "No arguments, using default (World Map)\n";
-        config.image.loadFromFile("res/world_map.png");
+        config.image.loadFromFile("res/world_map_large.png");
         config.width    = config.image.getSize().x;
         config.height   = config.image.getSize().y;
     }
