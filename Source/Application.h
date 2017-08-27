@@ -16,6 +16,8 @@ class Application
         void run();
 
     private:
+        void makeImage();
+
         void pollEvents();
         void update();
 

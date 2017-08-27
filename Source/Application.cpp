@@ -1,5 +1,8 @@
 #include "Application.h"
 
+#include <iostream>
+#include <ctime>
+
 Application::Application(const Config& config)
 :   m_window    ({config.width, config.height}, "Empire", sf::Style::Close)
 ,   m_pixels    (config.width * config.height)
@@ -43,6 +46,41 @@ void Application::pollEvents()
         {
             m_window.close();
         }
+        else if (e.type == sf::Event::KeyPressed)
+        {
+            if (e.key.code == sf::Keyboard::P)
+            {
+                makeImage();
+            }
+        }
+    }
+}
+
+void Application::makeImage()
+{
+    static int imageCount = 0;
+    std::cout << "Making an image... Please hold...\n";
+    sf::Image image;
+
+    std::vector<sf::Uint8> unrolledPixels;
+    unrolledPixels.reserve(m_pixels.size() * 4);
+
+    cellForEach(*m_pConfig, [&](unsigned x, unsigned y)
+    {
+        auto& pixel = m_pixels[getIndex(m_pConfig->width, x, y)];
+
+        unrolledPixels.push_back(pixel.color.r);
+        unrolledPixels.push_back(pixel.color.g);
+        unrolledPixels.push_back(pixel.color.b);
+        unrolledPixels.push_back(pixel.color.a);
+    });
+
+    std::string fileName = "Screenshots/Screenshot" + std::to_string(imageCount++) + ".png";
+
+    image.create((int)m_pConfig->width, (int)m_pConfig->height, unrolledPixels.data());
+    if (image.saveToFile(fileName))
+    {
+        std::cout << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n";
     }
 }
 

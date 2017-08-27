@@ -3,6 +3,39 @@
 #include <iostream>
 #include <fstream>
 
+void parseConfig    (std::ifstream& inFile, Config& configFile);
+void printConfigTips();
+void printControls  ();
+
+int main()
+{
+    Config configFile;
+
+    std::cout << "Trying to load image...\n";
+
+    std::ifstream inFile("config.txt");
+    if (!inFile.is_open())
+    {
+        std::cerr << "Unable to open config, using default.\n";
+        configFile.image.loadFromFile("res/world_map_large.png");
+    }
+    else
+    {
+        parseConfig(inFile, configFile);
+    }
+
+    printConfigTips ();
+    printControls   ();
+
+
+
+    configFile.width    = configFile.image.getSize().x;
+    configFile.height   = configFile.image.getSize().y;
+
+    Application app(configFile);
+    app.run();
+}
+
 void parseConfig(std::ifstream& inFile, Config& configFile)
 {
 
@@ -48,32 +81,18 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
     }
 }
 
-int main()
+void printConfigTips()
 {
-    Config configFile;
-
-    std::cout << "Trying to load image...\n";
-
-    std::ifstream inFile("config.txt");
-    if (!inFile.is_open())
-    {
-        std::cerr << "Unable to open config, using default.\n";
-        configFile.image.loadFromFile("res/world_map_large.png");
-    }
-    else
-    {
-        parseConfig(inFile, configFile);
-    }
-
     std::cout   << "\nIf you want to customise your experience, then simply edit the values in config.txt. \nRecommended:\n"
                 << "Image:          world_map_full.png\n"
                 << "Reproduction:   8  [This is the threshold of reproduction, lower = higher birthrate]\n"
                 << "Colonies:       10 [This is the number of colonies the simulation begins with]\n"
-                << "Enjoy!\n";
+                << "Enjoy!\n\n";
+}
 
-    configFile.width    = configFile.image.getSize().x;
-    configFile.height   = configFile.image.getSize().y;
-
-    Application app(configFile);
-    app.run();
+void printControls  ()
+{
+    std::cout << "Controls: "
+                << "P -> Prints a screenshot of the people (without the background), see console window for the location and image name\n"
+                << "\n\n";
 }
