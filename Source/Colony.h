@@ -1,0 +1,6 @@
+#ifndef COLONY_H_INCLUDED
+#define COLONY_H_INCLUDED
+
+
+
+#endif // COLONY_H_INCLUDED
