@@ -47,5 +47,7 @@ The rules are as follows:
                             -Small Chance       -> Gets their strength value increased or decreased a small amount
                         
    
-                    
+# Deps:
+
+C++14 and up, SFML 2.4.1 and up
             
