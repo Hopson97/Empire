@@ -32,7 +32,7 @@ std::vector<sf::Vector2i> ColonyCreator::createColonyLocations(unsigned mapWidth
     std::vector<sf::Vector2i> locations(m_numColonies);
 
     //skip over colony 0
-    for (unsigned i = 1; i < m_numColonies; i++)
+    for (int i = 1; i < m_numColonies; i++)
     {
         int x, y;
         while (true)
@@ -59,7 +59,7 @@ std::vector<Colony> ColonyCreator::createColonyStats() const
     colonies[0].id      = 0;
 
     //skip over colony 0
-    for (unsigned i = 1; i < m_numColonies; i++)
+    for (int i = 1; i < m_numColonies; i++)
     {
         auto& col    = colonies[i];
         col.colour   = m_colours[i];

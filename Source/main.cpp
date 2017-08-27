@@ -33,6 +33,17 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
             inFile >> configFile.colonies;
             std::cout   << "Colony Count loaded, set to: "
                         << configFile.colonies << ".\n\n";
+
+            if (configFile.colonies < 0)
+            {
+                std::cout << "Colony count too low! Set to 10\n\n";
+                configFile.colonies = 10;
+            }
+            else if (configFile.colonies > 12)
+            {
+                std::cout << "Colony count too high! Set to 10\n\n";
+                configFile.colonies = 10;
+            }
         }
     }
 }
