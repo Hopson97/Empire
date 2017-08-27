@@ -1,28 +1,10 @@
 #ifndef WORLD_H_INCLUDED
 #define WORLD_H_INCLUDED
 
-#include <SFML/Graphics.hpp>
 #include "Person.h"
-
-constexpr int NUM_COLONIES = 12;
+#include "Colony.h"
 
 struct Config;
-
-struct Colony
-{
-    uint8_t     id;
-    uint16_t    startStrLow;
-    uint16_t    startStrHigh;
-    sf::Color   colour;
-};
-
-struct ColonyStatistics
-{
-    int strength    = 0;
-    int members     = 0;
-    sf::Text text;
-    std::string name;
-};
 
 class World
 {

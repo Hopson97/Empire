@@ -5,9 +5,6 @@
 
 #include "Config.h"
 
-
-const sf::Color& getColour(int i);
-
 unsigned getIndex(unsigned width, unsigned x, unsigned y);
 
 template<typename F>
