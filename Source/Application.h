@@ -34,8 +34,8 @@ class Application
         sf::Texture         m_pixelSurfaceTex;
         sf::RectangleShape  m_pixelSurface;
 
-        sf::Text t;
-        sf::Font f;
+        sf::Text m_GUIText;
+        sf::Font m_GUIFont;
 };
 
 #endif // APPLICATION_H_INCLUDED

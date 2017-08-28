@@ -15,9 +15,9 @@ Application::Application(const Config& config)
     m_pixelSurface.setSize({(float)config.width, (float)config.height});
     m_pixelSurface.setTexture(&m_pixelSurfaceTex);
 
-    f.loadFromFile("res/arial.ttf");
-    t.setFont(f);
-    t.setCharacterSize(15);
+    m_GUIFont.loadFromFile("res/arial.ttf");
+    m_GUIText.setFont(m_GUIFont);
+    m_GUIText.setCharacterSize(15);
 }
 
 void Application::run()
@@ -28,8 +28,7 @@ void Application::run()
     while (m_window.isOpen())
     {
         auto ti = c.restart().asSeconds();
-        t.setString("Years: " + std::to_string(year++)
-                 + " Frame time: " + std::to_string(ti) + "s");
+        m_GUIText.setString("Years: " + std::to_string(year++));
         m_window.clear();
 
         update();
@@ -39,7 +38,7 @@ void Application::run()
 
         m_window.draw(m_pixelSurface);
         m_world.drawText(m_window);
-        m_window.draw(t);
+        m_window.draw(m_GUIText);
 
         m_window.display();
         pollEvents();
