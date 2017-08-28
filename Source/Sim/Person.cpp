@@ -1,6 +1,6 @@
 #include "Person.h"
 
-#include "Random.h"
+#include "../Util/Random.h"
 
 Person::Person(const PersonData& data)
 :   m_data  (data)

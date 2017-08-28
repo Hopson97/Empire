@@ -1,6 +1,8 @@
 #ifndef CONFIG_H_INCLUDED
 #define CONFIG_H_INCLUDED
 
+#include <SFML/Graphics.hpp>
+
 struct Config
 {
     sf::Image   image;

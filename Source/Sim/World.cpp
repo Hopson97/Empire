@@ -3,9 +3,9 @@
 #include <iostream>
 #include <iomanip>
 
-#include "Random.h"
-#include "Common.h"
-#include "Config.h"
+#include "../Util/Random.h"
+#include "../Util/Common.h"
+#include "../Util/Config.h"
 
 //Optimization Test
 /*
@@ -230,15 +230,15 @@ void World::createColonies()
 
 void World::initText()
 {
-    int charSize = 17;
-    m_statsFont.loadFromFile("res/arial.ttf");
+    int charSize = 15;
+    m_statsFont.loadFromFile("Res/arial.ttf");
 
     for (int i = 0; i < m_pConfig->colonies; i++)
     {
         auto& stats = m_colonyStats[i];
         stats.name = "Colony " + std::to_string(i) + ": ";
         stats.text.setCharacterSize(charSize);
-        stats.text.move(10, m_pConfig->height - i * charSize - 30);
+        stats.text.move(0, i * charSize + 30);
         stats.text.setOutlineColor(sf::Color::Black);
         stats.text.setFillColor(m_colonies[i].colour);
         stats.text.setOutlineThickness(1);

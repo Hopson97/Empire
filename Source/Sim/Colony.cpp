@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "Random.h"
+#include "../Util/Random.h"
 
 ColonyCreator::ColonyCreator(const sf::Image& image, int colonies)
 :   m_pImage        (&image)

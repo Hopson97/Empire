@@ -3,6 +3,8 @@
 #include <iostream>
 #include <ctime>
 
+#include "Util/Common.h"
+
 Application::Application(const Config& config)
 :   m_window    ({config.width, config.height}, "Empire")
 ,   m_world     (config)
@@ -15,14 +17,14 @@ Application::Application(const Config& config)
     m_pixelSurface.setSize({(float)config.width, (float)config.height});
     m_pixelSurface.setTexture(&m_pixelSurfaceTex);
 
-    m_GUIFont.loadFromFile("res/arial.ttf");
+    m_GUIFont.loadFromFile("Res/arial.ttf");
     m_GUIText.setFont(m_GUIFont);
     m_GUIText.setCharacterSize(15);
 
     m_button.setSize({32, 32});
     m_button.setPosition(8, 8);
 
-    m_buttonTexture.loadFromFile("res/sigma.png");
+    m_buttonTexture.loadFromFile("Res/sigma.png");
     m_button.setTexture(&m_buttonTexture);
 }
 

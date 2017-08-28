@@ -4,9 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-#include "World.h"
-#include "Common.h"
-#include "Config.h"
+#include "Sim/World.h"
+
+struct Config;
 
 class Application
 {
