@@ -12,6 +12,10 @@ Application::Application(const Config& config)
 ,   m_world     (config)
 ,   m_pConfig   (&config)
 {
+    m_view.setCenter({(float)config.width / 2, (float)config.height / 2});
+    m_view.setSize  ({(float)config.width,     (float)config.height});
+
+
     m_pixelBuffer.create(m_pConfig->width, m_pConfig->height);
     updateImage();
 
@@ -29,32 +33,20 @@ Application::Application(const Config& config)
 
 void Application::run()
 {
+    sf::Clock deltaClock;
     unsigned year = 0;
     while (m_window.isOpen())
     {
         m_GUIText.setString("Years: " + std::to_string(year++));
         m_window.clear();
 
-        update();
-
-        m_world.draw(m_window);
-
-        m_window.draw(m_pixelSurface);
-
-        auto pos = sf::Mouse::getPosition(m_window);
-        if (m_button.getGlobalBounds().contains(pos.x, pos.y))
-        {
-            m_world.drawText(m_window);
-            m_window.draw(m_GUIText);
-        }
-        else
-        {
-            m_window.draw(m_button);
-        }
+        input   (deltaClock.restart().asSeconds());
+        update  ();
+        render  ();
 
         m_window.display();
+
         pollEvents();
-        m_frameCount++;
     }
 }
 
@@ -73,6 +65,14 @@ void Application::pollEvents()
             if (e.key.code == sf::Keyboard::P)
             {
                 makeImage();
+            }
+            if (e.key.code == sf::Keyboard::Up)
+            {
+                m_view.zoom(0.99);
+            }
+            if (e.key.code == sf::Keyboard::Down)
+            {
+                m_view.zoom(1.01);
             }
         }
     }
@@ -103,6 +103,30 @@ void Application::updateImage()
     });
 }
 
+void Application::input(float dt)
+{
+    float speed = 100;
+    sf::Vector2f change;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    {
+        change.y -= speed;
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    {
+        change.y += speed;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    {
+        change.x -= speed;
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+        change.x += speed;
+    }
+
+    m_view.move(change * dt);
+}
+
 void Application::update()
 {
     m_world.update();
@@ -111,4 +135,22 @@ void Application::update()
     m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
 }
 
+void Application::render()
+{
+    m_window.setView(m_view);
+    m_world.draw(m_window);
+    m_window.draw(m_pixelSurface);
+    m_window.setView(m_window.getDefaultView());
+
+    auto pos = sf::Mouse::getPosition(m_window);
+    if (m_button.getGlobalBounds().contains(pos.x, pos.y))
+    {
+        m_world.drawText(m_window);
+        m_window.draw(m_GUIText);
+    }
+    else
+    {
+        m_window.draw(m_button);
+    }
+}
 

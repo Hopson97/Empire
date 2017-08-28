@@ -20,13 +20,13 @@ class Application
         void updateImage();
 
         void pollEvents();
-        void update();
+        void input  (float dt);
+        void update ();
+        void render ();
 
         sf::RenderWindow m_window;
 
         World m_world;
-
-        int m_frameCount = 0;
 
         const Config* m_pConfig;
 
@@ -36,6 +36,8 @@ class Application
 
         sf::Text m_GUIText;
         sf::RectangleShape m_button;
+
+        sf::View m_view;
 };
 
 #endif // APPLICATION_H_INCLUDED
