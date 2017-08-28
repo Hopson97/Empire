@@ -4,31 +4,40 @@
 #include <ctime>
 
 Application::Application(const Config& config)
-:   m_window    ({config.width, config.height}, "Empire", sf::Style::Close)
-,   m_pixels    (config.width * config.height)
+:   m_window    ({config.width, config.height}, "Empire")
 ,   m_world     (config)
 ,   m_pConfig   (&config)
 {
-    m_window.setFramerateLimit(100);
-    cellForEach(*m_pConfig, [&](int x, int y)
-    {
-        auto& p     = m_pixels[getIndex(m_pConfig->width, x, y)];
-        p.position  = {(float)x, (float)y};
-        p.color     = m_world.getColorAt(x, y);
-    });
+    m_pixelBuffer.create(m_pConfig->width, m_pConfig->height);
+    updateImage();
+
+    m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
+    m_pixelSurface.setSize({(float)config.width, (float)config.height});
+    m_pixelSurface.setTexture(&m_pixelSurfaceTex);
+
+    f.loadFromFile("res/arial.ttf");
+    t.setFont(f);
+    t.setCharacterSize(15);
 }
 
 void Application::run()
 {
+    sf::Clock c;
     while (m_window.isOpen())
     {
+        auto ti = c.restart().asSeconds();
+        t.setString("Frame time: " + std::to_string(ti) + "s");
         m_window.clear();
 
         update();
 
         m_world.draw(m_window);
-        m_window.draw(m_pixels.data(), m_pixels.size(), sf::Points);
+
+        m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
+
+        m_window.draw(m_pixelSurface);
         m_world.drawText(m_window);
+        m_window.draw(t);
 
         m_window.display();
         pollEvents();
@@ -56,55 +65,35 @@ void Application::pollEvents()
     }
 }
 
+//Takes the pixels that makes up the people, and save it to an image
 void Application::makeImage()
 {
     static int imageCount = 0;
-    std::cout << "Making an image... Please hold...\n";
-    sf::Image image;
-
-    std::vector<sf::Uint8> unrolledPixels;
-    unrolledPixels.reserve(m_pixels.size() * 4);
-
-    cellForEach(*m_pConfig, [&](unsigned x, unsigned y)
-    {
-        auto& pixel = m_pixels[getIndex(m_pConfig->width, x, y)];
-
-        unrolledPixels.push_back(pixel.color.r);
-        unrolledPixels.push_back(pixel.color.g);
-        unrolledPixels.push_back(pixel.color.b);
-        unrolledPixels.push_back(pixel.color.a);
-    });
-
+    std::cout << "Saving image... Please hold...\n";
     std::string fileName = "Screenshots/Screenshot" + std::to_string(imageCount++) + ".png";
 
-    image.create((int)m_pConfig->width, (int)m_pConfig->height, unrolledPixels.data());
-    if (image.saveToFile(fileName))
+    if (m_pixelBuffer.saveToFile(fileName))
     {
-        std::cout << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n";
+        std::cout << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n\n";
     }
+    else
+    {
+        std::cout << "Failed to save!\n\n";
+    }
+}
+
+void Application::updateImage()
+{
+    cellForEach(*m_pConfig, [&](unsigned x, unsigned y)
+    {
+        m_pixelBuffer.setPixel(x, y, m_world.getColorAt(x, y));
+    });
 }
 
 void Application::update()
 {
     m_world.update();
-    cellForEach(*m_pConfig, [&](unsigned x, unsigned y)
-    {
-        m_pixels[getIndex(m_pConfig->width, x, y)].color = m_world.getColorAt(x, y);
-    });
+    updateImage();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

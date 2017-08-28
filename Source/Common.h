@@ -8,68 +8,65 @@
 
 unsigned getIndex(unsigned width, unsigned x, unsigned y);
 
+enum Direction
+{
+    Increase,
+    Decrease
+};
+
+template<typename F>
+void iterateInDirection(Direction direction,
+                        unsigned lower_bound,
+                        unsigned upper_bound,
+                        F action)
+{
+    switch(direction)
+    {
+        case Direction::Increase:
+            for (unsigned i = lower_bound; i < upper_bound; i++)
+            {
+                action(i);
+            }
+            break;
+
+        case Direction::Decrease:
+            for (unsigned i = upper_bound - 1; i > lower_bound; i--)
+            {
+                action(i);
+            }
+            break;
+    }
+}
+
 //This loops the cells in a random order, eg might go from bottom left to top right,
 //or top left to bottom right.
 //This is there is less bias towards a certain direction
 template<typename F>
 void randomCellForEach(const Config& config, F f)
 {
-    int option = Random::get().intInRange(0, 3);
-    switch (option)
+    auto xDir = (Direction)Random::get().intInRange(0, 1);
+    auto yDir = (Direction)Random::get().intInRange(0, 1);
+
+    iterateInDirection(xDir, 0, config.height, [&](auto y)
     {
-        case 0:
-            for (unsigned y = 0; y < config.height; y++)
-            {
-                for (unsigned x = 0; x < config.width; x++)
-                {
-                    f(x, y);
-                }
-            }
-            break;
-
-        case 1:
-            for (unsigned y = config.height - 1; y > 0; y--)
-            {
-                for (unsigned x = 0; x < config.width; x++)
-                {
-                    f(x, y);
-                }
-            }
-            break;
-
-        case 2:
-            for (unsigned y = 0; y < config.height; y++)
-            {
-                for (unsigned x = config.width - 1; x > 0; x--)
-                {
-                    f(x, y);
-                }
-            }
-            break;
-
-        case 3:
-            for (unsigned y = config.height - 1; y > 0; y--)
-            {
-                for (unsigned x = config.width - 1; x > 0; x--)
-                {
-                    f(x, y);
-                }
-            }
-            break;
-    }
+        iterateInDirection(yDir, 0, config.width, [&](auto x)
+        {
+            f(x, y);
+        });
+    });
 }
 
 
 template<typename F>
 void cellForEach(const Config& config, F f)
 {
-    for (unsigned y = 0; y < config.height; y++)
+    iterateInDirection(Direction::Increase, 0, config.height, [&](auto y)
     {
-        for (unsigned x = 0; x < config.width; x++)
+        iterateInDirection(Direction::Increase, 0, config.width, [&](auto x)
         {
             f(x, y);
-        }
-    }
+        });
+    });
 }
 
 #endif // COMMON_H_INCLUDED

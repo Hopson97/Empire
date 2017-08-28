@@ -27,8 +27,6 @@ int main()
     printConfigTips ();
     printControls   ();
 
-
-
     configFile.width    = configFile.image.getSize().x;
     configFile.height   = configFile.image.getSize().y;
 
@@ -65,17 +63,16 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
         {
             inFile >> configFile.colonies;
             std::cout   << "Colony Count loaded, set to: "
-                        << configFile.colonies << ".\n\n";
-
-            if (configFile.colonies < 0)
+                        << configFile.colonies++ << ".\n\n";
+            if (configFile.colonies <= 2)
             {
-                std::cout << "Colony count too low! Set to 10\n\n";
-                configFile.colonies = 10;
+                std::cout << "Colony count too low! Setting to MIN [3]\n";
+                configFile.colonies = 3;
             }
-            else if (configFile.colonies > 12)
+            else if (configFile.colonies > 400)
             {
-                std::cout << "Colony count too high! Set to 10\n\n";
-                configFile.colonies = 10;
+                std::cout << "Colony count too high! Setting to MAX [400]\n";
+                configFile.colonies = 400;
             }
         }
     }
@@ -87,12 +84,14 @@ void printConfigTips()
                 << "Image:          world_map_full.png\n"
                 << "Reproduction:   8  [This is the threshold of reproduction, lower = higher birthrate]\n"
                 << "Colonies:       10 [This is the number of colonies the simulation begins with]\n"
+                << "Bare in mind, setting the colony count too high can cause CRASHES, hence it will check your number, and change it if you set it too high\n"
                 << "Enjoy!\n\n";
 }
 
 void printControls  ()
 {
     std::cout << "Controls: "
-                << "P -> Prints a screenshot of the people (without the background), see console window for the location and image name\n"
+                << "P -> Prints a screenshot of the people (without the background).\n"
+                << "See console window for the location and image name\n"
                 << "\n\n";
 }
