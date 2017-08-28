@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <functional>
 
 #include "../Util/Random.h"
 #include "../Util/Common.h"
@@ -9,34 +10,7 @@
 #include "../ResourceManager/ResourceHolder.h"
 
 //Optimization Test
-/*
-class Defer
-{
-    public:
-        Defer(const World& world, sf::Image& image, unsigned x, unsigned y)
-        :   m_world (world)
-        ,   m_image (m_image)
-        ,   m_x     (x)
-        ,   m_y     (y){}
 
-
-        Defer& operator =   (const Defer&) = delete;
-        Defer               (const Defer&) = delete;
-
-        ~Defer()
-        {
-            m_image.setPixel(m_x, m_y, m_world.getColorAt(m_x, m_y));
-        }
-
-    private:
-        const World& m_world;
-        sf::Image&   m_image;
-
-        unsigned m_x, m_y;
-
-
-};
-*/
 World::World(const Config& config)
 :   m_people        (config.width * config.height)
 ,   m_colonies      (config.colonies)
@@ -64,9 +38,8 @@ void World::update()
 
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
-        //Defer d(*this, image, x, y);
         auto& person    = m_people[getIndex(m_pConfig->width, x, y)];
-        auto& stats   = m_colonyStats[person.getData().colony];
+        auto& stats     = m_colonyStats[person.getData().colony];
 
         if (!person.getData().isAlive)
             return;
