@@ -1,9 +1,9 @@
 IMAGE
-world_map.png
+world_bridge.png
 
 REPRODUCTION
 8
 
 COLONIES
-9
+14
 

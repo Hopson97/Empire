@@ -18,6 +18,12 @@ Application::Application(const Config& config)
     m_GUIFont.loadFromFile("res/arial.ttf");
     m_GUIText.setFont(m_GUIFont);
     m_GUIText.setCharacterSize(15);
+
+    m_button.setSize({32, 32});
+    m_button.setPosition(8, 8);
+
+    m_buttonTexture.loadFromFile("res/sigma.png");
+    m_button.setTexture(&m_buttonTexture);
 }
 
 void Application::run()
@@ -35,10 +41,18 @@ void Application::run()
 
         m_world.draw(m_window);
 
-
         m_window.draw(m_pixelSurface);
-        m_world.drawText(m_window);
-        m_window.draw(m_GUIText);
+
+        auto pos = sf::Mouse::getPosition(m_window);
+        if (m_button.getGlobalBounds().contains(pos.x, pos.y))
+        {
+            m_world.drawText(m_window);
+            m_window.draw(m_GUIText);
+        }
+        else
+        {
+            m_window.draw(m_button);
+        }
 
         m_window.display();
         pollEvents();

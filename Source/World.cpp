@@ -56,6 +56,7 @@ void World::update()
 
     for (auto& c : m_colonyStats)
     {
+        c.highestStrength = 0;
         c.members = 0;
         c.strength = 0;
     }
@@ -87,6 +88,7 @@ void World::update()
         //, stay put
         if (isWater(xMoveTo, yMoveTo))
         {
+            stats.highestStrength = std::max(stats.highestStrength, strength);
             stats.strength    += strength;
             stats.members     ++;
             newPeople[getIndex(m_pConfig->width, x, y)] = person;
@@ -94,6 +96,7 @@ void World::update()
         }
         else if (movePerson.getData().colony == person.getData().colony)
         {
+            stats.highestStrength = std::max(stats.highestStrength, strength);
             stats.strength  += strength;
             stats.members ++;
 
@@ -142,6 +145,7 @@ void World::update()
         //Finally, do stuff for the stats
         stats.members ++;
         stats.strength  += strength;
+        stats.highestStrength = std::max(stats.highestStrength, strength);
     });
     m_people = std::move(newPeople);
 }
@@ -180,7 +184,8 @@ void World::drawText(sf::RenderWindow& window)
         stream  << std::left
                 << std::setw(10)    << stats.name
                 << std::setw(7)     << stats.members
-                << std::setw(10)    << " Avg Str: " << averageStr << '\n';
+                << std::setw(10)    << " Avg Str: " << averageStr
+                << std::setw(10)    << " Max Str  " << stats.highestStrength << '\n';
 
         stats.text.setString(stream.str());
         window.draw(stats.text);

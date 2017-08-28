@@ -36,6 +36,9 @@ class Application
 
         sf::Text m_GUIText;
         sf::Font m_GUIFont;
+
+        sf::RectangleShape m_button;
+        sf::Texture        m_buttonTexture;
 };
 
 #endif // APPLICATION_H_INCLUDED
