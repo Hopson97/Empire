@@ -1,9 +1,8 @@
 IMAGE
-mars.png
+earth_large.png
 
 REPRODUCTION
 8
 
 COLONIES
-14
-
+5

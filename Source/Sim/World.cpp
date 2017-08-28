@@ -6,6 +6,7 @@
 #include "../Util/Random.h"
 #include "../Util/Common.h"
 #include "../Util/Config.h"
+#include "../ResourceManager/ResourceHolder.h"
 
 //Optimization Test
 /*
@@ -231,8 +232,6 @@ void World::createColonies()
 void World::initText()
 {
     int charSize = 15;
-    m_statsFont.loadFromFile("Res/arial.ttf");
-
     for (int i = 0; i < m_pConfig->colonies; i++)
     {
         auto& stats = m_colonyStats[i];
@@ -242,7 +241,7 @@ void World::initText()
         stats.text.setOutlineColor(sf::Color::Black);
         stats.text.setFillColor(m_colonies[i].colour);
         stats.text.setOutlineThickness(1);
-        stats.text.setFont(m_statsFont);
+        stats.text.setFont(ResourceHolder::get().fonts.get("arial"));
     }
 }
 

@@ -26,7 +26,6 @@ class World
 
         sf::RectangleShape  m_world;
         sf::Texture         m_worldTexture;
-        sf::Font            m_statsFont;
 
         std::vector<Person>             m_people;
         std::vector<Colony>             m_colonies;
