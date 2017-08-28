@@ -1,5 +1,5 @@
 IMAGE
-world_bridge.png
+mars.png
 
 REPRODUCTION
 8

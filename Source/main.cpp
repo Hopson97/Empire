@@ -44,7 +44,7 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
         if (str == "IMAGE")
         {
             inFile >> str;
-            if (!configFile.image.loadFromFile("Res/" + str))
+            if (!configFile.image.loadFromFile("Res/Maps/" + str))
             {
                 std::cerr << "Unable to open \"" << str << "\", using default.\n\n";
                 configFile.image.loadFromFile("Res/Maps/world_map_large.png");
