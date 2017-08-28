@@ -61,9 +61,19 @@ std::vector<Colony> ColonyCreator::createColonyStats() const
     //skip over colony 0
     for (int i = 1; i < m_numColonies; i++)
     {
-        auto& col    = colonies[i];
-        col.colour   = m_colours[i];
-        col.id       = i;
+        auto& col = colonies[i];
+        if (i > (int)m_colours.size() - 1)
+        {
+            sf::Uint8 r = Random::get().intInRange(0, 255);
+            sf::Uint8 g = Random::get().intInRange(0, 255);
+            sf::Uint8 b = Random::get().intInRange(0, 255);
+            col.colour   = {r, g, b};
+        }
+        else
+        {
+            colonies[i].colour   = m_colours[i];
+        }
+        colonies[i].id = i;
     }
 
     return colonies;

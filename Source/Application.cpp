@@ -22,18 +22,20 @@ Application::Application(const Config& config)
 
 void Application::run()
 {
+    unsigned year = 0;
     sf::Clock c;
+
     while (m_window.isOpen())
     {
         auto ti = c.restart().asSeconds();
-        t.setString("Frame time: " + std::to_string(ti) + "s");
+        t.setString("Years: " + std::to_string(year++)
+                 + " Frame time: " + std::to_string(ti) + "s");
         m_window.clear();
 
         update();
 
         m_world.draw(m_window);
 
-        m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
 
         m_window.draw(m_pixelSurface);
         m_world.drawText(m_window);
@@ -94,6 +96,8 @@ void Application::update()
 {
     m_world.update();
     updateImage();
+
+    m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
 }
 
 
