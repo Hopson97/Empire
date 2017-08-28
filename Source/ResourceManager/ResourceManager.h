@@ -11,7 +11,7 @@ class ResourceManager
 
     public:
         ResourceManager (CrString folder, CrString extention)
-        :   m_folder    ("res/" + folder + "/")
+        :   m_folder    ("Res/" + folder + "/")
         ,   m_extention ("." + extention)
         { }
 
