@@ -1,6 +1,5 @@
 cmake_minimum_required (VERSION 3.0.2)
 project (Empire)
-file(GLOB SOURCE *.cpp)
 add_executable (empire 
 ./Source/main.cpp
 ./Source/ResourceManager/ResourceHolder.cpp
@@ -9,6 +8,5 @@ add_executable (empire
 ./Source/Sim/Colony.cpp
 ./Source/Application.cpp
 ./Source/Util/Common.cpp
-./Source/Util/Random.cpp
-)
+./Source/Util/Random.cpp)
 target_link_libraries (empire -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system)
