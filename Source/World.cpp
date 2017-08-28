@@ -33,24 +33,23 @@ void World::update()
         c.strength = 0;
     }
 
-    for (unsigned y = 0; y < m_pConfig->height; y++)
-    for (unsigned x = 0; x < m_pConfig->width; x++)
+    randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
         auto& person    = m_people[getIndex(m_pConfig->width, x, y)];
         auto& stats   = m_colonyStats[person.getData().colony];
 
         if (!person.getData().isAlive)
-            continue;
+            return;
         person.update();
         if (!person.getData().isAlive)
-            continue;
+            return;
 
 
         //Get new location to move to
         int xMoveTo = x + Random::get().intInRange(-1, 1);
         int yMoveTo = y + Random::get().intInRange(-1, 1);
-        if (xMoveTo < 0 || xMoveTo >= (int)m_pConfig->width) continue;
-        if (yMoveTo < 0 || yMoveTo >= (int)m_pConfig->height) continue;
+        if (xMoveTo < 0 || xMoveTo >= (int)m_pConfig->width) return;
+        if (yMoveTo < 0 || yMoveTo >= (int)m_pConfig->height) return;
 
         //Store this for the stats to use at the end of the loop
         auto  strength      = person.getData().strength;
@@ -63,7 +62,7 @@ void World::update()
             stats.strength    += strength;
             stats.members     ++;
             newPeople[getIndex(m_pConfig->width, x, y)] = person;
-            continue;
+            return;
         }
         else if (movePerson.getData().colony == person.getData().colony)
         {
@@ -76,7 +75,7 @@ void World::update()
             }
 
             newPeople[getIndex(m_pConfig->width, x, y)] = person;
-            continue;
+            return;
         }
 
 
@@ -89,7 +88,7 @@ void World::update()
                 person.fight(movePerson);
                 if (!person.getData().isAlive)
                 {
-                    continue;
+                    return;
                 }
             }
         }
@@ -115,7 +114,7 @@ void World::update()
         //Finally, do stuff for the stats
         stats.members ++;
         stats.strength  += strength;
-    }
+    });
     m_people = std::move(newPeople);
 }
 
