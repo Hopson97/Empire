@@ -12,6 +12,8 @@ Application::Application(const Config& config)
 ,   m_world     (config)
 ,   m_pConfig   (&config)
 {
+    m_window.setFramerateLimit(100);
+
     m_view.setCenter({(float)config.width / 2, (float)config.height / 2});
     m_view.setSize  ({(float)config.width,     (float)config.height});
 
@@ -28,7 +30,29 @@ Application::Application(const Config& config)
 
     m_button.setSize({32, 32});
     m_button.setPosition(8, 8);
+
     m_button.setTexture(&ResourceHolder::get().textures.get("sigma"));
+
+    m_threads.emplace_back([&]()
+    {
+        sf::Clock c;
+        while (m_window.isOpen())
+        {
+            if (c.getElapsedTime().asMilliseconds() >= 20)
+            {
+                updateImage();
+                c.restart();
+            }
+        }
+    });
+}
+
+Application::~Application()
+{
+    for (auto& t : m_threads)
+    {
+        t.join();
+    }
 }
 
 void Application::run()
@@ -97,10 +121,12 @@ void Application::makeImage()
 
 void Application::updateImage()
 {
+    m_worldMutex.lock();
     cellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
         m_pixelBuffer.setPixel(x, y, m_world.getColorAt(x, y));
     });
+    m_worldMutex.unlock();
 }
 
 void Application::input(float dt)
@@ -129,10 +155,11 @@ void Application::input(float dt)
 
 void Application::update()
 {
+    m_worldMutex.lock();
     m_world.update();
-    updateImage();
-
+    //updateImage();
     m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
+    m_worldMutex.unlock();
 }
 
 void Application::render()
