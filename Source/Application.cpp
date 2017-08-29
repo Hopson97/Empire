@@ -4,6 +4,7 @@
 #include <ctime>
 #include <thread>
 
+#include "Native/Native.h"
 #include "Util/Common.h"
 
 #include "ResourceManager/ResourceHolder.h"
@@ -95,11 +96,11 @@ void Application::makeImage()
 
     if (m_pixelBuffer.saveToFile(fileName))
     {
-        std::cout << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n\n";
+        std::cout << TextColour::Green << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n\n" << TextColour::White;
     }
     else
     {
-        std::cout << "Failed to save!\n\n";
+        std::cout << TextColour::Red << "Failed to save!\n\n" << TextColour::White;
     }
 }
 

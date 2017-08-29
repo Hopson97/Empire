@@ -9,8 +9,8 @@ add_executable (empire
 ./Source/Application.cpp
 ./Source/Util/Common.cpp
 ./Source/Util/Random.cpp
-./Source/Util/FPSCounter.cpp)
-target_link_libraries (empire -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system -lpthread)
+./Source/Util/FPSCounter.cpp
+./Source/Native/Win32.cpp)
 file(COPY Res colours.txt config.txt DESTINATION ${CMAKE_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Screenshots)
 find_package(Threads)
