@@ -136,8 +136,8 @@ void Application::input(float dt)
 
 void Application::update()
 {
-    m_world.update();
-    updateImage();
+    m_world.update(m_pixelBuffer);
+    //updateImage();
 }
 
 void Application::render()

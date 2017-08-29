@@ -11,7 +11,7 @@ class World
     public:
         World(const Config& config);
 
-        void update     ();
+        void update     (sf::Image& image);
         void draw       (sf::RenderWindow& window) const;
         void drawText   (sf::RenderWindow& window);
 
