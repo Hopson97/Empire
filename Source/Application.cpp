@@ -48,10 +48,9 @@ void Application::run()
         m_fpsCounter.update();
 
         input   (deltaClock.restart().asSeconds());
-        std::thread tupdate (&Application::update, this);
+        update  ();
 
         m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
-        tupdate.join();
         render  ();
 
         m_window.display();
