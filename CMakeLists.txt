@@ -8,7 +8,8 @@ add_executable (empire
 ./Source/Sim/Colony.cpp
 ./Source/Application.cpp
 ./Source/Util/Common.cpp
-./Source/Util/Random.cpp)
+./Source/Util/Random.cpp
+./Source/Util/FPSCounter.cpp)
 target_link_libraries (empire -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system -lpthread)
 file(COPY Res colours.txt config.txt DESTINATION ${CMAKE_BINARY_DIR})
 find_package(Threads)
