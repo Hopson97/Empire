@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <ctime>
+#include <thread>
 
 #include "Native/Native.h"
 #include "Util/Common.h"
@@ -72,7 +73,7 @@ void Application::pollEvents()
         {
             if (e.key.code == sf::Keyboard::P)
             {
-                makeImage();
+                std::thread(&Application::makeImage, this).detach();
             }
             if (e.key.code == sf::Keyboard::Up)
             {
