@@ -38,7 +38,7 @@ Application::Application(const Config& config)
         sf::Clock c;
         while (m_window.isOpen())
         {
-            if (c.getElapsedTime().asMilliseconds() >= 15)
+            //if (c.getElapsedTime().asMilliseconds() >= 15)
             {
                 update();
                 c.restart();
