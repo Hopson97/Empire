@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.0.2)
 project (Empire)
+find_package(Threads)
+find_package(SFML 2 REQUIRED network audio graphics window system)
 add_executable (empire 
 ./Source/main.cpp
 ./Source/ResourceManager/ResourceHolder.cpp
@@ -9,4 +11,5 @@ add_executable (empire
 ./Source/Application.cpp
 ./Source/Util/Common.cpp
 ./Source/Util/Random.cpp)
-target_link_libraries (empire -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system)
+include_directories(${SFML_INCLUDE_DIR})
+target_link_libraries (empire ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} Threads::Threads)

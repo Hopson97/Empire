@@ -1,0 +1,3 @@
+/home/spartan322/Projects/CPP/EmpireMod/Empire/CMakeFiles/rebuild_cache.dir
+/home/spartan322/Projects/CPP/EmpireMod/Empire/CMakeFiles/empire.dir
+/home/spartan322/Projects/CPP/EmpireMod/Empire/CMakeFiles/edit_cache.dir

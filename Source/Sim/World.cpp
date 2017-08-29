@@ -12,7 +12,7 @@
 //Optimization Test
 
 World::World(const Config& config)
-:   m_people        (config.width * config.height)
+:   m_people        (config.width, config.height)
 ,   m_colonies      (config.colonies)
 ,   m_colonyStats   (config.colonies)
 ,   m_pConfig       (&config)
@@ -27,7 +27,7 @@ World::World(const Config& config)
 
 void World::update()
 {
-    std::vector<Person> newPeople(m_pConfig->width * m_pConfig->height);
+    Grid<Person> newPeople(m_pConfig->width, m_pConfig->height);
 
     for (auto& c : m_colonyStats)
     {
@@ -38,7 +38,7 @@ void World::update()
 
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
-        auto& person    = m_people[getIndex(m_pConfig->width, x, y)];
+        auto& person    = m_people(x, y);
         auto& stats     = m_colonyStats[person.getData().colony];
 
         if (!person.getData().isAlive)
@@ -56,7 +56,7 @@ void World::update()
 
         //Store this for the stats to use at the end of the loop
         auto  strength      = person.getData().strength;
-        auto& movePerson    = m_people[getIndex(m_pConfig->width, xMoveTo, yMoveTo)];
+        auto& movePerson    = m_people(xMoveTo, yMoveTo);
 
         //If trying to move onto water or onto square where person of same colony is
         //, stay put
@@ -65,7 +65,7 @@ void World::update()
             stats.highestStrength = std::max(stats.highestStrength, strength);
             stats.strength    += strength;
             stats.members     ++;
-            newPeople[getIndex(m_pConfig->width, x, y)] = person;
+            newPeople(x, y) = person;
             return;
         }
         else if (movePerson.getData().colony == person.getData().colony)
@@ -79,7 +79,7 @@ void World::update()
                 person.giveDisease();
             }
 
-            newPeople[getIndex(m_pConfig->width, x, y)] = person;
+            newPeople(x, y) = person;
             return;
         }
 
@@ -98,7 +98,7 @@ void World::update()
             }
         }
         //if the fight is survived, then good news!
-        newPeople[getIndex(m_pConfig->width, xMoveTo, yMoveTo)] = person;
+        newPeople(xMoveTo, yMoveTo) = person;
 
         //try give birth
         if (person.getData().productionCount >= m_pConfig->reproductionThreshold)
@@ -113,7 +113,7 @@ void World::update()
         }
 
         //This will either be a dead person, or a newborn
-        newPeople[getIndex(m_pConfig->width, x, y)] = person;
+        newPeople(x, y) = person;
 
 
         //Finally, do stuff for the stats
@@ -126,7 +126,7 @@ void World::update()
 
 const sf::Color& World::getColorAt(unsigned x, unsigned y) const
 {
-    return m_colonies[m_people[getIndex(m_pConfig->width, x, y)].getData().colony].colour;
+    return m_colonies[m_people(x, y).getData().colony].colour;
 }
 
 bool World::isGrass(unsigned x, unsigned y) const
@@ -196,7 +196,7 @@ void World::createColonies()
             data.isAlive    = true;
             data.colony     = i;
 
-            m_people[getIndex(m_pConfig->width, newLocationX, newLocationY)].init(data);
+            m_people(newLocationX, newLocationY).init(data);
 
         }
     }

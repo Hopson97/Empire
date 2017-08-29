@@ -22,3 +22,6 @@ Project/
 
 #exe
 *.exe
+
+#unix exe
+empire
