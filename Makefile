@@ -150,6 +150,33 @@ Source/Application.cpp.s:
 	$(MAKE) -f CMakeFiles/empire.dir/build.make CMakeFiles/empire.dir/Source/Application.cpp.s
 .PHONY : Source/Application.cpp.s
 
+Source/Native/Win32.o: Source/Native/Win32.cpp.o
+
+.PHONY : Source/Native/Win32.o
+
+# target to build an object file
+Source/Native/Win32.cpp.o:
+	$(MAKE) -f CMakeFiles/empire.dir/build.make CMakeFiles/empire.dir/Source/Native/Win32.cpp.o
+.PHONY : Source/Native/Win32.cpp.o
+
+Source/Native/Win32.i: Source/Native/Win32.cpp.i
+
+.PHONY : Source/Native/Win32.i
+
+# target to preprocess a source file
+Source/Native/Win32.cpp.i:
+	$(MAKE) -f CMakeFiles/empire.dir/build.make CMakeFiles/empire.dir/Source/Native/Win32.cpp.i
+.PHONY : Source/Native/Win32.cpp.i
+
+Source/Native/Win32.s: Source/Native/Win32.cpp.s
+
+.PHONY : Source/Native/Win32.s
+
+# target to generate assembly for a file
+Source/Native/Win32.cpp.s:
+	$(MAKE) -f CMakeFiles/empire.dir/build.make CMakeFiles/empire.dir/Source/Native/Win32.cpp.s
+.PHONY : Source/Native/Win32.cpp.s
+
 Source/ResourceManager/ResourceHolder.o: Source/ResourceManager/ResourceHolder.cpp.o
 
 .PHONY : Source/ResourceManager/ResourceHolder.o
@@ -285,6 +312,33 @@ Source/Util/Common.cpp.s:
 	$(MAKE) -f CMakeFiles/empire.dir/build.make CMakeFiles/empire.dir/Source/Util/Common.cpp.s
 .PHONY : Source/Util/Common.cpp.s
 
+Source/Util/FPSCounter.o: Source/Util/FPSCounter.cpp.o
+
+.PHONY : Source/Util/FPSCounter.o
+
+# target to build an object file
+Source/Util/FPSCounter.cpp.o:
+	$(MAKE) -f CMakeFiles/empire.dir/build.make CMakeFiles/empire.dir/Source/Util/FPSCounter.cpp.o
+.PHONY : Source/Util/FPSCounter.cpp.o
+
+Source/Util/FPSCounter.i: Source/Util/FPSCounter.cpp.i
+
+.PHONY : Source/Util/FPSCounter.i
+
+# target to preprocess a source file
+Source/Util/FPSCounter.cpp.i:
+	$(MAKE) -f CMakeFiles/empire.dir/build.make CMakeFiles/empire.dir/Source/Util/FPSCounter.cpp.i
+.PHONY : Source/Util/FPSCounter.cpp.i
+
+Source/Util/FPSCounter.s: Source/Util/FPSCounter.cpp.s
+
+.PHONY : Source/Util/FPSCounter.s
+
+# target to generate assembly for a file
+Source/Util/FPSCounter.cpp.s:
+	$(MAKE) -f CMakeFiles/empire.dir/build.make CMakeFiles/empire.dir/Source/Util/FPSCounter.cpp.s
+.PHONY : Source/Util/FPSCounter.cpp.s
+
 Source/Util/Random.o: Source/Util/Random.cpp.o
 
 .PHONY : Source/Util/Random.o
@@ -351,6 +405,9 @@ help:
 	@echo "... Source/Application.o"
 	@echo "... Source/Application.i"
 	@echo "... Source/Application.s"
+	@echo "... Source/Native/Win32.o"
+	@echo "... Source/Native/Win32.i"
+	@echo "... Source/Native/Win32.s"
 	@echo "... Source/ResourceManager/ResourceHolder.o"
 	@echo "... Source/ResourceManager/ResourceHolder.i"
 	@echo "... Source/ResourceManager/ResourceHolder.s"
@@ -366,6 +423,9 @@ help:
 	@echo "... Source/Util/Common.o"
 	@echo "... Source/Util/Common.i"
 	@echo "... Source/Util/Common.s"
+	@echo "... Source/Util/FPSCounter.o"
+	@echo "... Source/Util/FPSCounter.i"
+	@echo "... Source/Util/FPSCounter.s"
 	@echo "... Source/Util/Random.o"
 	@echo "... Source/Util/Random.i"
 	@echo "... Source/Util/Random.s"

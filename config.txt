@@ -1,8 +1,8 @@
 IMAGE
-world_map_large_rivers.png
+world_connect.png
 
 REPRODUCTION
-8
+7
 
 COLONIES
-10
+200

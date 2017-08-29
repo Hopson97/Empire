@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <ctime>
+#include <thread>
 
+#include "Native/Native.h"
 #include "Util/Common.h"
 
 #include "ResourceManager/ResourceHolder.h"
@@ -32,27 +34,6 @@ Application::Application(const Config& config)
     m_button.setPosition(8, 8);
 
     m_button.setTexture(&ResourceHolder::get().textures.get("sigma"));
-
-    m_threads.emplace_back([&]()
-    {
-        sf::Clock c;
-        while (m_window.isOpen())
-        {
-            if (c.getElapsedTime().asMilliseconds() >= 20)
-            {
-                updateImage();
-                c.restart();
-            }
-        }
-    });
-}
-
-Application::~Application()
-{
-    for (auto& t : m_threads)
-    {
-        t.join();
-    }
 }
 
 void Application::run()
@@ -64,8 +45,12 @@ void Application::run()
         m_GUIText.setString("Years: " + std::to_string(year++));
         m_window.clear();
 
+        m_fpsCounter.update();
+
         input   (deltaClock.restart().asSeconds());
         update  ();
+
+        m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
         render  ();
 
         m_window.display();
@@ -88,7 +73,7 @@ void Application::pollEvents()
         {
             if (e.key.code == sf::Keyboard::P)
             {
-                makeImage();
+                std::thread(&Application::makeImage, this).detach();
             }
             if (e.key.code == sf::Keyboard::Up)
             {
@@ -111,22 +96,20 @@ void Application::makeImage()
 
     if (m_pixelBuffer.saveToFile(fileName))
     {
-        std::cout << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n\n";
+        std::cout << TextColour::Green << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n\n" << TextColour::White;
     }
     else
     {
-        std::cout << "Failed to save!\n\n";
+        std::cout << TextColour::Red << "Failed to save!\n\n" << TextColour::White;
     }
 }
 
 void Application::updateImage()
 {
-    m_worldMutex.lock();
     cellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
         m_pixelBuffer.setPixel(x, y, m_world.getColorAt(x, y));
     });
-    m_worldMutex.unlock();
 }
 
 void Application::input(float dt)
@@ -155,11 +138,8 @@ void Application::input(float dt)
 
 void Application::update()
 {
-    m_worldMutex.lock();
-    m_world.update();
+    m_world.update(m_pixelBuffer);
     //updateImage();
-    m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
-    m_worldMutex.unlock();
 }
 
 void Application::render()
@@ -174,6 +154,7 @@ void Application::render()
     {
         m_world.drawText(m_window);
         m_window.draw(m_GUIText);
+        m_fpsCounter.draw(m_window);
     }
     else
     {

@@ -1,3 +1,7 @@
+#Cmake stuff
+#CmakeFiles/
+#CmakeCache.txt
+#cmake_install.cmake
 
 #CodeBLocks stuff
 *.layout
@@ -23,5 +27,5 @@ Project/
 #exe
 *.exe
 
-#unix exe
+#unix
 empire
