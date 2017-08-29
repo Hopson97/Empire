@@ -9,4 +9,4 @@ add_executable (empire
 ./Source/Application.cpp
 ./Source/Util/Common.cpp
 ./Source/Util/Random.cpp)
-target_link_libraries (empire -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system)
+target_link_libraries (empire -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system -lpthread)
