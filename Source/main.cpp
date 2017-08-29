@@ -12,9 +12,8 @@ void printControls  ();
 
 int main()
 {
-    std::cout << TextColour::Red << "~~~~~~~~~~~~~~~~~~~~ PLEASE READ THIS ~~~~~~~~~~~~~~~~~~~~\n" << TextColour::White;
-    std::cout << "Pausing for one second...\n\n";
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::cout   << TextColour::Red  << "~~~~~~~~~~~~~~~~~~~~ PLEASE READ THIS ~~~~~~~~~~~~~~~~~~~~\n"
+                << TextColour::Red  << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
 
     Config configFile;
 
@@ -37,7 +36,6 @@ int main()
     configFile.width    = configFile.image.getSize().x;
     configFile.height   = configFile.image.getSize().y;
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
     Application app(configFile);
     app.run();
 }
