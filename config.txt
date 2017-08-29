@@ -1,5 +1,5 @@
 IMAGE
-world_map_large_rivers.png
+europe.png
 
 REPRODUCTION
 8

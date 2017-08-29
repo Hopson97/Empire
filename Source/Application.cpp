@@ -32,19 +32,19 @@ Application::Application(const Config& config)
     m_button.setPosition(8, 8);
 
     m_button.setTexture(&ResourceHolder::get().textures.get("sigma"));
-
+/*
     m_threads.emplace_back([&]()
     {
         sf::Clock c;
         while (m_window.isOpen())
         {
-            if (c.getElapsedTime().asMilliseconds() >= 20)
+            //if (c.getElapsedTime().asMilliseconds() >= 15)
             {
-                updateImage();
+                update();
                 c.restart();
             }
         }
-    });
+    });*/
 }
 
 Application::~Application()
@@ -64,9 +64,15 @@ void Application::run()
         m_GUIText.setString("Years: " + std::to_string(year++));
         m_window.clear();
 
+        m_fpsCounter.update();
+
         input   (deltaClock.restart().asSeconds());
         update  ();
+
+       // m_worldMutex.lock();
+        m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
         render  ();
+       // m_worldMutex.unlock();
 
         m_window.display();
 
@@ -121,12 +127,10 @@ void Application::makeImage()
 
 void Application::updateImage()
 {
-    m_worldMutex.lock();
     cellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
         m_pixelBuffer.setPixel(x, y, m_world.getColorAt(x, y));
     });
-    m_worldMutex.unlock();
 }
 
 void Application::input(float dt)
@@ -155,11 +159,10 @@ void Application::input(float dt)
 
 void Application::update()
 {
-    m_worldMutex.lock();
+    //m_worldMutex.lock();
     m_world.update();
-    //updateImage();
-    m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
-    m_worldMutex.unlock();
+    updateImage();
+    //m_worldMutex.unlock();
 }
 
 void Application::render()
@@ -174,6 +177,7 @@ void Application::render()
     {
         m_world.drawText(m_window);
         m_window.draw(m_GUIText);
+        m_fpsCounter.draw(m_window);
     }
     else
     {
