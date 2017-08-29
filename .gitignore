@@ -1,7 +1,7 @@
 #Cmake stuff
-#CmakeFiles/
-#CmakeCache.txt
-#cmake_install.cmake
+CmakeFiles/
+CmakeCache.txt
+cmake_install.cmake
 
 #CodeBLocks stuff
 *.layout
