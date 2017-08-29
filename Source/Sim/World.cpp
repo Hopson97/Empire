@@ -9,7 +9,7 @@
 #include "../Util/Config.h"
 #include "../ResourceManager/ResourceHolder.h"
 
-//Optimization Test
+constexpr int CHAR_SIZE = 15;
 
 World::World(const Config& config)
 :   m_people        (config.width * config.height)
@@ -51,7 +51,8 @@ void World::update()
         //Get new location to move to
         int xMoveTo = x + Random::get().intInRange(-1, 1);
         int yMoveTo = y + Random::get().intInRange(-1, 1);
-        if (xMoveTo < 0 || xMoveTo >= (int)m_pConfig->width) return;
+
+        if (xMoveTo < 0 || xMoveTo >= (int)m_pConfig->width)    return;
         if (yMoveTo < 0 || yMoveTo >= (int)m_pConfig->height) return;
 
         //Store this for the stats to use at the end of the loop
@@ -146,8 +147,14 @@ void World::draw(sf::RenderWindow& window) const
 
 void World::drawText(sf::RenderWindow& window)
 {
+    int i = 0;
     for (auto& stats : m_colonyStats)
     {
+        if (stats.members == 0)
+            continue;
+
+        stats.text.setPosition(0, i++ * CHAR_SIZE + 30);
+
         std::ostringstream stream;
 
         int averageStr = abs((stats.members > 0) ?
@@ -192,7 +199,7 @@ void World::createColonies()
 
             PersonData data;
             data.age        = 0;
-            data.strength   = Random::get().intInRange(500, 600);
+            data.strength   = Random::get().intInRange(60, 80);
             data.isAlive    = true;
             data.colony     = i;
 
@@ -204,17 +211,16 @@ void World::createColonies()
 
 void World::initText()
 {
-    int charSize = 15;
     for (int i = 0; i < m_pConfig->colonies; i++)
     {
         auto& stats = m_colonyStats[i];
-        stats.name = "Colony " + std::to_string(i) + ": ";
-        stats.text.setCharacterSize(charSize);
-        stats.text.move(0, i * charSize + 30);
-        stats.text.setOutlineColor(sf::Color::Black);
-        stats.text.setFillColor(m_colonies[i].colour);
-        stats.text.setOutlineThickness(1);
-        stats.text.setFont(ResourceHolder::get().fonts.get("arial"));
+        stats.name  = "Colony " + std::to_string(i) + ": ";
+
+        stats.text.setCharacterSize     (CHAR_SIZE);
+        stats.text.setOutlineColor      (sf::Color::Black);
+        stats.text.setFillColor         (m_colonies[i].colour);
+        stats.text.setOutlineThickness  (1);
+        stats.text.setFont              (ResourceHolder::get().fonts.get("arial"));
     }
 }
 

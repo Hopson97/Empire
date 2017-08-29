@@ -32,27 +32,6 @@ Application::Application(const Config& config)
     m_button.setPosition(8, 8);
 
     m_button.setTexture(&ResourceHolder::get().textures.get("sigma"));
-/*
-    m_threads.emplace_back([&]()
-    {
-        sf::Clock c;
-        while (m_window.isOpen())
-        {
-            //if (c.getElapsedTime().asMilliseconds() >= 15)
-            {
-                update();
-                c.restart();
-            }
-        }
-    });*/
-}
-
-Application::~Application()
-{
-    for (auto& t : m_threads)
-    {
-        t.join();
-    }
 }
 
 void Application::run()
@@ -69,10 +48,8 @@ void Application::run()
         input   (deltaClock.restart().asSeconds());
         update  ();
 
-       // m_worldMutex.lock();
         m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
         render  ();
-       // m_worldMutex.unlock();
 
         m_window.display();
 
@@ -159,10 +136,8 @@ void Application::input(float dt)
 
 void Application::update()
 {
-    //m_worldMutex.lock();
     m_world.update();
     updateImage();
-    //m_worldMutex.unlock();
 }
 
 void Application::render()

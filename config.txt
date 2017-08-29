@@ -1,8 +1,8 @@
 IMAGE
-europe.png
+world_connect.png
 
 REPRODUCTION
-8
+6
 
 COLONIES
-10
+15
