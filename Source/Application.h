@@ -3,8 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include <thread>
-#include <mutex>
 
 #include "Sim/World.h"
 #include "Util/NonCopyable.h"
@@ -13,11 +11,11 @@
 
 struct Config;
 
-class Application : public NonCopyable, public NonMovable
+class Application
 {
     public:
         Application(const Config& config);
-        ~Application();
+
 
         void run();
 
@@ -46,9 +44,6 @@ class Application : public NonCopyable, public NonMovable
         sf::RectangleShape m_button;
 
         sf::View m_view;
-
-        std::vector<std::thread> m_threads;
-        std::mutex m_worldMutex;
 };
 
 #endif // APPLICATION_H_INCLUDED
