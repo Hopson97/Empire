@@ -32,7 +32,7 @@ Application::Application(const Config& config)
     m_button.setPosition(8, 8);
 
     m_button.setTexture(&ResourceHolder::get().textures.get("sigma"));
-
+/*
     m_threads.emplace_back([&]()
     {
         sf::Clock c;
@@ -44,7 +44,7 @@ Application::Application(const Config& config)
                 c.restart();
             }
         }
-    });
+    });*/
 }
 
 Application::~Application()
@@ -67,12 +67,12 @@ void Application::run()
         m_fpsCounter.update();
 
         input   (deltaClock.restart().asSeconds());
-        //update  ();
+        update  ();
 
-        m_worldMutex.lock();
+       // m_worldMutex.lock();
         m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
         render  ();
-        m_worldMutex.unlock();
+       // m_worldMutex.unlock();
 
         m_window.display();
 
@@ -159,10 +159,10 @@ void Application::input(float dt)
 
 void Application::update()
 {
-    m_worldMutex.lock();
+    //m_worldMutex.lock();
     m_world.update();
     updateImage();
-    m_worldMutex.unlock();
+    //m_worldMutex.unlock();
 }
 
 void Application::render()
