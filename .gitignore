@@ -1,3 +1,7 @@
+#Cmake stuff
+CmakeFiles/
+CmakeCache.txt
+cmake_install.cmake
 
 #CodeBLocks stuff
 *.layout
@@ -7,6 +11,7 @@ bin/
 obj/
 
 #Makefile stuff
+Makefile
 *.o
 Empire/
 
@@ -22,3 +27,9 @@ Project/
 
 #exe
 *.exe
+
+#unix
+empire
+
+#Screenshots
+Screenshots/

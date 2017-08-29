@@ -7,6 +7,7 @@
     #include "windows.h"
     enum class TextColour
     {
+        Default           = -1
         Black             = 0,
         DarkBlue          = FOREGROUND_BLUE,
         DarkGreen         = FOREGROUND_GREEN,
@@ -31,22 +32,23 @@
 #else
     enum class TextColour
     {
-        Black,
-        DarkBlue,
-        DarkGreen,
-        DarkCyan,
-        DarkRed,
-        DarkMagenta,
-        DarkYellow,
-        DarkGrey,
-        Grey,
-        Blue,
-        Green,
-        Cyan,
-        Red,
-        Magenta,
-        Yellow,
-        White,
+        Default           = 39,
+        Black             = 30,
+        DarkBlue          = 34,
+        DarkGreen         = 32,
+        DarkCyan          = 36,
+        DarkRed           = 31,
+        DarkMagenta       = 35,
+        DarkYellow        = 33,
+        DarkGrey          = 90,
+        Grey              = 37,
+        Blue              = 94,
+        Green             = 92,
+        Cyan              = 96,
+        Red               = 91,
+        Magenta           = 95,
+        Yellow            = 33,
+        White             = 97,
     };
 
     std::ostream& operator<< (std::ostream& stream, TextColour t);

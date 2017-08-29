@@ -3,6 +3,7 @@
 
 #include "Person.h"
 #include "Colony.h"
+#include "../Util/Grid.h"
 
 struct Config;
 
@@ -27,7 +28,7 @@ class World
         sf::RectangleShape  m_world;
         sf::Texture         m_worldTexture;
 
-        std::vector<Person>             m_people;
+        Grid<Person>                    m_people;
         std::vector<Colony>             m_colonies;
         std::vector<ColonyStatistics>   m_colonyStats;
 
