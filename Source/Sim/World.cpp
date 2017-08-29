@@ -25,7 +25,7 @@ World::World(const Config& config)
     initText();
 }
 
-void World::update()
+void World::update(sf::Image& image)
 {
     std::vector<Person> newPeople(m_pConfig->width * m_pConfig->height);
 
@@ -67,6 +67,7 @@ void World::update()
             stats.strength    += strength;
             stats.members     ++;
             newPeople[getIndex(m_pConfig->width, x, y)] = person;
+            image.setPixel(x, y, getColorAt(x, y));
             return;
         }
         else if (movePerson.getData().colony == person.getData().colony)
@@ -81,6 +82,7 @@ void World::update()
             }
 
             newPeople[getIndex(m_pConfig->width, x, y)] = person;
+            image.setPixel(x, y, getColorAt(x, y));
             return;
         }
 
@@ -94,6 +96,7 @@ void World::update()
                 person.fight(movePerson);
                 if (!person.getData().isAlive)
                 {
+                    image.setPixel(x, y, getColorAt(x, y));
                     return;
                 }
             }
@@ -121,6 +124,7 @@ void World::update()
         stats.members ++;
         stats.strength  += strength;
         stats.highestStrength = std::max(stats.highestStrength, strength);
+        image.setPixel(x, y, getColorAt(x, y));
     });
     m_people = std::move(newPeople);
 }
@@ -199,7 +203,7 @@ void World::createColonies()
 
             PersonData data;
             data.age        = 0;
-            data.strength   = Random::get().intInRange(60, 80);
+            data.strength   = Random::get().intInRange(400, 650);
             data.isAlive    = true;
             data.colony     = i;
 
