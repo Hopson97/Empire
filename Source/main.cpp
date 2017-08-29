@@ -3,6 +3,7 @@
 
 #include "Util/Config.h"
 #include "Application.h"
+#include "Native/Native.h"
 
 void parseConfig    (std::ifstream& inFile, Config& configFile);
 void printConfigTips();
@@ -46,7 +47,7 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
             inFile >> str;
             if (!configFile.image.loadFromFile("Res/Maps/" + str))
             {
-                std::cerr << "Unable to open \"" << str << "\", using default.\n\n";
+                std::cerr << TextColour::Red << "Unable to open \"" << str << "\", using default.\n\n" << TextColour::White;
                 configFile.image.loadFromFile("Res/Maps/world_map_large.png");
             }
             else
@@ -57,22 +58,25 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
         else if (str == "REPRODUCTION")
         {
             inFile >> configFile.reproductionThreshold;
-            std::cout   << "Reproduction Threshold loaded, set to: "
-                        << configFile.reproductionThreshold << ".\n\n";
+            std::cout   << TextColour::Green << "Reproduction Threshold loaded, set to: "
+                        << configFile.reproductionThreshold
+                        << ".\n\n" << TextColour::White;
         }
         else if (str == "COLONIES")
         {
             inFile >> configFile.colonies;
-            std::cout   << "Colony Count loaded, set to: "
-                        << configFile.colonies++ << ".\n\n";
+            std::cout   << TextColour::Green << "Colony Count loaded, set to: "
+                        << configFile.colonies++
+                        << ".\n\n" << TextColour::White;
+
             if (configFile.colonies <= 2)
             {
-                std::cout << "Colony count too low! Setting to MIN [3]\n";
+                std::cout << TextColour::Red << "Colony count too low! Setting to MIN [3]\n" << TextColour::White;
                 configFile.colonies = 3;
             }
             else if (configFile.colonies > 400)
             {
-                std::cout << "Colony count too high! Setting to MAX [400]\n";
+                std::cout << TextColour::Red << "Colony count too high! Setting to MAX [400]\n" << TextColour::White;
                 configFile.colonies = 400;
             }
         }
@@ -82,17 +86,17 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
 void printConfigTips()
 {
     std::cout   << "\nIf you want to customise your experience, then simply edit the values in config.txt. \nRecommended:\n"
-                << "Image:          world_map_full.png [Put a pic in the Res/Maps/ folder, must be green and blue]\n"
-                << "Reproduction:   8  [This is the threshold of reproduction, lower = higher birthrate]\n"
-                << "Colonies:       10 [This is the number of colonies the simulation begins with]\n"
-                << "Bare in mind, setting the colony count too high can cause CRASHES, hence it will check your number, and change it if you set it too high\n"
-                << "Enjoy!\n\n";
+                << TextColour::Cyan << "Image:          world_map_full.png [Put a pic in the Res/Maps/ folder, must be green and blue]\n"
+                << TextColour::Cyan << "Reproduction:   8  [This is the threshold of reproduction, lower = higher birthrate]\n"
+                << TextColour::Cyan << "Colonies:       10 [This is the number of colonies the simulation begins with]\n"
+                << TextColour::Red << "Bare in mind, setting the colony count too high can cause CRASHES, hence it will check your number, and change it if you set it too high\n"
+                << TextColour::White << "Enjoy!\n\n";
 }
 
 void printControls  ()
 {
-    std::cout << "Controls: "
+    std::cout << TextColour::Cyan << "Controls: "
                 << "P -> Prints a screenshot of the people (without the background).\n"
                 << "See console window for the location and image name\n"
-                << "\n\n";
+                << "\n\n" << TextColour::White;
 }

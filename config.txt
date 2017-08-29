@@ -2,7 +2,7 @@ IMAGE
 world_connect.png
 
 REPRODUCTION
-6
+7
 
 COLONIES
-15
+-1
