@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <thread>
 
 #include "Util/Config.h"
 #include "Application.h"
@@ -11,6 +12,10 @@ void printControls  ();
 
 int main()
 {
+    std::cout << TextColour::Red << "~~~~~~~~~~~~~~~~~~~~ PLEASE READ THIS ~~~~~~~~~~~~~~~~~~~~\n" << TextColour::White;
+    std::cout << "Pausing for one second...\n\n";
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
     Config configFile;
 
     std::cout << "Trying to load image...\n";
@@ -18,7 +23,7 @@ int main()
     std::ifstream inFile("config.txt");
     if (!inFile.is_open())
     {
-        std::cerr << "Unable to open config, using default.\n";
+        std::cerr << TextColour::Red << "Unable to open config, using default.\n" << TextColour::White;
         configFile.image.loadFromFile("Res/Maps/world_map_large.png");
     }
     else
@@ -32,6 +37,7 @@ int main()
     configFile.width    = configFile.image.getSize().x;
     configFile.height   = configFile.image.getSize().y;
 
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     Application app(configFile);
     app.run();
 }
@@ -86,10 +92,10 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
 void printConfigTips()
 {
     std::cout   << "\nIf you want to customise your experience, then simply edit the values in config.txt. \nRecommended:\n"
-                << TextColour::Cyan << "Image:          world_map_full.png [Put a pic in the Res/Maps/ folder, must be green and blue]\n"
-                << TextColour::Cyan << "Reproduction:   8  [This is the threshold of reproduction, lower = higher birthrate]\n"
-                << TextColour::Cyan << "Colonies:       10 [This is the number of colonies the simulation begins with]\n"
-                << TextColour::Red << "Bare in mind, setting the colony count too high can cause CRASHES, hence it will check your number, and change it if you set it too high\n"
+                << TextColour::Cyan <<  "Image:          world_map_full.png [Put a pic in the Res/Maps/ folder, must be green and blue]\n"
+                <<                      "Reproduction:   8  [This is the threshold of reproduction, lower = higher birthrate]\n"
+                <<                      "Colonies:       10 [This is the number of colonies the simulation begins with]\n"
+                <<                      "Bare in mind, setting the colony count too high can cause CRASHES, hence it will check your number, and change it if you set it too high\n"
                 << TextColour::White << "Enjoy!\n\n";
 }
 
