@@ -38,7 +38,7 @@ Application::Application(const Config& config)
         sf::Clock c;
         while (m_window.isOpen())
         {
-            if (c.getElapsedTime().asMilliseconds() >= 20)
+            if (c.getElapsedTime().asMilliseconds() >= 15)
             {
                 updateImage();
                 c.restart();
