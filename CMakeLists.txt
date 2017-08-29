@@ -10,3 +10,5 @@ add_executable (empire
 ./Source/Util/Common.cpp
 ./Source/Util/Random.cpp)
 target_link_libraries (empire -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system -lpthread)
+file(COPY Res colours.txt config.txt DESTINATION ${CMAKE_BINARY_DIR})
+
