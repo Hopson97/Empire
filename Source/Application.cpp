@@ -96,11 +96,11 @@ void Application::makeImage()
 
     if (m_pixelBuffer.saveToFile(fileName))
     {
-        std::cout << TextColour::Green << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n\n" << TextColour::White;
+        std::cout << TextColour::Green << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n\n" << TextColour::Default;
     }
     else
     {
-        std::cout << TextColour::Red << "Failed to save!\n\n" << TextColour::White;
+        std::cout << TextColour::Red << "Failed to save!\n\n" << TextColour::Default;
     }
 }
 

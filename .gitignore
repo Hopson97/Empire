@@ -11,6 +11,7 @@ bin/
 obj/
 
 #Makefile stuff
+Makefile
 *.o
 Empire/
 
@@ -29,3 +30,6 @@ Project/
 
 #unix
 empire
+
+#Screenshots
+Screenshots/
