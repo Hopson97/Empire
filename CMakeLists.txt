@@ -12,6 +12,7 @@ add_executable (empire
 ./Source/Util/FPSCounter.cpp)
 target_link_libraries (empire -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system -lpthread)
 file(COPY Res colours.txt config.txt DESTINATION ${CMAKE_BINARY_DIR})
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Screenshots)
 find_package(Threads)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 find_package(SFML 2.4 REQUIRED network audio graphics window system)
