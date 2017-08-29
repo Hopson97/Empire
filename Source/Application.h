@@ -9,6 +9,7 @@
 #include "Sim/World.h"
 #include "Util/NonCopyable.h"
 #include "Util/NonMoveable.h"
+#include "Util/FPSCounter.h"
 
 struct Config;
 
@@ -32,6 +33,8 @@ class Application : public NonCopyable, public NonMovable
         sf::RenderWindow m_window;
 
         World m_world;
+
+        FPSCounter m_fpsCounter;
 
         const Config* m_pConfig;
 
