@@ -19,8 +19,12 @@ class World
         const sf::Color& getColorAt(unsigned x, unsigned y) const;
 
     private:
+        void tryWrap(int& x, int& y) const;
+
         bool isGrass    (unsigned x, unsigned y)    const;
         bool isWater    (unsigned x, unsigned y)    const;
+
+
 
         void createColonies();
         void initText();
@@ -31,6 +35,7 @@ class World
         Grid<Person>                    m_people;
         std::vector<Colony>             m_colonies;
         std::vector<ColonyStatistics>   m_colonyStats;
+        sf::RectangleShape              m_colonyStatsBg;
 
         const Config* m_pConfig;
 

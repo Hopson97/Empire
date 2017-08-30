@@ -9,7 +9,7 @@
 #include "../Util/Config.h"
 #include "../ResourceManager/ResourceHolder.h"
 
-constexpr int CHAR_SIZE = 15;
+constexpr int CHAR_SIZE = 14;
 
 World::World(const Config& config)
 :   m_people        (config.width, config.height)
@@ -38,8 +38,25 @@ void World::update(sf::Image& image)
 
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
+
         auto& person    = m_people(x, y);
         auto& stats     = m_colonyStats[person.getData().colony];
+        auto  strength  = person.getData().strength;
+
+        //Sometimes the loop will return early.
+        //If it does, then it can call these functions
+        auto endAlive = [&]()
+        {
+            stats.highestStrength = std::max(stats.highestStrength, strength);
+            stats.strength  += strength;
+            stats.members ++;
+            image.setPixel(x, y, getColorAt(x, y));
+        };
+
+        auto endDead = [&]()
+        {
+            image.setPixel(x, y, getColorAt(x, y));
+        };
 
         if (!person.getData().isAlive)
             return;
@@ -52,37 +69,28 @@ void World::update(sf::Image& image)
         int xMoveTo = x + Random::get().intInRange(-1, 1);
         int yMoveTo = y + Random::get().intInRange(-1, 1);
 
-        if (xMoveTo < 0 || xMoveTo >= (int)m_pConfig->width)    return;
-        if (yMoveTo < 0 || yMoveTo >= (int)m_pConfig->height) return;
+        tryWrap(xMoveTo, yMoveTo);
 
-        //Store this for the stats to use at the end of the loop
-        auto  strength      = person.getData().strength;
+        //Grid square to move to
         auto& movePerson    = m_people(xMoveTo, yMoveTo);
 
         //If trying to move onto water or onto square where person of same colony is
         //, stay put
         if (isWater(xMoveTo, yMoveTo))
         {
-            stats.highestStrength = std::max(stats.highestStrength, strength);
-            stats.strength    += strength;
-            stats.members     ++;
+            endAlive();
             newPeople(x, y) = person;
-            image.setPixel(x, y, getColorAt(x, y));
             return;
         }
         else if (movePerson.getData().colony == person.getData().colony)
         {
-            stats.highestStrength = std::max(stats.highestStrength, strength);
-            stats.strength  += strength;
-            stats.members ++;
-
             if (movePerson.getData().isDiseased)
             {
                 person.giveDisease();
             }
 
+            endAlive();
             newPeople(x, y) = person;
-            image.setPixel(x, y, getColorAt(x, y));
             return;
         }
 
@@ -96,7 +104,7 @@ void World::update(sf::Image& image)
                 person.fight(movePerson);
                 if (!person.getData().isAlive)
                 {
-                    image.setPixel(x, y, getColorAt(x, y));
+                    endDead();
                     return;
                 }
             }
@@ -119,12 +127,7 @@ void World::update(sf::Image& image)
         //This will either be a dead person, or a newborn
         newPeople(x, y) = person;
 
-
-        //Finally, do stuff for the stats
-        stats.members ++;
-        stats.strength  += strength;
-        stats.highestStrength = std::max(stats.highestStrength, strength);
-        image.setPixel(x, y, getColorAt(x, y));
+        endAlive();
     });
     m_people = std::move(newPeople);
 }
@@ -132,6 +135,16 @@ void World::update(sf::Image& image)
 const sf::Color& World::getColorAt(unsigned x, unsigned y) const
 {
     return m_colonies[m_people(x, y).getData().colony].colour;
+}
+
+void World::tryWrap(int& x, int& y) const
+{
+    if (x < 0)                              x = (m_pConfig->width - 1) + x;
+    else if (x >= (int)m_pConfig->width)    x = x - m_pConfig->width;
+
+
+    if (y < 0)                              y = (m_pConfig->height - 1) + y;
+    else if (y >= (int)m_pConfig->height)   y = y - m_pConfig->height;
 }
 
 bool World::isGrass(unsigned x, unsigned y) const
@@ -151,13 +164,14 @@ void World::draw(sf::RenderWindow& window) const
 
 void World::drawText(sf::RenderWindow& window)
 {
-    int i = 0;
+    window.draw(m_colonyStatsBg);
+    int i = 1;
     for (auto& stats : m_colonyStats)
     {
         if (stats.members == 0)
             continue;
 
-        stats.text.setPosition(0, i++ * CHAR_SIZE + 30);
+        stats.text.setPosition(10, i++ * CHAR_SIZE + 30);
 
         std::ostringstream stream;
 
@@ -167,14 +181,15 @@ void World::drawText(sf::RenderWindow& window)
 
 
         stream  << std::left
-                << std::setw(10)    << stats.name
-                << std::setw(7)     << stats.members
-                << std::setw(10)    << " Avg Str: " << averageStr
-                << std::setw(10)    << " Max Str  " << stats.highestStrength << '\n';
+                << std::setw(10) << std::left  <<  stats.name   << std::right   << '\t'
+                << std::setw(7)  << std::right << stats.members << std::right   << '\t'
+                << std::setw(10) << std::right << " Avg Str: "  << std::right   << averageStr << '\t'
+                << std::setw(10) << std::right << " Max Str  "  << std::right   << stats.highestStrength << '\n';
 
         stats.text.setString(stream.str());
         window.draw(stats.text);
     }
+    m_colonyStatsBg.setSize({420, i * CHAR_SIZE + 30});
 }
 
 void World::createColonies()
@@ -215,6 +230,11 @@ void World::createColonies()
 
 void World::initText()
 {
+    m_colonyStatsBg.move(4, 4);
+    m_colonyStatsBg.setFillColor({128, 128, 128, 128});
+    m_colonyStatsBg.setOutlineColor(sf::Color::Black);
+    m_colonyStatsBg.setOutlineThickness(3);
+
     for (int i = 0; i < m_pConfig->colonies; i++)
     {
         auto& stats = m_colonyStats[i];

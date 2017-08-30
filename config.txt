@@ -1,8 +1,8 @@
 IMAGE
-UK.png
+world_map_large.png
 
 REPRODUCTION
 7
 
 COLONIES
-250
+20
