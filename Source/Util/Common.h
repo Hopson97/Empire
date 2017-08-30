@@ -47,9 +47,9 @@ void randomCellForEach(const Config& config, F f)
     auto xDir = (Direction)Random::get().intInRange(0, 1);
     auto yDir = (Direction)Random::get().intInRange(0, 1);
 
-    iterateInDirection(xDir, 0, config.height, [&](auto y)
+    iterateInDirection(yDir, 0, config.height, [&](auto y)
     {
-        iterateInDirection(yDir, 0, config.width, [&](auto x)
+        iterateInDirection(xDir, 0, config.width, [&](auto x)
         {
             f(x, y);
         });

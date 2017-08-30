@@ -43,18 +43,11 @@ void Application::run()
     while (m_window.isOpen())
     {
         m_GUIText.setString("Years: " + std::to_string(year++));
-        m_window.clear();
-
         m_fpsCounter.update();
 
         input   (deltaClock.restart().asSeconds());
         update  ();
-
-        m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
         render  ();
-
-        m_window.display();
-
         pollEvents();
     }
 }
@@ -96,11 +89,11 @@ void Application::makeImage()
 
     if (m_pixelBuffer.saveToFile(fileName))
     {
-        std::cout << TextColour::Green << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n\n" << TextColour::White;
+        std::cout << TextColour::Green << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n\n" << TextColour::Default;
     }
     else
     {
-        std::cout << TextColour::Red << "Failed to save!\n\n" << TextColour::White;
+        std::cout << TextColour::Red << "Failed to save!\n\n" << TextColour::Default;
     }
 }
 
@@ -139,11 +132,13 @@ void Application::input(float dt)
 void Application::update()
 {
     m_world.update(m_pixelBuffer);
-    //updateImage();
+    m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
 }
 
 void Application::render()
 {
+    m_window.clear(sf::Color::Blue);
+
     m_window.setView(m_view);
     m_world.draw(m_window);
     m_window.draw(m_pixelSurface);
@@ -160,5 +155,7 @@ void Application::render()
     {
         m_window.draw(m_button);
     }
+
+    m_window.display();
 }
 

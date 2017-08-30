@@ -1,12 +1,15 @@
 #ifndef WIN32_H_INCLUDED
 #define WIN32_H_INCLUDED
 
-#include <iostream>
+#include <ostream>
 
 #ifdef __WIN32
+
     #include "windows.h"
+
     enum class TextColour
     {
+        Default           = -1,
         Black             = 0,
         DarkBlue          = FOREGROUND_BLUE,
         DarkGreen         = FOREGROUND_GREEN,
@@ -23,30 +26,6 @@
         Magenta           = FOREGROUND_INTENSITY | FOREGROUND_RED       | FOREGROUND_BLUE,
         Yellow            = FOREGROUND_INTENSITY | FOREGROUND_RED       | FOREGROUND_GREEN,
         White             = FOREGROUND_INTENSITY | FOREGROUND_RED       | FOREGROUND_GREEN | FOREGROUND_BLUE,
-    };
-
-    std::ostream& operator<< (std::ostream& stream, TextColour t);
-
-///@TODO This stuff for other OS
-#else
-    enum class TextColour
-    {
-        Black,
-        DarkBlue,
-        DarkGreen,
-        DarkCyan,
-        DarkRed,
-        DarkMagenta,
-        DarkYellow,
-        DarkGrey,
-        Grey,
-        Blue,
-        Green,
-        Cyan,
-        Red,
-        Magenta,
-        Yellow,
-        White,
     };
 
     std::ostream& operator<< (std::ostream& stream, TextColour t);
