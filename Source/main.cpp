@@ -13,8 +13,8 @@ void printControls  ();
 int main()
 {
     std::cout   << TextColour::Red  << "~~~~~~~~~~~~~~~~~~~~ PLEASE READ THIS ~~~~~~~~~~~~~~~~~~~~\n"
-                << TextColour::Red  << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
-
+                << TextColour::Red  << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
+                << TextColour::Default;
     Config configFile;
 
     std::cout << "Trying to load image...\n";
@@ -56,20 +56,20 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
             }
             else
             {
-                std::cout << "Success! Using " << str << ".\n\n";
+                std::cout << TextColour::Green << "Success! Using " << str << ".\n\n";
             }
         }
         else if (str == "REPRODUCTION")
         {
             inFile >> configFile.reproductionThreshold;
-            std::cout   << TextColour::Green << "Reproduction Threshold loaded, set to: "
+            std::cout   << TextColour::Default << "Reproduction Threshold loaded, set to: "
                         << configFile.reproductionThreshold
                         << ".\n\n" << TextColour::Default;
         }
         else if (str == "COLONIES")
         {
             inFile >> configFile.colonies;
-            std::cout   << TextColour::Green << "Colony Count loaded, set to: "
+            std::cout   << TextColour::Default << "Colony Count loaded, set to: "
                         << configFile.colonies++
                         << ".\n\n" << TextColour::Default;
 
@@ -89,12 +89,12 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
 
 void printConfigTips()
 {
-    std::cout   << "\nIf you want to customise your experience, then simply edit the values in config.txt. \nRecommended:\n"
-                << TextColour::Cyan <<  "Image:          world_map_full.png [Put a pic in the Res/Maps/ folder, must be green and blue]\n"
-                <<                      "Reproduction:   8  [This is the threshold of reproduction, lower = higher birthrate]\n"
-                <<                      "Colonies:       10 [This is the number of colonies the simulation begins with]\n"
-                <<                      "Bare in mind, setting the colony count too high can cause CRASHES, hence it will check your number, and change it if you set it too high\n"
-                << TextColour::Default << "Enjoy!\n\n";
+    std::cout   << TextColour::DarkCyan <<  "\nIf you want to customise your experience, then simply edit the values in config.txt. \nRecommended:\n"
+                << TextColour::Cyan     <<  "Image:          world_map_full.png [Put a pic in the Res/Maps/ folder, must be green and blue]\n"
+                <<                          "Reproduction:   8  [This is the threshold of reproduction, lower = higher birthrate]\n"
+                <<                          "Colonies:       10 [This is the number of colonies the simulation begins with]\n"
+                << TextColour::Red     <<   "PLEASE NOTE, setting the colony count too high can cause CRASHES, hence it will check your number, and change it if you set it too high\n"
+                << TextColour::Default <<   "Enjoy!\n\n";
 }
 
 void printControls  ()

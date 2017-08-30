@@ -1,8 +1,8 @@
 IMAGE
-world_connect.png
+UK.png
 
 REPRODUCTION
-8
+7
 
 COLONIES
-10
+250
