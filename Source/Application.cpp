@@ -29,6 +29,7 @@ Application::Application(const Config& config)
 
     m_GUIText.setFont(ResourceHolder::get().fonts.get("arial"));
     m_GUIText.setCharacterSize(15);
+    m_GUIText.move(10, 3);
 
     m_button.setSize({32, 32});
     m_button.setPosition(8, 8);

@@ -9,7 +9,7 @@
 #include "../Util/Config.h"
 #include "../ResourceManager/ResourceHolder.h"
 
-constexpr int CHAR_SIZE = 15;
+constexpr int CHAR_SIZE = 14;
 
 World::World(const Config& config)
 :   m_people        (config.width, config.height)
@@ -164,13 +164,14 @@ void World::draw(sf::RenderWindow& window) const
 
 void World::drawText(sf::RenderWindow& window)
 {
-    int i = 0;
+    window.draw(m_colonyStatsBg);
+    int i = 1;
     for (auto& stats : m_colonyStats)
     {
         if (stats.members == 0)
             continue;
 
-        stats.text.setPosition(0, i++ * CHAR_SIZE + 30);
+        stats.text.setPosition(10, i++ * CHAR_SIZE + 30);
 
         std::ostringstream stream;
 
@@ -180,14 +181,15 @@ void World::drawText(sf::RenderWindow& window)
 
 
         stream  << std::left
-                << std::setw(10)    << stats.name       << '\t'
-                << std::setw(7)     << stats.members    << '\t'
-                << std::setw(10)    << " Avg Str: " << averageStr << '\t'
-                << std::setw(10)    << " Max Str  " << stats.highestStrength << '\n';
+                << std::setw(10) << std::left  <<  stats.name   << std::right   << '\t'
+                << std::setw(7)  << std::right << stats.members << std::right   << '\t'
+                << std::setw(10) << std::right << " Avg Str: "  << std::right   << averageStr << '\t'
+                << std::setw(10) << std::right << " Max Str  "  << std::right   << stats.highestStrength << '\n';
 
         stats.text.setString(stream.str());
         window.draw(stats.text);
     }
+    m_colonyStatsBg.setSize({420, i * CHAR_SIZE + 30});
 }
 
 void World::createColonies()
@@ -228,6 +230,11 @@ void World::createColonies()
 
 void World::initText()
 {
+    m_colonyStatsBg.move(4, 4);
+    m_colonyStatsBg.setFillColor({128, 128, 128, 128});
+    m_colonyStatsBg.setOutlineColor(sf::Color::Black);
+    m_colonyStatsBg.setOutlineThickness(3);
+
     for (int i = 0; i < m_pConfig->colonies; i++)
     {
         auto& stats = m_colonyStats[i];

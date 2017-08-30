@@ -1,8 +1,8 @@
 IMAGE
-flatlands.png
+world_map_large.png
 
 REPRODUCTION
 7
 
 COLONIES
-3
+20

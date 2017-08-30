@@ -35,6 +35,7 @@ class World
         Grid<Person>                    m_people;
         std::vector<Colony>             m_colonies;
         std::vector<ColonyStatistics>   m_colonyStats;
+        sf::RectangleShape              m_colonyStatsBg;
 
         const Config* m_pConfig;
 
