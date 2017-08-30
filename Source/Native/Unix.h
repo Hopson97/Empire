@@ -1,7 +1,9 @@
 #ifndef UNIX_H_INCLUDED
 #define UNIX_H_INCLUDED
 
-#ifdef __unix__
+#include <ostream>
+
+#if defined(__unix__) || defined(__unix)
 
     enum class TextColour
     {
@@ -26,6 +28,6 @@
 
     std::ostream& operator<< (std::ostream& stream, TextColour t);
 
-#endif // __unix__
+#endif // __unix__ || __unix
 
 #endif // UNIX_H_INCLUDED

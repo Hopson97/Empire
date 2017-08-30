@@ -1,6 +1,6 @@
 #include "Unix.h"
 
-#ifdef __unix__
+#if defined(__unix__) || defined(__unix)
 
     std::ostream& operator<< (std::ostream& stream, TextColour t)
     {
@@ -8,4 +8,4 @@
         return stream;
     }
 
-#endif // __unix__
+#endif // __unix__ || __unix

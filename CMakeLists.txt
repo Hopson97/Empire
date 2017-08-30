@@ -10,7 +10,8 @@ add_executable (empire
 ./Source/Util/Common.cpp
 ./Source/Util/Random.cpp
 ./Source/Util/FPSCounter.cpp
-./Source/Native/Win32.cpp)
+./Source/Native/Win32.cpp
+./Source/Native/Unix.cpp)
 file(COPY Res colours.txt config.txt DESTINATION ${CMAKE_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Screenshots)
 find_package(Threads)

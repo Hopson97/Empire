@@ -1,7 +1,7 @@
 #ifndef WIN32_H_INCLUDED
 #define WIN32_H_INCLUDED
 
-#include <iostream>
+#include <ostream>
 
 #ifdef __WIN32
 
