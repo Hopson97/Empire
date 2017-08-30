@@ -12,7 +12,7 @@ void printControls  ();
 
 int main()
 {
-    std::cout   << TextColour::Red  << "~~~~~~~~~~~~~~~~~~~~ PLEASE READ THIS ~~~~~~~~~~~~~~~~~~~~\n"
+    std::cout   << TextColour::Red  << "\n~~~~~~~~~~~~~~~~~~~~ PLEASE READ THIS ~~~~~~~~~~~~~~~~~~~~\n"
                 << TextColour::Red  << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
                 << TextColour::Default;
     Config configFile;
