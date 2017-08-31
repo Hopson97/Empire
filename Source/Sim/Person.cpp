@@ -63,10 +63,9 @@ PersonData Person::getChild()
 
     //Chance of the child getting a mutated strength value
     int mutation = Random::get().intInRange(0, 1000000);
-    if (mutation >= 999'965) //rekt
+    if (mutation >= 999'000) //rekt
     {
         child.isDiseased = true;
-        if (child.strength > 0)
         child.strength *= 0.65;
     }
     else if (mutation >= 960'000) //Big mutation
