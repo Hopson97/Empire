@@ -8,6 +8,7 @@ struct Colony
 {
     uint8_t     id;
     sf::Color   colour;
+
 };
 
 struct ColonyStatistics

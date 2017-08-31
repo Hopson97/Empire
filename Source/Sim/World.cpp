@@ -38,7 +38,6 @@ void World::update(sf::Image& image)
 
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
-
         auto& person    = m_people(x, y);
         auto& stats     = m_colonyStats[person.getData().colony];
         auto  strength  = person.getData().strength;
@@ -58,11 +57,9 @@ void World::update(sf::Image& image)
             image.setPixel(x, y, getColorAt(x, y));
         };
 
-        if (!person.getData().isAlive)
-            return;
+        if (!person.getData().isAlive) return;
         person.update();
-        if (!person.getData().isAlive)
-            return;
+        if (!person.getData().isAlive) return;
 
 
         //Get new location to move to
@@ -93,7 +90,6 @@ void World::update(sf::Image& image)
             newPeople(x, y) = person;
             return;
         }
-
 
         //Try move to new spot
         //Fight other person if need be
@@ -164,10 +160,20 @@ void World::draw(sf::RenderWindow& window) const
 
 void World::drawText(sf::RenderWindow& window)
 {
+    sf::Text text;
+    text.setCharacterSize     (CHAR_SIZE);
+    text.setOutlineColor      (sf::Color::Black);
+    text.setFillColor         (sf::Color::White);
+    text.setOutlineThickness  (1);
+    text.setFont              (ResourceHolder::get().fonts.get("arial"));
+
     window.draw(m_colonyStatsBg);
-    int i = 1;
+    int i = 2;
+    int totalMembers = 0;
     for (auto& stats : m_colonyStats)
     {
+        totalMembers += stats.members;
+
         if (stats.members == 0)
             continue;
 
@@ -189,6 +195,10 @@ void World::drawText(sf::RenderWindow& window)
         stats.text.setString(stream.str());
         window.draw(stats.text);
     }
+    text.setString("Total Population: " + std::to_string(totalMembers));
+    text.setPosition(10, CHAR_SIZE + 30);
+    window.draw(text);
+
     m_colonyStatsBg.setSize({420, i * CHAR_SIZE + 30});
 }
 

@@ -50,6 +50,7 @@ void Application::run()
         update  ();
         render  ();
         pollEvents();
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 
