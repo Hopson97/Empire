@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "../Native/Native.h"
 #include "../Util/Random.h"
 
 ColonyCreator::ColonyCreator(const sf::Image& image, int colonies)
@@ -12,7 +13,7 @@ ColonyCreator::ColonyCreator(const sf::Image& image, int colonies)
     std::ifstream inFile("colours.txt");
     if (!inFile.is_open())
     {
-        exit(0);
+        std::cout << TextColour::Red << "Unable to open colours.txt\n\n" << TextColour::Default;
     }
     sf::Color colour;
 

@@ -16,7 +16,6 @@ class Application
     public:
         Application(const Config& config);
 
-
         void run();
 
     private:

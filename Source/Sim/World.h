@@ -24,9 +24,6 @@ class World
     private:
         void tryWrap(int& x, int& y) const;
 
-        bool isGrass    (unsigned x, unsigned y)    const;
-        bool isWater    (unsigned x, unsigned y)    const;
-
         void createColonies();
         void initText();
 

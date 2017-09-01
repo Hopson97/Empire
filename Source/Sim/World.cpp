@@ -12,11 +12,11 @@
 constexpr int CHAR_SIZE = 14;
 
 World::World(const Config& config)
-:   m_people        (config.width, config.height)
+:   m_map           (config)
+,   m_people        (config.width, config.height)
 ,   m_colonies      (config.colonies)
 ,   m_colonyStats   (config.colonies)
 ,   m_pConfig       (&config)
-,   m_map           (config)
 {
     createColonies();
     initText();
@@ -70,7 +70,7 @@ void World::update(sf::Image& image)
 
         //If trying to move onto water or onto square where person of same colony is
         //, stay put
-        if (isWater(xMoveTo, yMoveTo))
+        if (m_map.isWaterAt(xMoveTo, yMoveTo))
         {
             endAlive();
             newPeople(x, y) = person;
@@ -138,16 +138,6 @@ void World::tryWrap(int& x, int& y) const
 
     if (y < 0)                              y = (m_pConfig->height - 1) + y;
     else if (y >= (int)m_pConfig->height)   y = y - m_pConfig->height;
-}
-
-bool World::isGrass(unsigned x, unsigned y) const
-{
-    return m_pConfig->image.getPixel(x, y).g > 235;
-}
-
-bool World::isWater(unsigned x, unsigned y) const
-{
-    return m_pConfig->image.getPixel(x, y).b > 235;
 }
 
 const Map& World::getMap() const
@@ -219,9 +209,9 @@ void World::createColonies()
             int newLocationX = xOffset + location.x;
             int newLocationY = yOffset + location.y;
 
-            if (newLocationX < 0 || newLocationX >= (int)m_pConfig->width) continue;
+            if (newLocationX < 0 || newLocationX >= (int)m_pConfig->width)  continue;
             if (newLocationY < 0 || newLocationY >= (int)m_pConfig->height) continue;
-            if (isWater(newLocationX, newLocationY)) continue;
+            if (m_map.isWaterAt(newLocationX, newLocationY))                continue;
 
             PersonData data;
             data.age        = 0;

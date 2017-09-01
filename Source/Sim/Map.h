@@ -12,6 +12,9 @@ class Map
 
         void draw(sf::RenderWindow& window) const;
 
+        bool isWaterAt  (unsigned x, unsigned y) const;
+        bool isLandAt   (unsigned x, unsigned y) const;
+
     private:
         sf::Texture m_mapTexture;
         sf::RectangleShape m_sprite;
