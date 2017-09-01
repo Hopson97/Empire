@@ -15,37 +15,31 @@ World::World(const Config& config)
 :   m_map           (config)
 ,   m_people        (config.width, config.height)
 ,   m_colonies      (config.colonies)
-,   m_colonyStats   (config.colonies)
+,   m_colonyStatsManager    (config.colonies)
 ,   m_pConfig       (&config)
 {
     createColonies();
-    initText();
+    m_colonyStatsManager.initText(m_colonies);
 }
 
 void World::update(sf::Image& image)
 {
     Grid<Person> newPeople(m_pConfig->width, m_pConfig->height);
 
-    for (auto& c : m_colonyStats)
-    {
-        c.highestStrength = 0;
-        c.members = 0;
-        c.strength = 0;
-    }
-
+    m_colonyStatsManager.reset();
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
-        auto& person    = m_people(x, y);
-        auto& stats     = m_colonyStats[person.getData().colony];
-        int   strength  = person.getData().strength;
+
+
+        auto&    person    = m_people(x, y);
+        unsigned colonyID  = person.getData().colony;
+        unsigned strength  = person.getData().strength;
 
         //Sometimes the loop will return early.
         //If it does, then it can call these functions
         auto endAlive = [&]()
         {
-            stats.highestStrength = std::max(stats.highestStrength, strength);
-            stats.strength  += strength;
-            stats.members ++;
+            m_colonyStatsManager.update(colonyID, strength);
             image.setPixel(x, y, getColorAt(x, y));
         };
 
@@ -147,46 +141,7 @@ const Map& World::getMap() const
 
 void World::drawText(sf::RenderWindow& window)
 {
-    sf::Text text;
-    text.setCharacterSize     (CHAR_SIZE);
-    text.setOutlineColor      (sf::Color::Black);
-    text.setFillColor         (sf::Color::White);
-    text.setOutlineThickness  (1);
-    text.setFont              (ResourceHolder::get().fonts.get("arial"));
-
-    window.draw(m_colonyStatsBg);
-    int i = 2;
-    int totalMembers = 0;
-    for (auto& stats : m_colonyStats)
-    {
-        totalMembers += stats.members;
-
-        if (stats.members == 0)
-            continue;
-
-        stats.text.setPosition(10, i++ * CHAR_SIZE + 30);
-
-        std::ostringstream stream;
-
-        int averageStr = abs((stats.members > 0) ?
-            stats.strength / stats.members :
-            0);
-
-
-        stream  << std::left
-                << std::setw(10) << std::left  <<  stats.name   << std::right   << '\t'
-                << std::setw(7)  << std::right << stats.members << std::right   << '\t'
-                << std::setw(10) << std::right << " Avg Str: "  << std::right   << averageStr << '\t'
-                << std::setw(10) << std::right << " Max Str  "  << std::right   << stats.highestStrength << '\n';
-
-        stats.text.setString(stream.str());
-        window.draw(stats.text);
-    }
-    text.setString("Total Population: " + std::to_string(totalMembers));
-    text.setPosition(10, CHAR_SIZE + 30);
-    window.draw(text);
-
-    m_colonyStatsBg.setSize({420, i * CHAR_SIZE + 30});
+    m_colonyStatsManager.drawStats(window);
 }
 
 void World::createColonies()
@@ -225,25 +180,6 @@ void World::createColonies()
     }
 }
 
-void World::initText()
-{
-    m_colonyStatsBg.move(4, 4);
-    m_colonyStatsBg.setFillColor({128, 128, 128, 128});
-    m_colonyStatsBg.setOutlineColor(sf::Color::Black);
-    m_colonyStatsBg.setOutlineThickness(3);
-
-    for (int i = 0; i < m_pConfig->colonies; i++)
-    {
-        auto& stats = m_colonyStats[i];
-        stats.name  = "Colony " + std::to_string(i) + ": ";
-
-        stats.text.setCharacterSize     (CHAR_SIZE);
-        stats.text.setOutlineColor      (sf::Color::Black);
-        stats.text.setFillColor         (m_colonies[i].colour);
-        stats.text.setOutlineThickness  (1);
-        stats.text.setFont              (ResourceHolder::get().fonts.get("arial"));
-    }
-}
 
 
 

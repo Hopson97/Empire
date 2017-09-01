@@ -26,16 +26,13 @@ class World
         void tryWrap(int& x, int& y) const;
 
         void createColonies();
-        void initText();
+
 
         Map m_map;
 
-        Grid<Person>                    m_people;
-        std::vector<Colony>             m_colonies;
-        std::vector<ColonyStatistics>   m_colonyStats;
-        sf::RectangleShape              m_colonyStatsBg;
-
-
+        Grid<Person>        m_people;
+        std::vector<Colony> m_colonies;
+        ColonyStatsManager  m_colonyStatsManager;
 
         const Config* m_pConfig;
 
