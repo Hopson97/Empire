@@ -70,10 +70,10 @@ PersonData Person::getChild()
         child.isDiseased = true;
         child.strength *= 0.65;
     }
-    else if (mutation >= 750'000) //Small mutation
+    else if (mutation >= 800'000) //Small mutation
     {
-        child.strength  *= Random::get().floatInRange(0, 1);
-}
+        child.strength  *= Random::get().floatInRange(0.1, 1);
+    }
 
     return child;
 }
