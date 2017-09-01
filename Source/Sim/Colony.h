@@ -12,6 +12,8 @@ struct Colony
     int         id;
     sf::Color   colour;
 
+    unsigned strLow;
+    unsigned strHigh;
 };
 
 class ColonyCreator

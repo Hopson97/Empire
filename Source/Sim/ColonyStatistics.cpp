@@ -50,9 +50,9 @@ void ColonyStatsManager::drawStats(sf::RenderWindow& window)
 
         std::ostringstream stream;
 
-        int averageStr = abs((stats.members > 0) ?
+        int averageStr = stats.members > 0 ?
             stats.strength / stats.members :
-            0);
+            0;
 
         stream  << std::left
                 << std::setw(10) << std::left  <<  stats.name   << std::right   << '\t'
@@ -68,7 +68,7 @@ void ColonyStatsManager::drawStats(sf::RenderWindow& window)
     m_totalPopText.setPosition(10, CHAR_SIZE + 30);
     window.draw(m_totalPopText);
 
-    m_colonyStatsBg.setSize({420, i * CHAR_SIZE + 30});
+    m_colonyStatsBg.setSize({420, float(i * CHAR_SIZE + 30)});
 }
 
 

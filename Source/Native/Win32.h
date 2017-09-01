@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-#ifdef __WIN32
+#ifdef _WIN32
     #include "windows.h"
 
     enum class TextColour

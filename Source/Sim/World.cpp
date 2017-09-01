@@ -166,7 +166,8 @@ void World::createColonies()
 
             PersonData data;
             data.age        = 0;
-            data.strength   = Random::get().intInRange(400, 650);
+            data.strength   = Random::get().intInRange(m_colonies[i].strLow,
+                                                       m_colonies[i].strHigh);
             data.isAlive    = true;
             data.colony     = i;
 

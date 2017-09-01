@@ -66,6 +66,10 @@ std::vector<Colony> ColonyCreator::createColonyStats() const
     for (int i = 1; i < m_numColonies; i++)
     {
         auto& col = colonies[i];
+
+        col.strLow  = 400;
+        col.strHigh = 650;
+
         if (i > (int)m_colours.size() - 1)
         {
             sf::Uint8 r = Random::get().intInRange(0, 255);

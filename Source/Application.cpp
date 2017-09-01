@@ -3,6 +3,7 @@
 #include <iostream>
 #include <ctime>
 #include <thread>
+#include <mutex>
 
 #include "Native/Native.h"
 #include "Util/Common.h"
@@ -85,7 +86,9 @@ void Application::pollEvents()
 //Takes the pixels that makes up the people, and save it to an image
 void Application::makeImage()
 {
+    m_imageMutex.lock();
     static int imageCount = 0;
+
     std::cout << "Saving image... Please hold...\n";
     std::string fileName = "Screenshots/Screenshot" + std::to_string(imageCount++) + ".png";
 
@@ -97,6 +100,7 @@ void Application::makeImage()
     {
         std::cout << TextColour::Red << "Failed to save!\n\n" << TextColour::Default;
     }
+    m_imageMutex.unlock();
 }
 
 void Application::updateImage()
