@@ -79,7 +79,7 @@ std::vector<Colony> ColonyCreator::createColonyStats() const
         }
         else
         {
-            colonies[i].colour   = m_colours[i];
+            colonies[i].colour = m_colours[i];
         }
         colonies[i].id = i;
     }

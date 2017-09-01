@@ -2,6 +2,7 @@
 #define PERSON_H_INCLUDED
 
 #include <cstdint>
+#include <vector>
 
 struct
 #ifdef __GNUC__
@@ -9,13 +10,12 @@ __attribute__((packed, aligned(4)))
 #endif // __GNUC__
 PersonData
 {
-    uint16_t    age             = 0;
-    uint16_t    strength        = 0;
-    uint8_t     colony          = 0;
-    uint8_t     productionCount = 0;
-    uint8_t     isDiseased      = false;
-    uint8_t     isAlive         = false;
-    uint8_t     isImmune        = false;
+    unsigned    age             = 0;
+    unsigned    strength        = 0;
+    unsigned    colony          = 0;
+    unsigned    productionCount = 0;
+    bool    isDiseased      = false;
+    bool    isAlive         = false;
 };
 
 class Person
@@ -37,5 +37,7 @@ class Person
     private:
         PersonData m_data;
 };
+
+
 
 #endif // PERSON_H_INCLUDED

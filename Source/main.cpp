@@ -2,6 +2,7 @@
 #include <fstream>
 #include <thread>
 
+#include "Util/Random.h"
 #include "Util/Config.h"
 #include "Application.h"
 #include "Native/Native.h"
@@ -35,6 +36,11 @@ int main()
 
     configFile.width    = configFile.image.getSize().x;
     configFile.height   = configFile.image.getSize().y;
+
+    for (int i = 0; i < 50; i++)
+    {
+        std::cout << Random::get().floatInRange(0.90, 1.8) << std::endl;
+    }
 
     Application app(configFile);
     app.run();

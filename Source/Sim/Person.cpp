@@ -25,7 +25,9 @@ void Person::update()
 
 void Person::fight(Person& other)
 {
-    if (other.getData().colony == 0) return;
+    if (other.getData().colony == 0)
+        return;
+
     if (other.getData().strength >= getData().strength)
     {
         kill();
@@ -55,7 +57,7 @@ PersonData Person::getChild()
     child.colony    = m_data.colony;
     child.strength  = m_data.strength;
 
-    //5% the child is cured of disease
+    //chance the child is cured of disease
     if (m_data.isDiseased)
     {
         child.isDiseased = Random::get().intInRange(0, 100) >= 85;
@@ -68,6 +70,10 @@ PersonData Person::getChild()
         child.isDiseased = true;
         child.strength *= 0.65;
     }
+    else if (mutation >= 750'000) //Small mutation
+    {
+        child.strength  *= Random::get().floatInRange(0, 1);
+}
 
     return child;
 }

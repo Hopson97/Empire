@@ -96,7 +96,7 @@ void World::update(sf::Image& image)
         newPeople(xMoveTo, yMoveTo) = person;
 
         //try give birth
-        if (person.getData().productionCount >= m_pConfig->reproductionThreshold)
+        if (person.getData().productionCount >= (unsigned)m_pConfig->reproductionThreshold)
         {
             //The person itself has moved to a new spot, so it is ok to mess with it's data now
             person.init(person.getChild());
@@ -166,8 +166,8 @@ void World::createColonies()
 
             PersonData data;
             data.age        = 0;
-            data.strength   = Random::get().intInRange(m_colonies[i].strLow,
-                                                       m_colonies[i].strHigh);
+            data.strength   = Random::get().intInRange(400,
+                                                       650);
             data.isAlive    = true;
             data.colony     = i;
 
