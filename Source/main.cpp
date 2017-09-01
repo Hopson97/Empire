@@ -99,8 +99,11 @@ void printConfigTips()
 
 void printControls  ()
 {
-    std::cout << TextColour::Cyan << "Controls: "
+    std::cout   << TextColour::Red << "Controls:\n" << TextColour::Cyan
                 << "P -> Prints a screenshot of the people (without the background).\n"
-                << "See console window for the location and image name\n"
+                << "See console window for the location and image name.\n"
+                << TextColour::Red << "Taking screenshots in future sessions WILL OVERWRITE your screenshots from previous sessions!!\n\n" << TextColour::Cyan
+                << "WASD -> Pans Camera around.\n\n"
+                << "Up/ Down Arrow Keys -> Zooms camera in and out.\n\n"
                 << "\n\n" << TextColour::Default;
 }

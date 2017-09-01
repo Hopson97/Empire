@@ -15,13 +15,13 @@ PersonData
     uint8_t     productionCount = 0;
     uint8_t     isDiseased      = false;
     uint8_t     isAlive         = false;
+    uint8_t     isImmune        = false;
 };
 
 class Person
 {
     public:
         Person      () = default;
-        Person      (const PersonData& data);
         void init   (const PersonData& data);
 
         void update();

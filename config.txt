@@ -1,8 +1,8 @@
 IMAGE
-world_map_large.png
+world_map.png
 
 REPRODUCTION
-7
+8
 
 COLONIES
-20
+10

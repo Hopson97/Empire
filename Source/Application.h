@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <mutex>
 
 #include "Sim/World.h"
 #include "Util/NonCopyable.h"
@@ -15,7 +16,6 @@ class Application
 {
     public:
         Application(const Config& config);
-
 
         void run();
 
@@ -44,6 +44,8 @@ class Application
         sf::RectangleShape m_button;
 
         sf::View m_view;
+
+        std::mutex m_imageMutex;
 };
 
 #endif // APPLICATION_H_INCLUDED

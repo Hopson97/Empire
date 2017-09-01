@@ -2,11 +2,6 @@
 
 #include "../Util/Random.h"
 
-Person::Person(const PersonData& data)
-:   m_data  (data)
-{
-}
-
 void Person::init(const PersonData& data)
 {
     m_data = data;
@@ -67,20 +62,11 @@ PersonData Person::getChild()
     }
 
     //Chance of the child getting a mutated strength value
-    int mutation = Random::get().intInRange(0, 1000);
-    if (mutation >= 999) //rekt
+    int mutation = Random::get().intInRange(0, 1000000);
+    if (mutation >= 999'000)
     {
         child.isDiseased = true;
-        if (child.strength > 0)
-        child.strength /= 2;
-    }
-    else if (mutation >= 960) //Big mutation
-    {
-        child.strength *= Random::get().floatInRange(0.90, 1.8);
-    }
-    else if (mutation >= 750) //Small mutation
-    {
-        child.strength  *= Random::get().floatInRange(0.95, 1.4);
+        child.strength *= 0.65;
     }
 
     return child;

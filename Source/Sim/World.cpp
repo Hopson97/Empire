@@ -12,44 +12,32 @@
 constexpr int CHAR_SIZE = 14;
 
 World::World(const Config& config)
-:   m_people        (config.width, config.height)
+:   m_map           (config)
+,   m_people        (config.width, config.height)
 ,   m_colonies      (config.colonies)
-,   m_colonyStats   (config.colonies)
+,   m_colonyStatsManager    (config.colonies)
 ,   m_pConfig       (&config)
 {
-    m_worldTexture.loadFromImage(config.image);
-    m_world.setTexture  (&m_worldTexture);
-    m_world.setSize     ({(float)config.width,
-                          (float)config.height});
     createColonies();
-    initText();
+    m_colonyStatsManager.initText(m_colonies);
 }
 
 void World::update(sf::Image& image)
 {
     Grid<Person> newPeople(m_pConfig->width, m_pConfig->height);
-
-    for (auto& c : m_colonyStats)
-    {
-        c.highestStrength = 0;
-        c.members = 0;
-        c.strength = 0;
-    }
+    m_colonyStatsManager.reset();
 
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
-
-        auto& person    = m_people(x, y);
-        auto& stats     = m_colonyStats[person.getData().colony];
-        auto  strength  = person.getData().strength;
+        auto&    person    = m_people(x, y);
+        unsigned colonyID  = person.getData().colony;
+        unsigned strength  = person.getData().strength;
 
         //Sometimes the loop will return early.
         //If it does, then it can call these functions
         auto endAlive = [&]()
         {
-            stats.highestStrength = std::max(stats.highestStrength, strength);
-            stats.strength  += strength;
-            stats.members ++;
+            m_colonyStatsManager.update(colonyID, strength);
             image.setPixel(x, y, getColorAt(x, y));
         };
 
@@ -58,25 +46,21 @@ void World::update(sf::Image& image)
             image.setPixel(x, y, getColorAt(x, y));
         };
 
-        if (!person.getData().isAlive)
-            return;
+        if (!person.getData().isAlive) return;
         person.update();
-        if (!person.getData().isAlive)
-            return;
-
+        if (!person.getData().isAlive) return;
 
         //Get new location to move to
         int xMoveTo = x + Random::get().intInRange(-1, 1);
         int yMoveTo = y + Random::get().intInRange(-1, 1);
-
         tryWrap(xMoveTo, yMoveTo);
 
         //Grid square to move to
-        auto& movePerson    = m_people(xMoveTo, yMoveTo);
+        auto& movePerson = m_people(xMoveTo, yMoveTo);
 
         //If trying to move onto water or onto square where person of same colony is
         //, stay put
-        if (isWater(xMoveTo, yMoveTo))
+        if (m_map.isWaterAt(xMoveTo, yMoveTo))
         {
             endAlive();
             newPeople(x, y) = person;
@@ -93,7 +77,6 @@ void World::update(sf::Image& image)
             newPeople(x, y) = person;
             return;
         }
-
 
         //Try move to new spot
         //Fight other person if need be
@@ -147,56 +130,21 @@ void World::tryWrap(int& x, int& y) const
     else if (y >= (int)m_pConfig->height)   y = y - m_pConfig->height;
 }
 
-bool World::isGrass(unsigned x, unsigned y) const
+const Map& World::getMap() const
 {
-    return m_pConfig->image.getPixel(x, y).g > 235;
-}
-
-bool World::isWater(unsigned x, unsigned y) const
-{
-    return m_pConfig->image.getPixel(x, y).b > 235;
-}
-
-void World::draw(sf::RenderWindow& window) const
-{
-    window.draw(m_world);
+    return m_map;
 }
 
 void World::drawText(sf::RenderWindow& window)
 {
-    window.draw(m_colonyStatsBg);
-    int i = 1;
-    for (auto& stats : m_colonyStats)
-    {
-        if (stats.members == 0)
-            continue;
-
-        stats.text.setPosition(10, i++ * CHAR_SIZE + 30);
-
-        std::ostringstream stream;
-
-        int averageStr = abs((stats.members > 0) ?
-            stats.strength / stats.members :
-            0);
-
-
-        stream  << std::left
-                << std::setw(10) << std::left  <<  stats.name   << std::right   << '\t'
-                << std::setw(7)  << std::right << stats.members << std::right   << '\t'
-                << std::setw(10) << std::right << " Avg Str: "  << std::right   << averageStr << '\t'
-                << std::setw(10) << std::right << " Max Str  "  << std::right   << stats.highestStrength << '\n';
-
-        stats.text.setString(stream.str());
-        window.draw(stats.text);
-    }
-    m_colonyStatsBg.setSize({420, i * CHAR_SIZE + 30});
+    m_colonyStatsManager.drawStats(window);
 }
 
 void World::createColonies()
 {
-    ColonyCreator creator(m_pConfig->image, m_pConfig->colonies);
+    ColonyCreator creator(m_pConfig->colonies);
 
-    auto locations  = creator.createColonyLocations(m_pConfig->width, m_pConfig->height);
+    auto locations  = creator.createColonyLocations(*m_pConfig, m_map);
     m_colonies      = creator.createColonyStats();
 
     //Place colonies at the locations
@@ -212,13 +160,14 @@ void World::createColonies()
             int newLocationX = xOffset + location.x;
             int newLocationY = yOffset + location.y;
 
-            if (newLocationX < 0 || newLocationX >= (int)m_pConfig->width) continue;
+            if (newLocationX < 0 || newLocationX >= (int)m_pConfig->width)  continue;
             if (newLocationY < 0 || newLocationY >= (int)m_pConfig->height) continue;
-            if (isWater(newLocationX, newLocationY)) continue;
+            if (m_map.isWaterAt(newLocationX, newLocationY))                continue;
 
             PersonData data;
             data.age        = 0;
-            data.strength   = Random::get().intInRange(400, 650);
+            data.strength   = Random::get().intInRange(m_colonies[i].strLow,
+                                                       m_colonies[i].strHigh);
             data.isAlive    = true;
             data.colony     = i;
 
@@ -228,25 +177,6 @@ void World::createColonies()
     }
 }
 
-void World::initText()
-{
-    m_colonyStatsBg.move(4, 4);
-    m_colonyStatsBg.setFillColor({128, 128, 128, 128});
-    m_colonyStatsBg.setOutlineColor(sf::Color::Black);
-    m_colonyStatsBg.setOutlineThickness(3);
-
-    for (int i = 0; i < m_pConfig->colonies; i++)
-    {
-        auto& stats = m_colonyStats[i];
-        stats.name  = "Colony " + std::to_string(i) + ": ";
-
-        stats.text.setCharacterSize     (CHAR_SIZE);
-        stats.text.setOutlineColor      (sf::Color::Black);
-        stats.text.setFillColor         (m_colonies[i].colour);
-        stats.text.setOutlineThickness  (1);
-        stats.text.setFont              (ResourceHolder::get().fonts.get("arial"));
-    }
-}
 
 
 

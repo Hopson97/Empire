@@ -2,6 +2,9 @@
 
 #ifdef __WIN32
 
+    //makes .exe size smaller by removing rarely used win api stuff
+    #define WIN32_LEAN_AND_MEAN
+
     namespace
     {
         WORD _default;
