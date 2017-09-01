@@ -25,12 +25,10 @@ World::World(const Config& config)
 void World::update(sf::Image& image)
 {
     Grid<Person> newPeople(m_pConfig->width, m_pConfig->height);
-
     m_colonyStatsManager.reset();
+
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
-
-
         auto&    person    = m_people(x, y);
         unsigned colonyID  = person.getData().colony;
         unsigned strength  = person.getData().strength;
@@ -52,15 +50,13 @@ void World::update(sf::Image& image)
         person.update();
         if (!person.getData().isAlive) return;
 
-
         //Get new location to move to
         int xMoveTo = x + Random::get().intInRange(-1, 1);
         int yMoveTo = y + Random::get().intInRange(-1, 1);
-
         tryWrap(xMoveTo, yMoveTo);
 
         //Grid square to move to
-        auto& movePerson    = m_people(xMoveTo, yMoveTo);
+        auto& movePerson = m_people(xMoveTo, yMoveTo);
 
         //If trying to move onto water or onto square where person of same colony is
         //, stay put

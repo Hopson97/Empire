@@ -27,9 +27,7 @@ class World
 
         void createColonies();
 
-
         Map m_map;
-
         Grid<Person>        m_people;
         std::vector<Colony> m_colonies;
         ColonyStatsManager  m_colonyStatsManager;
