@@ -31,16 +31,12 @@ void ColonyStatsManager::update(unsigned colonyID, unsigned strength)
     s.members++;
 }
 
+
+
 void ColonyStatsManager::drawStats(sf::RenderWindow& window)
 {
-    sf::Text text;
-    text.setCharacterSize     (CHAR_SIZE);
-    text.setOutlineColor      (sf::Color::Black);
-    text.setFillColor         (sf::Color::White);
-    text.setOutlineThickness  (1);
-    text.setFont              (ResourceHolder::get().fonts.get("arial"));
-
     window.draw(m_colonyStatsBg);
+
     int i = 2;
     int totalMembers = 0;
     for (auto& stats : m_colonyStats)
@@ -58,7 +54,6 @@ void ColonyStatsManager::drawStats(sf::RenderWindow& window)
             stats.strength / stats.members :
             0);
 
-
         stream  << std::left
                 << std::setw(10) << std::left  <<  stats.name   << std::right   << '\t'
                 << std::setw(7)  << std::right << stats.members << std::right   << '\t'
@@ -68,9 +63,10 @@ void ColonyStatsManager::drawStats(sf::RenderWindow& window)
         stats.text.setString(stream.str());
         window.draw(stats.text);
     }
-    text.setString("Total Population: " + std::to_string(totalMembers));
-    text.setPosition(10, CHAR_SIZE + 30);
-    window.draw(text);
+
+    m_totalPopText.setString("Total Population: " + std::to_string(totalMembers));
+    m_totalPopText.setPosition(10, CHAR_SIZE + 30);
+    window.draw(m_totalPopText);
 
     m_colonyStatsBg.setSize({420, i * CHAR_SIZE + 30});
 }
@@ -96,4 +92,41 @@ void ColonyStatsManager::initText(const std::vector<Colony>& colonies)
         stats.text.setOutlineThickness  (1);
         stats.text.setFont              (ResourceHolder::get().fonts.get("arial"));
     }
+
+    m_totalPopText.setCharacterSize     (CHAR_SIZE);
+    m_totalPopText.setOutlineColor      (sf::Color::Black);
+    m_totalPopText.setFillColor         (sf::Color::White);
+    m_totalPopText.setOutlineThickness  (1);
+    m_totalPopText.setFont              (ResourceHolder::get().fonts.get("arial"));
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

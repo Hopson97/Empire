@@ -32,6 +32,7 @@ class ColonyStatsManager
     private:
         std::vector<ColonyStatistics>   m_colonyStats;
         sf::RectangleShape              m_colonyStatsBg;
+        sf::Text                        m_totalPopText;
 };
 
 #endif // COLONYSTATISTICS_H_INCLUDED
