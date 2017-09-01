@@ -16,11 +16,8 @@ World::World(const Config& config)
 ,   m_colonies      (config.colonies)
 ,   m_colonyStats   (config.colonies)
 ,   m_pConfig       (&config)
+,   m_map           (config)
 {
-    m_worldTexture.loadFromImage(config.image);
-    m_world.setTexture  (&m_worldTexture);
-    m_world.setSize     ({(float)config.width,
-                          (float)config.height});
     createColonies();
     initText();
 }
@@ -153,9 +150,9 @@ bool World::isWater(unsigned x, unsigned y) const
     return m_pConfig->image.getPixel(x, y).b > 235;
 }
 
-void World::draw(sf::RenderWindow& window) const
+const Map& World::getMap() const
 {
-    window.draw(m_world);
+    return m_map;
 }
 
 void World::drawText(sf::RenderWindow& window)

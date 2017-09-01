@@ -50,7 +50,7 @@ void Application::run()
         update  ();
         render  ();
         pollEvents();
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
 
@@ -142,7 +142,7 @@ void Application::render()
     m_window.clear(sf::Color::Blue);
 
     m_window.setView(m_view);
-    m_world.draw(m_window);
+    m_world.getMap().draw(m_window);
     m_window.draw(m_pixelSurface);
     m_window.setView(m_window.getDefaultView());
 

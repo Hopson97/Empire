@@ -5,6 +5,8 @@
 #include "Colony.h"
 #include "../Util/Grid.h"
 
+#include "Map.h"
+
 struct Config;
 
 class World
@@ -13,10 +15,11 @@ class World
         World(const Config& config);
 
         void update     (sf::Image& image);
-        void draw       (sf::RenderWindow& window) const;
         void drawText   (sf::RenderWindow& window);
 
         const sf::Color& getColorAt(unsigned x, unsigned y) const;
+
+        const Map& getMap() const;
 
     private:
         void tryWrap(int& x, int& y) const;
@@ -24,18 +27,17 @@ class World
         bool isGrass    (unsigned x, unsigned y)    const;
         bool isWater    (unsigned x, unsigned y)    const;
 
-
-
         void createColonies();
         void initText();
 
-        sf::RectangleShape  m_world;
-        sf::Texture         m_worldTexture;
+        Map m_map;
 
         Grid<Person>                    m_people;
         std::vector<Colony>             m_colonies;
         std::vector<ColonyStatistics>   m_colonyStats;
         sf::RectangleShape              m_colonyStatsBg;
+
+
 
         const Config* m_pConfig;
 
