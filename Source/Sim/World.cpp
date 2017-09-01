@@ -37,7 +37,7 @@ void World::update(sf::Image& image)
     {
         auto& person    = m_people(x, y);
         auto& stats     = m_colonyStats[person.getData().colony];
-        auto  strength  = person.getData().strength;
+        int   strength  = person.getData().strength;
 
         //Sometimes the loop will return early.
         //If it does, then it can call these functions
@@ -191,9 +191,9 @@ void World::drawText(sf::RenderWindow& window)
 
 void World::createColonies()
 {
-    ColonyCreator creator(m_pConfig->image, m_pConfig->colonies);
+    ColonyCreator creator(m_pConfig->colonies);
 
-    auto locations  = creator.createColonyLocations(m_pConfig->width, m_pConfig->height);
+    auto locations  = creator.createColonyLocations(*m_pConfig, m_map);
     m_colonies      = creator.createColonyStats();
 
     //Place colonies at the locations

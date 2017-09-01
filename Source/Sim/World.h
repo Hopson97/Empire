@@ -3,6 +3,7 @@
 
 #include "Person.h"
 #include "Colony.h"
+#include "ColonyStatistics.h"
 #include "../Util/Grid.h"
 
 #include "Map.h"

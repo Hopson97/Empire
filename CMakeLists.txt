@@ -1,12 +1,14 @@
 cmake_minimum_required (VERSION 3.0.2)
 project (Empire)
-add_executable (empire 
+add_executable (empire
 ./Source/main.cpp
+./Source/Application.cpp
 ./Source/ResourceManager/ResourceHolder.cpp
 ./Source/Sim/World.cpp
 ./Source/Sim/Person.cpp
 ./Source/Sim/Colony.cpp
-./Source/Application.cpp
+./Source/Sim/ColonyStatistics.cpp
+./Source/Sim/Map.cpp
 ./Source/Util/Common.cpp
 ./Source/Util/Random.cpp
 ./Source/Util/FPSCounter.cpp

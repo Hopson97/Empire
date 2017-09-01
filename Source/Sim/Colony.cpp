@@ -5,10 +5,12 @@
 
 #include "../Native/Native.h"
 #include "../Util/Random.h"
+#include "../Util/Config.h"
 
-ColonyCreator::ColonyCreator(const sf::Image& image, int colonies)
-:   m_pImage        (&image)
-,   m_numColonies   (colonies)
+#include "Map.h"
+
+ColonyCreator::ColonyCreator(int colonies)
+:   m_numColonies   (colonies)
 {
     std::ifstream inFile("colours.txt");
     if (!inFile.is_open())
@@ -28,7 +30,7 @@ ColonyCreator::ColonyCreator(const sf::Image& image, int colonies)
     }
 }
 
-std::vector<sf::Vector2i> ColonyCreator::createColonyLocations(unsigned mapWidth, unsigned mapHeight) const
+std::vector<sf::Vector2i> ColonyCreator::createColonyLocations(const Config& config, const Map& map) const
 {
     std::vector<sf::Vector2i> locations(m_numColonies);
 
@@ -36,11 +38,12 @@ std::vector<sf::Vector2i> ColonyCreator::createColonyLocations(unsigned mapWidth
     for (int i = 1; i < m_numColonies; i++)
     {
         int x, y;
+        //Loops until land is found
         while (true)
         {
-            x = Random::get().intInRange(0, mapWidth);
-            y = Random::get().intInRange(0, mapHeight);
-            if (m_pImage->getPixel(x, y).g >= 250)
+            x = Random::get().intInRange(0, config.width);
+            y = Random::get().intInRange(0, config.height);
+            if (map.isLandAt(x, y))
             {
                 locations[i] = {x, y};
                 break;
