@@ -10,8 +10,7 @@
 #include "Map.h"
 #include "../Native/Native.h"
 
-CustomColonyCreator::CustomColonyCreator(int numColonies, const std::string& fileName)
-:   ColonyCreator   (numColonies)
+CustomColonyCreator::CustomColonyCreator(const std::string& fileName)
 {
     std::ifstream inFile("Res/Starts/" + fileName + ".txt");
 

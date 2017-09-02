@@ -17,7 +17,7 @@ class CustomColonyCreator : public ColonyCreator
     };
 
     public:
-        CustomColonyCreator(int numColonies, const std::string& fileName);
+        CustomColonyCreator(const std::string& fileName);
 
         std::vector<sf::Vector2i>  createColonyLocations(const Config& config, const Map& map) const override;
         std::vector<Colony>        createColonyStats() const override;

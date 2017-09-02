@@ -10,6 +10,11 @@ class RandomColonyCreator : public ColonyCreator
 
         std::vector<sf::Vector2i>  createColonyLocations(const Config& config, const Map& map) const override;
         std::vector<Colony>        createColonyStats() const override;
+
+    private:
+        int m_numColonies;
+
+        std::vector<sf::Color> m_colours;
 };
 
 #endif // RANDOMCOLONYCREATOR_H_INCLUDED

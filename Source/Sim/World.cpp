@@ -55,14 +55,9 @@ void World::createColonies()
 {
     std::unique_ptr<ColonyCreator> colonyCreator;
     if (m_pConfig->customStart)
-    {
-        colonyCreator = std::make_unique<CustomColonyCreator>(m_pConfig->colonies,
-                                                              m_pConfig->imageName);
-    }
+        colonyCreator = std::make_unique<CustomColonyCreator>(m_pConfig->imageName);
     else
-    {
         colonyCreator = std::make_unique<RandomColonyCreator>(m_pConfig->colonies);
-    }
 
     auto locations  = colonyCreator->createColonyLocations(*m_pConfig, m_map);
     m_colonies      = colonyCreator->createColonyStats();
