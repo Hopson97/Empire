@@ -12,7 +12,7 @@ class Random
         Random& operator=   (const Random& other)   = delete;
 
         int intInRange(int low, int high);
-        float floatInRange(int low, int high);
+        float floatInRange(float low, float high);
 
     private:
         Random();

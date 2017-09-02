@@ -1,6 +1,7 @@
 #include "Random.h"
 
 #include <ctime>
+#include <iostream>
 
 Random& Random::get()
 {
@@ -19,7 +20,7 @@ int Random::intInRange(int low, int high)
     return dist(m_rng);
 }
 
-float Random::floatInRange(int low, int high)
+float Random::floatInRange(float low, float high)
 {
     std::uniform_real_distribution<float> dist(low, high);
     return dist(m_rng);

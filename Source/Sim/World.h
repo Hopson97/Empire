@@ -3,7 +3,10 @@
 
 #include "Person.h"
 #include "Colony.h"
+#include "ColonyStatistics.h"
 #include "../Util/Grid.h"
+
+#include "Map.h"
 
 struct Config;
 
@@ -13,26 +16,21 @@ class World
         World(const Config& config);
 
         void update     (sf::Image& image);
-        void draw       (sf::RenderWindow& window) const;
         void drawText   (sf::RenderWindow& window);
 
         const sf::Color& getColorAt(unsigned x, unsigned y) const;
 
+        const Map& getMap() const;
+
     private:
-        bool isGrass    (unsigned x, unsigned y)    const;
-        bool isWater    (unsigned x, unsigned y)    const;
-        
-        sf::Color getPixelAt(unsigned x, unsigned y) const;
+        void tryWrap(int& x, int& y) const;
 
         void createColonies();
-        void initText();
 
-        sf::RectangleShape  m_world;
-        sf::Texture         m_worldTexture;
-
-        Grid<Person>                    m_people;
-        std::vector<Colony>             m_colonies;
-        std::vector<ColonyStatistics>   m_colonyStats;
+        Map m_map;
+        Grid<Person>        m_people;
+        std::vector<Colony> m_colonies;
+        ColonyStatsManager  m_colonyStatsManager;
 
         const Config* m_pConfig;
 

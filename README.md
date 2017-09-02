@@ -45,8 +45,7 @@ The rules are as follows:
                         -Inherits the parent's Disease (if parent is diseased)
                         -Has a chance of mutating:
                             -Slim Chance        -> Gets diseased
-                            -Very Small Chance  -> Gets their strength value increased or decreased a lot
-                            -Small Chance       -> Gets their strength value increased or decreased a small amount
+                            -Slightly Larger Chance -> Child is born weaker,
 
 
 # Deps:

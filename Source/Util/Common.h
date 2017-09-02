@@ -40,7 +40,7 @@ void iterateInDirection(Direction direction,
 
 //This loops the cells in a random order, eg might go from bottom left to top right,
 //or top left to bottom right.
-//This is there is less bias towards a certain direction
+//This is so there is less bias towards a certain direction
 template<typename F>
 void randomCellForEach(const Config& config, F f)
 {

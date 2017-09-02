@@ -3,6 +3,7 @@
 #include <iostream>
 #include <ctime>
 #include <thread>
+#include <mutex>
 
 #include "Native/Native.h"
 #include "Util/Common.h"
@@ -29,6 +30,7 @@ Application::Application(const Config& config)
 
     m_GUIText.setFont(ResourceHolder::get().fonts.get("arial"));
     m_GUIText.setCharacterSize(15);
+    m_GUIText.move(10, 3);
 
     m_button.setSize({32, 32});
     m_button.setPosition(8, 8);
@@ -49,6 +51,7 @@ void Application::run()
         update  ();
         render  ();
         pollEvents();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
 
@@ -83,7 +86,9 @@ void Application::pollEvents()
 //Takes the pixels that makes up the people, and save it to an image
 void Application::makeImage()
 {
+    m_imageMutex.lock();
     static int imageCount = 0;
+
     std::cout << "Saving image... Please hold...\n";
     std::string fileName = "Screenshots/Screenshot" + std::to_string(imageCount++) + ".png";
 
@@ -95,6 +100,7 @@ void Application::makeImage()
     {
         std::cout << TextColour::Red << "Failed to save!\n\n" << TextColour::Default;
     }
+    m_imageMutex.unlock();
 }
 
 void Application::updateImage()
@@ -140,7 +146,7 @@ void Application::render()
     m_window.clear(sf::Color::Blue);
 
     m_window.setView(m_view);
-    m_world.draw(m_window);
+    m_world.getMap().draw(m_window);
     m_window.draw(m_pixelSurface);
     m_window.setView(m_window.getDefaultView());
 
