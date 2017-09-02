@@ -3,63 +3,94 @@
 
 #include "../Util/Random.h"
 
-void Person::init(const PersonData& data)
+ChildData::operator Person() const
 {
-    m_data = data;
+    return Person().init(*this);
+}
+
+Person& Person::init(const ChildData& data)
+{
+    m_strength      = data.strength;
+    m_colony        = data.colony;
+    m_isDiseased    = data.isDiseased;
+    m_isAlive       = true;
+    m_age               = 0;
+    m_productionCount   = 0;
+    m_kills             = 0;
+
+    return *this;
 }
 
 void Person::update()
 {
-    m_data.age++;
-    m_data.productionCount++;
+    m_age++;
+    m_productionCount++;
 
-    if (m_data.age > m_data.strength)
+    if (m_age > m_strength)
     {
         kill();
     }
 
-    if (m_data.isDiseased)
+    if (m_isDiseased)
     {
-        m_data.age *= 1.5;
+        m_age *= 1.5;
     }
 }
 
 void Person::fight(Person& other)
 {
-    if (!this->getData().isAlive || !other.getData().isAlive || other.getData().colony == 0) 
+    if (!this->isAlive() || !other.isAlive() || other.getColony() == 0) 
         return;
-    
-    if (other.getData().strength >= getData().strength)
+
+    if (other.m_strength >= m_strength)
     {
         kill();
     }
     else
     {
+        m_kills++;
         other.kill();
     }
 }
 
+MoveVector Person::getNextMove() const
+{
+    return { static_cast<int8_t>(Random::get().intInRange(-1, 1)),
+             static_cast<int8_t>(Random::get().intInRange(-1, 1))};
+}
+
+
 void Person::kill()
 {
-    m_data = PersonData();
+    m_age        = 0;
+    m_strength   = 0;
+    m_colony     = 0;
+    m_productionCount  = 0;
+
+    m_isDiseased = false;
+    m_isAlive    = false;
 }
 
 void Person::giveDisease()
 {
-    m_data.isDiseased = true;
+    m_isDiseased = true;
 }
 
-PersonData Person::getChild()
+ChildData Person::getChild()
 {
-    m_data.productionCount = 0;
+    static const data_t KILL_THRESHOLD = 15;
 
-    PersonData child;
-    child.isAlive   = true;
-    child.colony    = m_data.colony;
-    child.strength  = m_data.strength;
+    int killPoints = 0;
+        //std::ceil(KILL_THRESHOLD / std::max((uint16_t)1, std::min(KILL_THRESHOLD, m_kills)));
+
+    m_productionCount = 0;
+
+    ChildData child;
+    child.colony    = m_colony;
+    child.strength  = m_strength + killPoints;
 
     //chance the child is cured of disease
-    if (m_data.isDiseased)
+    if (m_isDiseased)
     {
         child.isDiseased = Random::get().intInRange(0, 100) >= 85;
     }

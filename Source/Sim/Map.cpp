@@ -2,8 +2,6 @@
 
 #include "../Util/Config.h"
 
-constexpr int COLOUR_RECOGNISE_THRESHOLD = 220;
-
 Map::Map(const Config& config)
 :   m_pConfig   (&config)
 ,	m_biomes	(config.width, config.height)
@@ -34,14 +32,4 @@ sf::Color Map::getPixelAt(unsigned x, unsigned y) const
 const Map::BiomePtr& Map::getBiomeAt(unsigned x, unsigned y) const
 {
 	return m_biomes(x, y);
-}
-
-bool Map::isWaterAt(unsigned x, unsigned y) const
-{
-    return m_pConfig->image.getPixel(x, y).b >= COLOUR_RECOGNISE_THRESHOLD;
-}
-
-bool Map::isLandAt(unsigned x, unsigned y) const
-{
-    return m_pConfig->image.getPixel(x, y).g >= COLOUR_RECOGNISE_THRESHOLD;
 }

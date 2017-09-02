@@ -23,10 +23,7 @@ class Map
 
         sf::Color getPixelAt(unsigned x, unsigned y) const;
         const BiomePtr& getBiomeAt(unsigned x, unsigned y) const;
-
-        bool isWaterAt  (unsigned x, unsigned y) const;
-        bool isLandAt   (unsigned x, unsigned y) const;
-
+        
     private:
         sf::Texture         m_mapTexture;
         sf::RectangleShape  m_sprite;

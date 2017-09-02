@@ -1,8 +1,8 @@
 IMAGE
-UK.png
+UK-mod.png
 
 REPRODUCTION
-3
+7
 
 COLONIES
 10

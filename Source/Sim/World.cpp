@@ -32,10 +32,17 @@ void World::update(sf::Image& image)
 
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
-        auto&    person    = m_people(x, y);
-        if (!person.getData().isAlive) return;
-        unsigned colonyID  = person.getData().colony;
-        unsigned strength  = person.getData().strength;
+        auto& person    = m_people(x, y);
+        if (!person.isAlive())
+            return;
+
+        person.update();
+
+        if (!person.isAlive()) 
+            return;
+
+        unsigned colonyID  = person.getColony();
+        unsigned strength  = person.getStrength();
         auto&    biome     = m_map.getBiomeAt(x, y);
 
         //Sometimes the loop will return early.
@@ -51,12 +58,10 @@ void World::update(sf::Image& image)
             image.setPixel(x, y, getColorAt(x, y));
         };
 
-        person.update();
-        if (!person.getData().isAlive) return;
-
         //Get new location to move to
-        int xMoveTo = x + Random::get().intInRange(-1, 1);
-        int yMoveTo = y + Random::get().intInRange(-1, 1);
+        auto moveTo = person.getNextMove();
+        int xMoveTo = x + moveTo.x;
+        int yMoveTo = y + moveTo.y;
         tryWrap(xMoveTo, yMoveTo);
 
         //Grid square to move to
@@ -65,15 +70,15 @@ void World::update(sf::Image& image)
 
         //If trying to move onto water or onto square where person of same colony is
         //, stay put
-        if (!moveBiome->canMove(person.getData()))
+        if (!moveBiome->canMove(person))
         {
             endAlive();
             newPeople(x, y) = person;
             return;
         }
-        else if (movePerson.getData().colony == person.getData().colony)
+        else if (movePerson.getColony() == colonyID)
         {
-            if (movePerson.getData().isDiseased)
+            if (movePerson.isDiseased())
             {
                 person.giveDisease();
             }
@@ -85,13 +90,13 @@ void World::update(sf::Image& image)
 
         //Try move to new spot
         //Fight other person if need be
-        if (movePerson.getData().colony != person.getData().colony)
+        if (movePerson.getColony() != colonyID)
         {
-            if (movePerson.getData().isAlive)
+            if (movePerson.isAlive())
             {
                 moveBiome->onFight(movePerson, person);
                 person.fight(movePerson);
-                if (!person.getData().isAlive)
+                if (!person.isAlive())
                 {
                     endDead();
                     return;
@@ -102,7 +107,7 @@ void World::update(sf::Image& image)
         newPeople(xMoveTo, yMoveTo) = person;
 
         //try give birth
-        if (person.getData().productionCount >= (unsigned)m_pConfig->reproductionThreshold)
+        if (person.getProduction() >= (unsigned)m_pConfig->reproductionThreshold)
         {
             //The person itself has moved to a new spot, so it is ok to mess with it's data now
             auto childData = person.getChild();
@@ -125,7 +130,7 @@ void World::update(sf::Image& image)
 
 const sf::Color& World::getColorAt(unsigned x, unsigned y) const
 {
-    return m_colonies[m_people(x, y).getData().colony].colour;
+    return m_colonies[m_people(x, y).getColony()].colour;
 }
 
 void World::tryWrap(int& x, int& y) const
@@ -171,21 +176,19 @@ void World::createColonies()
             if (newLocationX < 0 || newLocationX >= (int)m_pConfig->width)  continue;
             if (newLocationY < 0 || newLocationY >= (int)m_pConfig->height) continue;
 
-            PersonData data;
-            data.age        = 0;
+            ChildData data;
             data.strength   = Random::get().intInRange(m_colonies[i].strLow,
                                                        m_colonies[i].strHigh);
-            data.isAlive    = true;
+            data.isDiseased = false;
             data.colony     = i;
 
-            if (!Biome::getBiomeForColor(m_map.getPixelAt(newLocationX, newLocationY))->canMove(data)) continue;
+            if (!m_map.getBiomeAt(newLocationX, newLocationY)->canMove(data)) continue;
 
             m_people(newLocationX, newLocationY).init(data);
 
         }
     }
 }
-
 
 
 
