@@ -55,8 +55,9 @@ void World::update(sf::Image& image)
         };
 
         //Get new location to move to
-        int xMoveTo = x + Random::get().intInRange(-1, 1);
-        int yMoveTo = y + Random::get().intInRange(-1, 1);
+        auto moveTo = person.getNextMove();
+        int xMoveTo = x + moveTo.x;
+        int yMoveTo = y + moveTo.y;
         tryWrap(xMoveTo, yMoveTo);
 
         //Grid square to move to

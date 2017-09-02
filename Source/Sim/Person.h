@@ -3,8 +3,10 @@
 
 #include <cstdint>
 #include <vector>
+#include <SFML/System/Vector2.hpp>
 
-using data_t = uint16_t;
+using data_t        =   uint16_t;
+using MoveVector    =   sf::Vector2<int8_t>;
 
 struct ChildData
 {
@@ -23,6 +25,8 @@ class Person
         void kill();
         void giveDisease();
         void fight(Person& other);
+
+        MoveVector getNextMove() const;
 
         ChildData getChild();
 

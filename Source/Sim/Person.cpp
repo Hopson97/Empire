@@ -46,6 +46,13 @@ void Person::fight(Person& other)
     }
 }
 
+MoveVector Person::getNextMove() const
+{
+    return { Random::get().intInRange(-1, 1),
+             Random::get().intInRange(-1, 1)};
+}
+
+
 void Person::kill()
 {
     m_age        = 0;
