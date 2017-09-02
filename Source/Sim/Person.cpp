@@ -12,6 +12,7 @@ void Person::init(const ChildData& data)
     m_age               = 0;
     m_productionCount   = 0;
     m_kills             = 0;
+    m_moveState         = MoveState::Walking;
 }
 
 void Person::update()
@@ -48,8 +49,18 @@ void Person::fight(Person& other)
 
 MoveVector Person::getNextMove() const
 {
-    return { (int8_t)Random::get().intInRange(-1, 1),
-             (int8_t)Random::get().intInRange(-1, 1)};
+    switch (m_moveState)
+    {
+        case MoveState::Walking:
+            return { (int8_t)Random::get().intInRange(-1, 1),
+                     (int8_t)Random::get().intInRange(-1, 1)};
+
+        case MoveState::Swimming:
+            return m_swimVector;
+
+        default:
+            return {0, 0};
+    }
 }
 
 
