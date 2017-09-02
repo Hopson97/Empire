@@ -43,7 +43,7 @@ std::vector<sf::Vector2i> ColonyCreator::createColonyLocations(const Config& con
         {
             x = Random::get().intInRange(0, config.width);
             y = Random::get().intInRange(0, config.height);
-            if (map.isLandAt(x, y))
+            if (map.getBiomeAt(x, y)->canMove(Person().init({400, static_cast<data_t>(i), false})))
             {
                 locations[i] = {x, y};
                 break;

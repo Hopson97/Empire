@@ -8,6 +8,7 @@ class Grid
 {
     public:
         Grid(unsigned width, unsigned height): m_width(width), m_height(height), m_data(width*height) {}
+        Grid(unsigned width, unsigned height, T& fill): m_width(width), m_height(height), m_data(width*height, fill) {}
         
         unsigned width() const { return m_width; }
         unsigned height() const { return m_height; }

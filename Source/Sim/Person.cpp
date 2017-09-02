@@ -1,10 +1,15 @@
 #include "Person.h"
+#include "Biome.h"
 
 #include "../Util/Random.h"
 
-void Person::init(const ChildData& data)
+ChildData::operator Person() const
 {
+    return Person().init(*this);
+}
 
+Person& Person::init(const ChildData& data)
+{
     m_strength      = data.strength;
     m_colony        = data.colony;
     m_isDiseased    = data.isDiseased;
@@ -13,6 +18,8 @@ void Person::init(const ChildData& data)
     m_productionCount   = 0;
     m_kills             = 0;
     m_moveState         = MoveState::Walking;
+
+    return *this;
 }
 
 void Person::update()
@@ -45,7 +52,7 @@ void Person::endSwim()
 
 void Person::fight(Person& other)
 {
-    if (other.m_colony == 0)
+    if (!this->isAlive() || !other.isAlive() || other.getColony() == 0) 
         return;
 
     if (other.m_strength >= m_strength)

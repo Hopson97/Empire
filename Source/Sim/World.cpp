@@ -1,8 +1,11 @@
 #include "World.h"
+#include "Biome.h"
 
 #include <iostream>
 #include <iomanip>
 #include <functional>
+
+#include <type_traits>
 
 #include "../Util/Random.h"
 #include "../Util/Common.h"
@@ -35,11 +38,12 @@ void World::update(sf::Image& image)
 
         person.update();
 
-        if (!person.isAlive()) return;
-
+        if (!person.isAlive()) 
+            return;
 
         unsigned colonyID  = person.getColony();
         unsigned strength  = person.getStrength();
+        auto&    biome     = m_map.getBiomeAt(x, y);
 
         //Sometimes the loop will return early.
         //If it does, then it can call these functions
@@ -62,10 +66,11 @@ void World::update(sf::Image& image)
 
         //Grid square to move to
         auto& movePerson = m_people(xMoveTo, yMoveTo);
+        auto& moveBiome  = m_map.getBiomeAt(xMoveTo, yMoveTo);
 
         //If trying to move onto water or onto square where person of same colony is
         //, stay put
-        if (m_map.isWaterAt(xMoveTo, yMoveTo))
+        if (!moveBiome->canMove(person))
         {
             endAlive();
             newPeople(x, y) = person;
@@ -89,6 +94,7 @@ void World::update(sf::Image& image)
         {
             if (movePerson.isAlive())
             {
+                moveBiome->onFight(movePerson, person);
                 person.fight(movePerson);
                 if (!person.isAlive())
                 {
@@ -104,7 +110,9 @@ void World::update(sf::Image& image)
         if (person.getProduction() >= (unsigned)m_pConfig->reproductionThreshold)
         {
             //The person itself has moved to a new spot, so it is ok to mess with it's data now
-            person.init(person.getChild());
+            auto childData = person.getChild();
+            biome->onRepopulate(childData);
+            person.init(childData);
         }
         else
         {
@@ -167,13 +175,14 @@ void World::createColonies()
 
             if (newLocationX < 0 || newLocationX >= (int)m_pConfig->width)  continue;
             if (newLocationY < 0 || newLocationY >= (int)m_pConfig->height) continue;
-            if (m_map.isWaterAt(newLocationX, newLocationY))                continue;
 
             ChildData data;
             data.strength   = Random::get().intInRange(m_colonies[i].strLow,
                                                        m_colonies[i].strHigh);
             data.isDiseased = false;
             data.colony     = i;
+
+            if (!m_map.getBiomeAt(newLocationX, newLocationY)->canMove(data)) continue;
 
             m_people(newLocationX, newLocationY).init(data);
 

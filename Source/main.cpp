@@ -6,10 +6,18 @@
 #include "Util/Config.h"
 #include "Application.h"
 #include "Native/Native.h"
+#include "Sim/Biome.h"
 
 void parseConfig    (std::ifstream& inFile, Config& configFile);
 void printConfigTips();
 void printControls  ();
+
+struct Desert : Biome::Base
+{
+    bool isBiome(sf::Color c) override { return c.r > Biome::COLOUR_RECOGNISE_THRESHOLD && c.g > Biome::COLOUR_RECOGNISE_THRESHOLD; }
+    bool canMove(const Person p) override { return true; }
+    void onUpdate(Person& p) override { p.setStrength(p.getStrength()-1); }
+};
 
 int main()
 {
@@ -36,6 +44,11 @@ int main()
 
     configFile.width    = configFile.image.getSize().x;
     configFile.height   = configFile.image.getSize().y;
+
+    Biome::add(new Desert());
+    Biome::add(new Biome::Grass());
+    Biome::add(new Biome::Water());
+    Biome::add(new Biome::Ignore());
 
     Application app(configFile);
     app.run();

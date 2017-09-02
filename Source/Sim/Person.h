@@ -8,25 +8,28 @@
 using data_t        =   uint16_t;
 using MoveVector    =   sf::Vector2<int8_t>;
 
+class Person;
+
 enum class MoveState : uint8_t
 {
     Walking,
     Swimming,
 };
-
 //Simply, this is a struct for new people aka "children"
 struct ChildData
 {
     data_t strength;
     data_t colony;
     data_t isDiseased;
+
+    operator Person() const;
 };
 
 //Represents one person on the map
 class Person
 {
     public:
-        void init   (const ChildData& data);
+        Person& init   (const ChildData& data);
 
         void update();
 
@@ -41,11 +44,20 @@ class Person
 
         ChildData getChild();
 
+        data_t getAge       ()  const   { return m_age;             }
         data_t getStrength  ()  const   { return m_strength;        }
         data_t getProduction()  const   { return m_productionCount; }
         data_t getColony    ()  const   { return m_colony;          }
+        data_t getKills     ()  const   { return m_kills;           }
         bool   isAlive      ()  const   { return m_isAlive;         }
         bool   isDiseased   ()  const   { return m_isDiseased;      }
+
+        void setAge         (data_t age)    { m_age = age;              }
+        void setStrength    (data_t str)    { m_strength = str;         }
+        void setProduction  (data_t pro)    { m_productionCount = pro;  }
+        void setKills       (data_t kil)    { m_kills = kil;            }
+
+        Person& operator=(const ChildData& data) { return init(data); }
 
         MoveState getMoveState  () const { return m_moveState; }
 
