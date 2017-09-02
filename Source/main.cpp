@@ -57,8 +57,17 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
             }
             else
             {
+                configFile.imageName = str.substr(0, str.length() - 4);
+                std::cout << configFile.imageName << "\n";
                 std::cout << TextColour::Green << "Success! Using " << str << ".\n\n";
             }
+        }
+        else if (str == "CUSTOM_START")
+        {
+            inFile >> configFile.customStart;
+            std::cout   << TextColour::Default << "Custom Start Loaded, set to "
+                        << std::boolalpha << configFile.customStart
+                        << ".\n\n" << TextColour::Default;
         }
         else if (str == "REPRODUCTION")
         {

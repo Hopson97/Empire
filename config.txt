@@ -1,5 +1,8 @@
 IMAGE
-world_map_connectXL.png
+world_map.png
+
+CUSTOM_START
+0
 
 REPRODUCTION
 8
