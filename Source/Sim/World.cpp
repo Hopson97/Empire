@@ -3,18 +3,22 @@
 #include <iostream>
 #include <iomanip>
 #include <functional>
+#include <memory>
 
 #include "../Util/Random.h"
 #include "../Util/Common.h"
 #include "../Util/Config.h"
 #include "../ResourceManager/ResourceHolder.h"
 
+#include "ColonyCreator.h"
+#include "RandomColonyCreator.h"
+#include "CustomColonyCreator.h"
+
 constexpr int CHAR_SIZE = 14;
 
 World::World(const Config& config)
 :   m_map           (config)
 ,   m_people        (config.width, config.height)
-,   m_colonies      (config.colonies)
 ,   m_colonyStatsManager    (config.colonies)
 ,   m_pConfig       (&config)
 {
@@ -49,17 +53,26 @@ void World::drawText(sf::RenderWindow& window)
 
 void World::createColonies()
 {
-    ColonyCreator creator(m_pConfig->colonies);
+    std::unique_ptr<ColonyCreator> colonyCreator;
+    if (m_pConfig->customStart)
+    {
+        colonyCreator = std::make_unique<CustomColonyCreator>(m_pConfig->colonies,
+                                                              m_pConfig->imageName);
+    }
+    else
+    {
+        colonyCreator = std::make_unique<RandomColonyCreator>(m_pConfig->colonies);
+    }
 
-    auto locations  = creator.createColonyLocations(*m_pConfig, m_map);
-    m_colonies      = creator.createColonyStats();
+    auto locations  = colonyCreator->createColonyLocations(*m_pConfig, m_map);
+    m_colonies      = colonyCreator->createColonyStats();
 
     //Place colonies at the locations
-    for (unsigned i = 1; i < (unsigned)m_pConfig->colonies; i++)
+    for (unsigned i = 1; i < m_colonies.size(); i++)
     {
         auto& location = locations[i];
         //place up to 50 people at the location
-        for (int j = 0; j < 50; j++)
+        for (int j = 0; j < m_colonies[i].startPeople; j++)
         {
             int xOffset = Random::get().intInRange(-4, 4);
             int yOffset = Random::get().intInRange(-4, 4);

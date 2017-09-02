@@ -9,7 +9,10 @@ class  Map;
 
 struct Colony
 {
-    int         id;
+    unsigned    id;
+    unsigned    startPeople = 50;
+
+
     sf::Color   colour;
 
     unsigned strLow;
