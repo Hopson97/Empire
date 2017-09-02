@@ -101,32 +101,3 @@ void ColonyStatsManager::initText(const std::vector<Colony>& colonies)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

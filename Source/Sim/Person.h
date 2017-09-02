@@ -3,26 +3,22 @@
 
 #include <cstdint>
 #include <vector>
+#include <SFML/System/Vector2.hpp>
 
-struct
-#ifdef __GNUC__
-__attribute__((packed, aligned(4)))
-#endif // __GNUC__
-PersonData
+using data_t        =   uint16_t;
+using MoveVector    =   sf::Vector2<int8_t>;
+
+struct ChildData
 {
-    unsigned    age             = 0;
-    unsigned    strength        = 0;
-    unsigned    colony          = 0;
-    unsigned    productionCount = 0;
-    bool    isDiseased      = false;
-    bool    isAlive         = false;
+    data_t strength;
+    data_t colony;
+    data_t isDiseased;
 };
 
 class Person
 {
     public:
-        Person      () = default;
-        void init   (const PersonData& data);
+        void init   (const ChildData& data);
 
         void update();
 
@@ -30,12 +26,25 @@ class Person
         void giveDisease();
         void fight(Person& other);
 
-        PersonData getChild();
+        MoveVector getNextMove() const;
 
-        const PersonData& getData() const { return m_data; }
+        ChildData getChild();
+
+        data_t getStrength  ()  const   { return m_strength;        }
+        data_t getProduction()  const   { return m_productionCount; }
+        data_t getColony    ()  const   { return m_colony;          }
+        bool   isAlive      ()  const   { return m_isAlive;         }
+        bool   isDiseased   ()  const   { return m_isDiseased;      }
 
     private:
-        PersonData m_data;
+        data_t  m_age        = 0;
+        data_t  m_strength   = 0;
+        data_t  m_colony     = 0;
+        data_t  m_productionCount  = 0;
+        data_t  m_kills = 0;
+
+        bool    m_isDiseased = false;
+        bool    m_isAlive    = false;
 };
 
 
