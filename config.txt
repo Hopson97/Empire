@@ -1,6 +1,9 @@
 IMAGE
 world_map.png
 
+CUSTOM_START
+1
+
 REPRODUCTION
 8
 

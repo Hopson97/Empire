@@ -1,6 +1,7 @@
 #include "Random.h"
 
 #include <ctime>
+#include <iostream>
 
 Random& Random::get()
 {

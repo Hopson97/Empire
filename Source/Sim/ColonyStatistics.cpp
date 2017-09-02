@@ -68,7 +68,7 @@ void ColonyStatsManager::drawStats(sf::RenderWindow& window)
     m_totalPopText.setPosition(10, CHAR_SIZE + 30);
     window.draw(m_totalPopText);
 
-    m_colonyStatsBg.setSize({420, float(i * CHAR_SIZE + 30)});
+    m_colonyStatsBg.setSize({355, float(i * CHAR_SIZE + 30)});
 }
 
 
@@ -77,7 +77,7 @@ void ColonyStatsManager::drawStats(sf::RenderWindow& window)
 void ColonyStatsManager::initText(const std::vector<Colony>& colonies)
 {
     m_colonyStatsBg.move(4, 4);
-    m_colonyStatsBg.setFillColor({128, 128, 128, 128});
+    m_colonyStatsBg.setFillColor({128, 128, 128, 230});
     m_colonyStatsBg.setOutlineColor(sf::Color::Black);
     m_colonyStatsBg.setOutlineThickness(3);
 
@@ -99,34 +99,5 @@ void ColonyStatsManager::initText(const std::vector<Colony>& colonies)
     m_totalPopText.setOutlineThickness  (1);
     m_totalPopText.setFont              (ResourceHolder::get().fonts.get("arial"));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -3,18 +3,22 @@
 #include <iostream>
 #include <iomanip>
 #include <functional>
+#include <memory>
 
 #include "../Util/Random.h"
 #include "../Util/Common.h"
 #include "../Util/Config.h"
 #include "../ResourceManager/ResourceHolder.h"
 
+#include "ColonyCreator.h"
+#include "RandomColonyCreator.h"
+#include "CustomColonyCreator.h"
+
 constexpr int CHAR_SIZE = 14;
 
 World::World(const Config& config)
 :   m_map           (config)
 ,   m_people        (config.width, config.height)
-,   m_colonies      (config.colonies)
 ,   m_colonyStatsManager    (config.colonies)
 ,   m_pConfig       (&config)
 {
@@ -22,102 +26,9 @@ World::World(const Config& config)
     m_colonyStatsManager.initText(m_colonies);
 }
 
-void World::update(sf::Image& image)
-{
-    Grid<Person> newPeople(m_pConfig->width, m_pConfig->height);
-    m_colonyStatsManager.reset();
-
-    randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
-    {
-        auto&    person    = m_people(x, y);
-        unsigned colonyID  = person.getData().colony;
-        unsigned strength  = person.getData().strength;
-
-        //Sometimes the loop will return early.
-        //If it does, then it can call these functions
-        auto endAlive = [&]()
-        {
-            m_colonyStatsManager.update(colonyID, strength);
-            image.setPixel(x, y, getColorAt(x, y));
-        };
-
-        auto endDead = [&]()
-        {
-            image.setPixel(x, y, getColorAt(x, y));
-        };
-
-        if (!person.getData().isAlive) return;
-        person.update();
-        if (!person.getData().isAlive) return;
-
-        //Get new location to move to
-        int xMoveTo = x + Random::get().intInRange(-1, 1);
-        int yMoveTo = y + Random::get().intInRange(-1, 1);
-        tryWrap(xMoveTo, yMoveTo);
-
-        //Grid square to move to
-        auto& movePerson = m_people(xMoveTo, yMoveTo);
-
-        //If trying to move onto water or onto square where person of same colony is
-        //, stay put
-        if (m_map.isWaterAt(xMoveTo, yMoveTo))
-        {
-            endAlive();
-            newPeople(x, y) = person;
-            return;
-        }
-        else if (movePerson.getData().colony == person.getData().colony)
-        {
-            if (movePerson.getData().isDiseased)
-            {
-                person.giveDisease();
-            }
-
-            endAlive();
-            newPeople(x, y) = person;
-            return;
-        }
-
-        //Try move to new spot
-        //Fight other person if need be
-        if (movePerson.getData().colony != person.getData().colony)
-        {
-            if (movePerson.getData().isAlive)
-            {
-                person.fight(movePerson);
-                if (!person.getData().isAlive)
-                {
-                    endDead();
-                    return;
-                }
-            }
-        }
-        //if the fight is survived, then good news!
-        newPeople(xMoveTo, yMoveTo) = person;
-
-        //try give birth
-        if (person.getData().productionCount >= m_pConfig->reproductionThreshold)
-        {
-            //The person itself has moved to a new spot, so it is ok to mess with it's data now
-            person.init(person.getChild());
-        }
-        else
-        {
-            //Kill the old person, the current person has now moved
-            person.kill();
-        }
-
-        //This will either be a dead person, or a newborn
-        newPeople(x, y) = person;
-
-        endAlive();
-    });
-    m_people = std::move(newPeople);
-}
-
 const sf::Color& World::getColorAt(unsigned x, unsigned y) const
 {
-    return m_colonies[m_people(x, y).getData().colony].colour;
+    return m_colonies[m_people(x, y).getColony()].colour;
 }
 
 void World::tryWrap(int& x, int& y) const
@@ -142,17 +53,21 @@ void World::drawText(sf::RenderWindow& window)
 
 void World::createColonies()
 {
-    ColonyCreator creator(m_pConfig->colonies);
+    std::unique_ptr<ColonyCreator> colonyCreator;
+    if (m_pConfig->customStart)
+        colonyCreator = std::make_unique<CustomColonyCreator>(m_pConfig->imageName);
+    else
+        colonyCreator = std::make_unique<RandomColonyCreator>(m_pConfig->colonies);
 
-    auto locations  = creator.createColonyLocations(*m_pConfig, m_map);
-    m_colonies      = creator.createColonyStats();
+    auto locations  = colonyCreator->createColonyLocations(*m_pConfig, m_map);
+    m_colonies      = colonyCreator->createColonyStats();
 
     //Place colonies at the locations
-    for (unsigned i = 1; i < (unsigned)m_pConfig->colonies; i++)
+    for (unsigned i = 1; i < m_colonies.size(); i++)
     {
         auto& location = locations[i];
         //place up to 50 people at the location
-        for (int j = 0; j < 50; j++)
+        for (int j = 0; j < m_colonies[i].startPeople; j++)
         {
             int xOffset = Random::get().intInRange(-4, 4);
             int yOffset = Random::get().intInRange(-4, 4);
@@ -164,11 +79,10 @@ void World::createColonies()
             if (newLocationY < 0 || newLocationY >= (int)m_pConfig->height) continue;
             if (m_map.isWaterAt(newLocationX, newLocationY))                continue;
 
-            PersonData data;
-            data.age        = 0;
+            ChildData data;
             data.strength   = Random::get().intInRange(m_colonies[i].strLow,
                                                        m_colonies[i].strHigh);
-            data.isAlive    = true;
+            data.isDiseased = false;
             data.colony     = i;
 
             m_people(newLocationX, newLocationY).init(data);
@@ -178,5 +92,118 @@ void World::createColonies()
 }
 
 
+void World::update(sf::Image& image)
+{
+    Grid<Person> newPeople(m_pConfig->width, m_pConfig->height);
+    m_colonyStatsManager.reset();
 
+    randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
+    {
+        auto& person    = m_people(x, y);
+        if (!person.isAlive())
+            return;
+
+        person.update();
+
+        if (!person.isAlive()) return;
+
+
+        unsigned colonyID  = person.getColony();
+        unsigned strength  = person.getStrength();
+
+        //Sometimes the loop will return early.
+        //If it does, then it can call these functions
+        auto endAlive = [&]()
+        {
+            m_colonyStatsManager.update(colonyID, strength);
+            image.setPixel(x, y, getColorAt(x, y));
+        };
+
+        auto endDead = [&]()
+        {
+            image.setPixel(x, y, getColorAt(x, y));
+        };
+
+        //Get new location to move to
+        auto nextMove = person.getNextMove();
+        int xMoveTo = x + nextMove.x;
+        int yMoveTo = y + nextMove.y;
+        tryWrap(xMoveTo, yMoveTo);
+
+        //Grid square to move to
+        auto& movePerson = m_people(xMoveTo, yMoveTo);
+
+        if (person.walking())
+        {
+            //If trying to move onto water or onto square where person of same colony is
+            //, stay put
+            if (m_map.isWaterAt(xMoveTo, yMoveTo))
+            {
+                endAlive();
+                newPeople(x, y) = person;
+                return;
+            }
+            else if (movePerson.getColony() == colonyID)
+            {
+                if (movePerson.isDiseased())
+                {
+                    person.giveDisease();
+                }
+
+                endAlive();
+                newPeople(x, y) = person;
+                return;
+            }
+
+            //Try move to new spot
+            //Fight other person if need be
+            if (movePerson.getColony() != colonyID)
+            {
+                if (movePerson.isAlive())
+                {
+                    person.fight(movePerson);
+                    if (!person.isAlive())
+                    {
+                        endDead();
+                        return;
+                    }
+                }
+            }
+            //if the fight is survived, then good news!
+            newPeople(xMoveTo, yMoveTo) = person;
+
+            //try give birth
+            if (person.getProduction() >= (unsigned)m_pConfig->reproductionThreshold)
+            {
+                //The person itself has moved to a new spot, so it is ok to mess with it's data now
+                person.init(person.getChild());
+            }
+            else
+            {
+                //Kill the old person, the current person has now moved
+                person.kill();
+            }
+
+
+            //This will either be a dead person, or a newborn
+            newPeople(x, y) = person;
+
+            endAlive();
+        }
+        else
+        {
+            if (m_map.isLandAt(xMoveTo, yMoveTo))
+            {
+                person.endSwim();
+            }
+
+            newPeople(xMoveTo, yMoveTo) = person;
+            person.kill();
+            newPeople(x, y) = person;
+            endAlive();
+
+        }
+    });
+    m_people = std::move(newPeople);
+}
 
