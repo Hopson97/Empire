@@ -31,6 +31,18 @@ void Person::update()
     }
 }
 
+void Person::startSwim(const MoveVector& dir)
+{
+    m_moveState = MoveState::Walking;
+    m_swimVector = dir;
+}
+
+void Person::endSwim()
+{
+    m_moveState = MoveState::Walking;
+}
+
+
 void Person::fight(Person& other)
 {
     if (other.m_colony == 0)
@@ -73,6 +85,7 @@ void Person::kill()
 
     m_isDiseased = false;
     m_isAlive    = false;
+    m_moveState  = MoveState::Walking;
 }
 
 void Person::giveDisease()

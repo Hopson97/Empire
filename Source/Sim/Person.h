@@ -30,6 +30,9 @@ class Person
 
         void update();
 
+        void startSwim(const MoveVector& dir);
+        void endSwim();
+
         void kill();
         void giveDisease();
         void fight(Person& other);
@@ -44,6 +47,8 @@ class Person
         bool   isAlive      ()  const   { return m_isAlive;         }
         bool   isDiseased   ()  const   { return m_isDiseased;      }
 
+        MoveState getMoveState  () const { return m_moveState; }
+
     private:
         data_t  m_age        = 0;
         data_t  m_strength   = 0;
@@ -51,12 +56,14 @@ class Person
         data_t  m_productionCount  = 0;
         data_t  m_kills = 0;
 
+        MoveVector m_swimVector;
+
         MoveState m_moveState = MoveState::Walking;
 
         bool    m_isDiseased = false;
         bool    m_isAlive    = false;
 
-        MoveVector m_swimVector;
+
 };
 
 

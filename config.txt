@@ -1,8 +1,8 @@
 IMAGE
-thinking.png
+world_map.png
 
 REPRODUCTION
 7
 
 COLONIES
-10
+2
