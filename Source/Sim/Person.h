@@ -9,7 +9,7 @@ using data_t        =   uint16_t;
 using MoveVector    =   sf::Vector2<int8_t>;
 
 class Person;
-
+//Simply, this is a struct for new people aka "children"
 struct ChildData
 {
     data_t strength;
@@ -19,6 +19,7 @@ struct ChildData
     operator Person() const;
 };
 
+//Represents one person on the map
 class Person
 {
     public:

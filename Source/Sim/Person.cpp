@@ -55,8 +55,8 @@ void Person::fight(Person& other)
 
 MoveVector Person::getNextMove() const
 {
-    return { static_cast<int8_t>(Random::get().intInRange(-1, 1)),
-             static_cast<int8_t>(Random::get().intInRange(-1, 1))};
+    return { (int8_t)Random::get().intInRange(-1, 1),
+             (int8_t)Random::get().intInRange(-1, 1)};
 }
 
 
@@ -78,16 +78,16 @@ void Person::giveDisease()
 
 ChildData Person::getChild()
 {
-    static const data_t KILL_THRESHOLD = 15;
+    //static const data_t KILL_THRESHOLD = 15;
 
-    int killPoints = 0;
+    //int killPoints = 0;
         //std::ceil(KILL_THRESHOLD / std::max((uint16_t)1, std::min(KILL_THRESHOLD, m_kills)));
 
     m_productionCount = 0;
 
     ChildData child;
     child.colony    = m_colony;
-    child.strength  = m_strength + killPoints;
+    child.strength  = m_strength;// + killPoints;
 
     //chance the child is cured of disease
     if (m_isDiseased)
