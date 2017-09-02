@@ -29,7 +29,15 @@ void World::update(sf::Image& image)
 
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
-        auto&    person    = m_people(x, y);
+        auto& person    = m_people(x, y);
+        if (!person.isAlive())
+            return;
+
+        person.update();
+
+        if (!person.isAlive()) return;
+
+
         unsigned colonyID  = person.getColony();
         unsigned strength  = person.getStrength();
 
@@ -45,11 +53,6 @@ void World::update(sf::Image& image)
         {
             image.setPixel(x, y, getColorAt(x, y));
         };
-
-
-        if (!person.isAlive()) return;
-        person.update();
-        if (!person.isAlive()) return;
 
         //Get new location to move to
         int xMoveTo = x + Random::get().intInRange(-1, 1);

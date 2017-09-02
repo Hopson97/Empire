@@ -4,10 +4,14 @@
 
 void Person::init(const ChildData& data)
 {
+
     m_strength      = data.strength;
     m_colony        = data.colony;
     m_isDiseased    = data.isDiseased;
     m_isAlive       = true;
+    m_age               = 0;
+    m_productionCount   = 0;
+    m_kills             = 0;
 }
 
 void Person::update()
@@ -37,6 +41,7 @@ void Person::fight(Person& other)
     }
     else
     {
+        m_kills++;
         other.kill();
     }
 }
@@ -59,11 +64,16 @@ void Person::giveDisease()
 
 ChildData Person::getChild()
 {
+    static const data_t KILL_THRESHOLD = 15;
+
+    int killPoints = 0;
+        //std::ceil(KILL_THRESHOLD / std::max((uint16_t)1, std::min(KILL_THRESHOLD, m_kills)));
+
     m_productionCount = 0;
 
     ChildData child;
     child.colony    = m_colony;
-    child.strength  = m_strength;
+    child.strength  = m_strength + killPoints;
 
     //chance the child is cured of disease
     if (m_isDiseased)
