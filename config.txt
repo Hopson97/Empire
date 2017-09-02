@@ -1,5 +1,5 @@
 IMAGE
-world_map_large.png
+thinking.png
 
 REPRODUCTION
 7

@@ -8,6 +8,7 @@
 using data_t        =   uint16_t;
 using MoveVector    =   sf::Vector2<int8_t>;
 
+//Simply, this is a struct for new people aka "children"
 struct ChildData
 {
     data_t strength;
@@ -15,6 +16,7 @@ struct ChildData
     data_t isDiseased;
 };
 
+//Represents one person on the map
 class Person
 {
     public:
