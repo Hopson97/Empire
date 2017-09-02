@@ -21,6 +21,8 @@ class World
     private:
         bool isGrass    (unsigned x, unsigned y)    const;
         bool isWater    (unsigned x, unsigned y)    const;
+        
+        sf::Color getPixelAt(unsigned x, unsigned y) const;
 
         void createColonies();
         void initText();

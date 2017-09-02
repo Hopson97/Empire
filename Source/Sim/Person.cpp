@@ -1,4 +1,5 @@
 #include "Person.h"
+#include "Biome.h"
 
 #include "../Util/Random.h"
 
@@ -30,7 +31,7 @@ void Person::update()
 
 void Person::fight(Person& other)
 {
-    if (other.getData().colony == 0) return;
+    if (!this->getData().isAlive || !other.getData().isAlive || other.getData().colony == 0) return;
     if (other.getData().strength >= getData().strength)
     {
         kill();

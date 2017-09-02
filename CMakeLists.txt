@@ -6,6 +6,7 @@ add_executable (empire
 ./Source/Sim/World.cpp
 ./Source/Sim/Person.cpp
 ./Source/Sim/Colony.cpp
+./Source/Sim/Biome.cpp
 ./Source/Application.cpp
 ./Source/Util/Common.cpp
 ./Source/Util/Random.cpp

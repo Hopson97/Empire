@@ -1,8 +1,11 @@
 #include "World.h"
+#include "Biome.h"
 
 #include <iostream>
 #include <iomanip>
 #include <functional>
+
+#include <type_traits>
 
 #include "../Util/Random.h"
 #include "../Util/Common.h"
@@ -38,30 +41,32 @@ void World::update(sf::Image& image)
 
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
-        auto& person    = m_people(x, y);
-        auto& stats     = m_colonyStats[person.getData().colony];
+        auto&  person    = m_people(x, y);
+        auto&  stats     = m_colonyStats[person.getData().colony];
+        auto&  biome     = Biome::getBiomeForColor(getPixelAt(x, y));
 
         if (!person.getData().isAlive)
             return;
+        biome->onUpdate(person);
         person.update();
         if (!person.getData().isAlive)
             return;
-
 
         //Get new location to move to
         int xMoveTo = x + Random::get().intInRange(-1, 1);
         int yMoveTo = y + Random::get().intInRange(-1, 1);
 
         if (xMoveTo < 0 || xMoveTo >= (int)m_pConfig->width)    return;
-        if (yMoveTo < 0 || yMoveTo >= (int)m_pConfig->height) return;
+        if (yMoveTo < 0 || yMoveTo >= (int)m_pConfig->height)   return;
 
         //Store this for the stats to use at the end of the loop
         auto  strength      = person.getData().strength;
         auto& movePerson    = m_people(xMoveTo, yMoveTo);
+        auto& moveBiome     = Biome::getBiomeForColor(getPixelAt(xMoveTo, yMoveTo));
 
         //If trying to move onto water or onto square where person of same colony is
         //, stay put
-        if (isWater(xMoveTo, yMoveTo))
+        if (!moveBiome->canMove(person.getData()))
         {
             stats.highestStrength = std::max(stats.highestStrength, strength);
             stats.strength    += strength;
@@ -93,6 +98,7 @@ void World::update(sf::Image& image)
         {
             if (movePerson.getData().isAlive)
             {
+                moveBiome->onFight(movePerson, person);
                 person.fight(movePerson);
                 if (!person.getData().isAlive)
                 {
@@ -108,7 +114,9 @@ void World::update(sf::Image& image)
         if (person.getData().productionCount >= m_pConfig->reproductionThreshold)
         {
             //The person itself has moved to a new spot, so it is ok to mess with it's data now
-            person.init(person.getChild());
+            auto childData = person.getChild();
+            biome->onRepopulate(childData);
+            person.init(childData);
         }
         else
         {
@@ -142,6 +150,11 @@ bool World::isGrass(unsigned x, unsigned y) const
 bool World::isWater(unsigned x, unsigned y) const
 {
     return m_pConfig->image.getPixel(x, y).b > 235;
+}
+
+sf::Color World::getPixelAt(unsigned x, unsigned y) const
+{
+    return m_pConfig->image.getPixel(x, y);
 }
 
 void World::draw(sf::RenderWindow& window) const
@@ -184,6 +197,8 @@ void World::createColonies()
     auto locations  = creator.createColonyLocations(m_pConfig->width, m_pConfig->height);
     m_colonies      = creator.createColonyStats();
 
+    std::cout << "limits: " << m_pConfig->width << ", " << m_pConfig->height << "\n";
+
     //Place colonies at the locations
     for (unsigned i = 1; i < (unsigned)m_pConfig->colonies; i++)
     {
@@ -199,13 +214,17 @@ void World::createColonies()
 
             if (newLocationX < 0 || newLocationX >= (int)m_pConfig->width) continue;
             if (newLocationY < 0 || newLocationY >= (int)m_pConfig->height) continue;
-            if (isWater(newLocationX, newLocationY)) continue;
 
             PersonData data;
             data.age        = 0;
             data.strength   = Random::get().intInRange(400, 650);
             data.isAlive    = true;
             data.colony     = i;
+
+            std::cout << "["<< i << ", " << j << "] x: " << newLocationX << ", y: " << newLocationY << "\n";
+            auto& biome = Biome::getBiomeForColor(getPixelAt(newLocationX, newLocationY));
+            if (!biome || !biome->canMove(data)) continue;
+            std::cout << "cleared\n";
 
             m_people(newLocationX, newLocationY).init(data);
 

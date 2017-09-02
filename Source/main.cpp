@@ -5,6 +5,7 @@
 #include "Util/Config.h"
 #include "Application.h"
 #include "Native/Native.h"
+#include "Sim/Biome.h"
 
 void parseConfig    (std::ifstream& inFile, Config& configFile);
 void printConfigTips();
@@ -35,6 +36,10 @@ int main()
 
     configFile.width    = configFile.image.getSize().x;
     configFile.height   = configFile.image.getSize().y;
+
+    Biome::add(new Biome::Grass());
+    Biome::add(new Biome::Water());
+    Biome::add(new Biome::Ignore());
 
     Application app(configFile);
     app.run();

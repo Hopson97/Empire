@@ -34,6 +34,8 @@ class Person
 
         const PersonData& getData() const { return m_data; }
 
+        Person& operator=(const PersonData& data) { init(data); return *this; }
+
     private:
         PersonData m_data;
 };
