@@ -2,33 +2,36 @@
 
 #include "../Util/Random.h"
 
-void Person::init(const PersonData& data)
+void Person::init(const ChildData& data)
 {
-    m_data = data;
+    m_strength      = data.strength;
+    m_colony        = data.colony;
+    m_isDiseased    = data.isDiseased;
+    m_isAlive       = true;
 }
 
 void Person::update()
 {
-    m_data.age++;
-    m_data.productionCount++;
+    m_age++;
+    m_productionCount++;
 
-    if (m_data.age > m_data.strength)
+    if (m_age > m_strength)
     {
         kill();
     }
 
-    if (m_data.isDiseased)
+    if (m_isDiseased)
     {
-        m_data.age *= 1.5;
+        m_age *= 1.5;
     }
 }
 
 void Person::fight(Person& other)
 {
-    if (other.getData().colony == 0)
+    if (other.m_colony == 0)
         return;
 
-    if (other.getData().strength >= getData().strength)
+    if (other.m_strength >= m_strength)
     {
         kill();
     }
@@ -40,25 +43,30 @@ void Person::fight(Person& other)
 
 void Person::kill()
 {
-    m_data = PersonData();
+    m_age        = 0;
+    m_strength   = 0;
+    m_colony     = 0;
+    m_productionCount  = 0;
+
+    m_isDiseased = false;
+    m_isAlive    = false;
 }
 
 void Person::giveDisease()
 {
-    m_data.isDiseased = true;
+    m_isDiseased = true;
 }
 
-PersonData Person::getChild()
+ChildData Person::getChild()
 {
-    m_data.productionCount = 0;
+    m_productionCount = 0;
 
-    PersonData child;
-    child.isAlive   = true;
-    child.colony    = m_data.colony;
-    child.strength  = m_data.strength;
+    ChildData child;
+    child.colony    = m_colony;
+    child.strength  = m_strength;
 
     //chance the child is cured of disease
-    if (m_data.isDiseased)
+    if (m_isDiseased)
     {
         child.isDiseased = Random::get().intInRange(0, 100) >= 85;
     }
