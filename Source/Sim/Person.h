@@ -49,6 +49,9 @@ class Person
 
         MoveState getMoveState  () const { return m_moveState; }
 
+        bool swimming   () const { return m_moveState == MoveState::Swimming; }
+        bool walking    () const { return m_moveState == MoveState::Walking ; }
+
     private:
         data_t  m_age        = 0;
         data_t  m_strength   = 0;

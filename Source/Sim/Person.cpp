@@ -33,7 +33,7 @@ void Person::update()
 
 void Person::startSwim(const MoveVector& dir)
 {
-    m_moveState = MoveState::Walking;
+    m_moveState = MoveState::Swimming;
     m_swimVector = dir;
 }
 
