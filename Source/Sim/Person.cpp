@@ -17,6 +17,7 @@ Person& Person::init(const ChildData& data)
     m_age               = 0;
     m_productionCount   = 0;
     m_kills             = 0;
+    m_moveState         = MoveState::Walking;
 
     return *this;
 }
@@ -37,6 +38,18 @@ void Person::update()
     }
 }
 
+void Person::startSwim(const MoveVector& dir)
+{
+    m_moveState = MoveState::Walking;
+    m_swimVector = dir;
+}
+
+void Person::endSwim()
+{
+    m_moveState = MoveState::Walking;
+}
+
+
 void Person::fight(Person& other)
 {
     if (!this->isAlive() || !other.isAlive() || other.getColony() == 0) 
@@ -55,8 +68,18 @@ void Person::fight(Person& other)
 
 MoveVector Person::getNextMove() const
 {
-    return { (int8_t)Random::get().intInRange(-1, 1),
-             (int8_t)Random::get().intInRange(-1, 1)};
+    switch (m_moveState)
+    {
+        case MoveState::Walking:
+            return { (int8_t)Random::get().intInRange(-1, 1),
+                     (int8_t)Random::get().intInRange(-1, 1)};
+
+        case MoveState::Swimming:
+            return m_swimVector;
+
+        default:
+            return {0, 0};
+    }
 }
 
 
@@ -69,6 +92,7 @@ void Person::kill()
 
     m_isDiseased = false;
     m_isAlive    = false;
+    m_moveState  = MoveState::Walking;
 }
 
 void Person::giveDisease()

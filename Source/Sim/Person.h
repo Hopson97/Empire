@@ -9,6 +9,12 @@ using data_t        =   uint16_t;
 using MoveVector    =   sf::Vector2<int8_t>;
 
 class Person;
+
+enum class MoveState : uint8_t
+{
+    Walking,
+    Swimming,
+};
 //Simply, this is a struct for new people aka "children"
 struct ChildData
 {
@@ -26,6 +32,9 @@ class Person
         Person& init   (const ChildData& data);
 
         void update();
+
+        void startSwim(const MoveVector& dir);
+        void endSwim();
 
         void kill();
         void giveDisease();
@@ -50,6 +59,8 @@ class Person
 
         Person& operator=(const ChildData& data) { return init(data); }
 
+        MoveState getMoveState  () const { return m_moveState; }
+
     private:
         data_t  m_age        = 0;
         data_t  m_strength   = 0;
@@ -57,8 +68,14 @@ class Person
         data_t  m_productionCount  = 0;
         data_t  m_kills = 0;
 
+        MoveVector m_swimVector;
+
+        MoveState m_moveState = MoveState::Walking;
+
         bool    m_isDiseased = false;
         bool    m_isAlive    = false;
+
+
 };
 
 
