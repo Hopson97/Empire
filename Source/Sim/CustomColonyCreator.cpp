@@ -25,6 +25,7 @@ CustomColonyCreator::CustomColonyCreator(int numColonies, const std::string& fil
     {
         if (line == "COLONY")
         {
+            std::cout << "Found colony!\n";
             bool    startFound      = false,
                     strengthFound   = false,
                     peopleFound     = false,
@@ -56,16 +57,14 @@ CustomColonyCreator::CustomColonyCreator(int numColonies, const std::string& fil
                 }
                 else if (line == "COLOUR")
                 {
+                    int r, g, b;
                     colourFound = true;
-                    inFile >> info.colour.r >> info.colour.g >> info.colour.b;
+                    inFile >> r >> g >> b;
+                    info.colour.r = (uint8_t)r;
+                    info.colour.g = (uint8_t)g;
+                    info.colour.b = (uint8_t)b;
                 }
             }
-
-            std::cout   << std::boolalpha
-                        << startFound << " "
-                        << strengthFound << " "
-                        << peopleFound << " "
-                        << colourFound << "\n";
 
             if (startFound && strengthFound && peopleFound && colourFound)
             {
@@ -84,16 +83,14 @@ CustomColonyCreator::CustomColonyCreator(int numColonies, const std::string& fil
 
 std::vector<sf::Vector2i> CustomColonyCreator::createColonyLocations(const Config& config, const Map& map) const
 {
-    std::vector<sf::Vector2i> locations(m_colonyInfo.size());
+    std::vector<sf::Vector2i> locations(m_colonyInfo.size() + 1);
 
     //skip over colony 0
-    for (unsigned i = 1; i < m_colonyInfo.size(); i++)
+    for (unsigned i = 1; i < m_colonyInfo.size() + 1; i++)
     {
         int x, y;
-        //Loops until land is found
-
-        x = m_colonyInfo[i].startPoint.x;
-        y = m_colonyInfo[i].startPoint.y;
+        x = m_colonyInfo[i - 1].startPoint.x;
+        y = m_colonyInfo[i - 1].startPoint.y;
         if (!map.isLandAt(x, y))
         {
             std::cout << "WARNING: COLONY OVER WATER.\n";
@@ -110,14 +107,14 @@ std::vector<Colony> CustomColonyCreator::createColonyStats() const
     std::vector<Colony> colonies(m_colonyInfo.size() + 1);
 
     //Colony 0 is reserved for the dead
-    colonies[0].colour  = {0, 0, 0, 0};
+    colonies[0].colour  = {0, 0, 0, 10};
     colonies[0].id      = 0;
 
     //skip over colony 0
     for (unsigned i = 1; i < m_colonyInfo.size() + 1; i++)
     {
-        auto& col   = colonies[i];
-        auto& info  = m_colonyInfo[i];
+        auto& col   = colonies      [i];
+        auto& info  = m_colonyInfo  [i - 1];
 
         col.strLow  = info.strLow;
         col.strHigh = info.strHigh;
@@ -133,14 +130,14 @@ void CustomColonyCreator::loadStartPoint(ColonyInfo& info, std::ifstream& inFile
 {
     inFile >> info.startPoint.x >> info.startPoint.y;
 
-    if (info.strLow < 0)
+    if (info.startPoint.x < 0)
     {
-        printError("START POINT");
+        printError("START POINT X");
         info.startPoint.x = 100;
     }
-    if (info.strHigh < 0)
+    if (info.startPoint.y < 0)
     {
-        printError("START POINT");
+        printError("START POINT Y");
         info.startPoint.y = 100;
     }
 }
@@ -163,7 +160,7 @@ void CustomColonyCreator::loadStrength(ColonyInfo& info, std::ifstream& inFile)
 void CustomColonyCreator::printError (const std::string& name)
 {
     std::cout   << TextColour::Red
-                << name << "COORDS> MUST BE GREATER THAN 0, setting to 100.\n\n"
+                << name << "MUST BE GREATER THAN 0, setting to 100.\n\n"
                 << TextColour::Default;
 }
 
