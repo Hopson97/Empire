@@ -14,7 +14,7 @@ void Person::init(const ChildData& data)
     m_kills             = 0;
 }
 
-void Person::update()
+bool Person::update()
 {
     m_age++;
     m_productionCount++;
@@ -28,6 +28,7 @@ void Person::update()
     {
         m_age *= 1.5;
     }
+    return true;
 }
 
 void Person::fight(Person& other)

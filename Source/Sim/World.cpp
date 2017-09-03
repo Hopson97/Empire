@@ -41,14 +41,14 @@ void World::tryWrap(int& x, int& y) const
     else if (y >= (int)m_pConfig->height)   y = y - m_pConfig->height;
 }
 
-const Map& World::getMap() const
-{
-    return m_map;
-}
-
 void World::drawText(sf::RenderWindow& window)
 {
     m_colonyStatsManager.drawStats(window);
+}
+
+void World::draw(sf::RenderWindow& window)
+{
+    m_map.draw(window);
 }
 
 void World::createColonies()
@@ -66,12 +66,12 @@ void World::createColonies()
     for (unsigned i = 1; i < m_colonies.size(); i++)
     {
         auto& location = locations[i];
-        //place up to 50 people at the location
-        for (int j = 0; j < m_colonies[i].startPeople; j++)
+        //place people at the location
+        for (unsigned j = 0; j < m_colonies[i].startPeople; j++)
         {
-            constexpr int diameter = 10;
-            int xOffset = Random::get().intInRange(-diameter, diameter);
-            int yOffset = Random::get().intInRange(-diameter, diameter);
+            constexpr int radius = 5;
+            int xOffset = Random::get().intInRange(-radius, radius);
+            int yOffset = Random::get().intInRange(-radius, radius);
 
             int newLocationX = xOffset + location.x;
             int newLocationY = yOffset + location.y;
@@ -104,9 +104,9 @@ void World::update(sf::Image& image)
         if (!person.isAlive())
             return;
 
-        person.update();
+        bool shouldUpdate = person.update();
 
-        if (!person.isAlive()) return;
+        if (!person.isAlive() || !shouldUpdate) return;
 
 
         unsigned colonyID  = person.getColony();

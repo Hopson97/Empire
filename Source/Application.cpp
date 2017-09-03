@@ -146,8 +146,8 @@ void Application::render()
     m_window.clear(sf::Color::Blue);
 
     m_window.setView(m_view);
-    m_world.getMap().draw(m_window);
-    m_window.draw(m_pixelSurface);
+    m_world .draw (m_window);
+    m_window.draw (m_pixelSurface);
     m_window.setView(m_window.getDefaultView());
 
     auto pos = sf::Mouse::getPosition(m_window);

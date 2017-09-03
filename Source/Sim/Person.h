@@ -21,7 +21,7 @@ class Person
     public:
         void init   (const ChildData& data);
 
-        void update();
+        bool update();
 
         void kill();
         void giveDisease();

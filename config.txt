@@ -2,10 +2,10 @@ IMAGE
 world_map.png
 
 CUSTOM_START
-1
+0
 
 REPRODUCTION
-8
+6
 
 COLONIES
-100
+10
