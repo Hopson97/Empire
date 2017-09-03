@@ -14,6 +14,8 @@ add_executable (empire
 ./Source/Util/FPSCounter.cpp
 ./Source/Native/Win32.cpp
 ./Source/Native/Unix.cpp)
+set_property(TARGET empire PROPERTY CXX_STANDARD 14)
+set_property(TARGET empire PROPERTY CXX_STANDARD_REQUIRED ON)
 file(COPY Res colours.txt config.txt DESTINATION ${CMAKE_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Screenshots)
 find_package(Threads)
