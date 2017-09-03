@@ -6,13 +6,6 @@
 #include <SFML/System/Vector2.hpp>
 
 using data_t        =   uint16_t;
-using MoveVector    =   sf::Vector2<int8_t>;
-
-enum class MoveState : uint8_t
-{
-    Walking,
-    Swimming,
-};
 
 //Simply, this is a struct for new people aka "children"
 struct ChildData
@@ -30,14 +23,11 @@ class Person
 
         void update();
 
-        void startSwim(const MoveVector& dir);
-        void endSwim();
-
         void kill();
         void giveDisease();
         void fight(Person& other);
 
-        MoveVector getNextMove() const;
+        sf::Vector2<int8_t> getNextMove() const;
 
         ChildData getChild();
 
@@ -47,11 +37,6 @@ class Person
         bool   isAlive      ()  const   { return m_isAlive;         }
         bool   isDiseased   ()  const   { return m_isDiseased;      }
 
-        MoveState getMoveState  () const { return m_moveState; }
-
-        bool swimming   () const { return m_moveState == MoveState::Swimming; }
-        bool walking    () const { return m_moveState == MoveState::Walking ; }
-
     private:
         data_t  m_age        = 0;
         data_t  m_strength   = 0;
@@ -59,14 +44,8 @@ class Person
         data_t  m_productionCount  = 0;
         data_t  m_kills = 0;
 
-        MoveVector m_swimVector;
-
-        MoveState m_moveState = MoveState::Walking;
-
         bool    m_isDiseased = false;
         bool    m_isAlive    = false;
-
-
 };
 
 

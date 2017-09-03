@@ -69,8 +69,9 @@ void World::createColonies()
         //place up to 50 people at the location
         for (int j = 0; j < m_colonies[i].startPeople; j++)
         {
-            int xOffset = Random::get().intInRange(-4, 4);
-            int yOffset = Random::get().intInRange(-4, 4);
+            constexpr int diameter = 10;
+            int xOffset = Random::get().intInRange(-diameter, diameter);
+            int yOffset = Random::get().intInRange(-diameter, diameter);
 
             int newLocationX = xOffset + location.x;
             int newLocationY = yOffset + location.y;
@@ -99,7 +100,7 @@ void World::update(sf::Image& image)
 
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
-        auto& person    = m_people(x, y);
+        auto& person = m_people(x, y);
         if (!person.isAlive())
             return;
 
@@ -115,6 +116,7 @@ void World::update(sf::Image& image)
         //If it does, then it can call these functions
         auto endAlive = [&]()
         {
+            newPeople(x, y) = person;
             m_colonyStatsManager.update(colonyID, strength);
             image.setPixel(x, y, getColorAt(x, y));
         };
@@ -133,76 +135,55 @@ void World::update(sf::Image& image)
         //Grid square to move to
         auto& movePerson = m_people(xMoveTo, yMoveTo);
 
-        if (person.walking())
+        //If trying to move onto water or onto square where person of same colony is
+        //, stay put
+        if (m_map.isWaterAt(xMoveTo, yMoveTo))
         {
-            //If trying to move onto water or onto square where person of same colony is
-            //, stay put
-            if (m_map.isWaterAt(xMoveTo, yMoveTo))
+            endAlive();
+            return;
+        }
+        else if (movePerson.getColony() == colonyID)
+        {
+            if (movePerson.isDiseased())
             {
-                endAlive();
-                newPeople(x, y) = person;
-                return;
+                person.giveDisease();
             }
-            else if (movePerson.getColony() == colonyID)
-            {
-                if (movePerson.isDiseased())
-                {
-                    person.giveDisease();
-                }
-
-                endAlive();
-                newPeople(x, y) = person;
-                return;
-            }
-
-            //Try move to new spot
-            //Fight other person if need be
-            if (movePerson.getColony() != colonyID)
-            {
-                if (movePerson.isAlive())
-                {
-                    person.fight(movePerson);
-                    if (!person.isAlive())
-                    {
-                        endDead();
-                        return;
-                    }
-                }
-            }
-            //if the fight is survived, then good news!
-            newPeople(xMoveTo, yMoveTo) = person;
-
-            //try give birth
-            if (person.getProduction() >= (unsigned)m_pConfig->reproductionThreshold)
-            {
-                //The person itself has moved to a new spot, so it is ok to mess with it's data now
-                person.init(person.getChild());
-            }
-            else
-            {
-                //Kill the old person, the current person has now moved
-                person.kill();
-            }
-
-
-            //This will either be a dead person, or a newborn
-            newPeople(x, y) = person;
 
             endAlive();
+            return;
+        }
+
+        //Try move to new spot
+        //Fight other person if need be
+        if (movePerson.getColony() != colonyID)
+        {
+            if (movePerson.isAlive())
+            {
+                person.fight(movePerson);
+                if (!person.isAlive())
+                {
+                    endDead();
+                    return;
+                }
+            }
+        }
+        //if the fight is survived, then good news!
+        newPeople(xMoveTo, yMoveTo) = person;
+
+        //try give birth
+        if (person.getProduction() >= (unsigned)m_pConfig->reproductionThreshold)
+        {
+            //The person itself has moved to a new spot, so it is ok to mess with it's data now
+            person.init(person.getChild());
         }
         else
         {
-            if (m_map.isLandAt(xMoveTo, yMoveTo))
-            {
-                person.endSwim();
-            }
-
-            newPeople(xMoveTo, yMoveTo) = person;
+            //Kill the old person, the current person has now moved.
+            //I know this is weird, but it works :^)
             person.kill();
-            newPeople(x, y) = person;
-            endAlive();
-
         }
+
+        endAlive();
     });
     m_people = std::move(newPeople);
 }

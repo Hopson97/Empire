@@ -12,7 +12,6 @@ void Person::init(const ChildData& data)
     m_age               = 0;
     m_productionCount   = 0;
     m_kills             = 0;
-    m_moveState         = MoveState::Walking;
 }
 
 void Person::update()
@@ -31,18 +30,6 @@ void Person::update()
     }
 }
 
-void Person::startSwim(const MoveVector& dir)
-{
-    m_moveState = MoveState::Swimming;
-    m_swimVector = dir;
-}
-
-void Person::endSwim()
-{
-    m_moveState = MoveState::Walking;
-}
-
-
 void Person::fight(Person& other)
 {
     if (other.m_colony == 0)
@@ -59,20 +46,11 @@ void Person::fight(Person& other)
     }
 }
 
-MoveVector Person::getNextMove() const
+sf::Vector2<int8_t> Person::getNextMove() const
 {
-    switch (m_moveState)
-    {
-        case MoveState::Walking:
-            return { (int8_t)Random::get().intInRange(-1, 1),
-                     (int8_t)Random::get().intInRange(-1, 1)};
 
-        case MoveState::Swimming:
-            return m_swimVector;
-
-        default:
-            return {0, 0};
-    }
+    return { (int8_t)Random::get().intInRange(-1, 1),
+             (int8_t)Random::get().intInRange(-1, 1)};
 }
 
 
@@ -85,7 +63,6 @@ void Person::kill()
 
     m_isDiseased = false;
     m_isAlive    = false;
-    m_moveState  = MoveState::Walking;
 }
 
 void Person::giveDisease()
@@ -119,9 +96,9 @@ ChildData Person::getChild()
         child.isDiseased = true;
         child.strength *= 0.65;
     }
-    else if (mutation >= 800'000) //Small mutation
+    else if (mutation >= 900'000) //Small mutation
     {
-        child.strength  *= Random::get().floatInRange(0.1, 1);
+        child.strength  *= Random::get().floatInRange(0.5, 1);
     }
 
     return child;
