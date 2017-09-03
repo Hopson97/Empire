@@ -8,18 +8,18 @@ Hopson:
     quad.png
     world_map.png
     world_map_large.png
-    world_map_large_rivers.png 
+    world_map_large_rivers.png
     utopia.png
     USA.png
     westeros.png
-    world_connectXL.png 
+    world_connectXL.png
 
 CanadianMapper:
     canadian_flag.png
     world_bridge.png
-    world_connect.png 
+    world_connect.png
     hopson.png
-    
+
 Kermit:
     shrek.png
     pepe.png
@@ -29,15 +29,17 @@ Kermit:
     horde.png
     sonic.png
     skellyslogo.png
-    
+
 Mcguy215:
     squiggles.png
-    
+
 Kaz:
     hopson_large.png
     ded.png
-    
+
+Lisbon Mapping
+    world_discrete_connect.png
+
 ???
     maze.png
-    thinking.png 
-    
+    thinking.png

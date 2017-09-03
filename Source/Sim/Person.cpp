@@ -1,5 +1,7 @@
 #include "Person.h"
 
+#include <iostream>
+
 #include "../Util/Random.h"
 
 void Person::init(const ChildData& data)
@@ -12,16 +14,27 @@ void Person::init(const ChildData& data)
     m_age               = 0;
     m_productionCount   = 0;
     m_kills             = 0;
+    m_stopSwimCount     = 0;
 }
 
-void Person::startSwim(sf::Vector2<int8_t>dir)
+void Person::startSwim(const sf::Vector2i& dir)
 {
-
+    m_swimDir = dir;
+    m_isSwimming = true;
 }
 
 void Person::endSwim()
 {
+    if (m_stopSwimCount++ > 10)
+    {
+        m_stopSwimCount = 0;
+        m_isSwimming = false;
+    }
+}
 
+void Person::turnAround()
+{
+    m_swimDir *= -1;
 }
 
 
@@ -57,13 +70,13 @@ void Person::fight(Person& other)
     }
 }
 
-sf::Vector2<int8_t> Person::getNextMove() const
+sf::Vector2i Person::getNextMove() const
 {
     if (m_isSwimming)
         return m_swimDir;
-
-    return {(int8_t)Random::get().intInRange(-1, 1),
-            (int8_t)Random::get().intInRange(-1, 1)};
+    else
+        return { (int8_t)Random::get().intInRange(-1, 1),
+                 (int8_t)Random::get().intInRange(-1, 1)};
 }
 
 
@@ -73,6 +86,7 @@ void Person::kill()
     m_strength   = 0;
     m_colony     = 0;
     m_productionCount  = 0;
+    m_stopSwimCount    = 0;
 
     m_isDiseased = false;
     m_isAlive    = false;
@@ -109,9 +123,9 @@ ChildData Person::getChild()
         child.isDiseased = true;
         child.strength *= 0.65;
     }
-    else if (mutation >= 900'000) //Small mutation
+    else if (mutation >= 750'000) //Small mutation
     {
-        child.strength  *= Random::get().floatInRange(0.1, 1);
+        child.strength  *= Random::get().floatInRange(0.0, 1);
     }
 
     return child;

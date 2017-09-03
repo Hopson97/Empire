@@ -23,14 +23,15 @@ class Person
 
         void update();
 
-        void startSwim(sf::Vector2<int8_t> dir);
+        void startSwim(const sf::Vector2i& dir);
         void endSwim();
+        void turnAround();
 
         void kill();
         void giveDisease();
         void fight(Person& other);
 
-        sf::Vector2<int8_t> getNextMove() const;
+        sf::Vector2i getNextMove() const;
 
         ChildData getChild();
 
@@ -42,13 +43,14 @@ class Person
         bool    isSwimming      ()  const   { return m_isSwimming;      }
 
     private:
+        sf::Vector2i m_swimDir;
+
         data_t  m_age        = 0;
         data_t  m_strength   = 0;
         data_t  m_colony     = 0;
         data_t  m_productionCount  = 0;
         data_t  m_kills = 0;
-
-        sf::Vector2<int8_t> m_swimDir;
+        data_t  m_stopSwimCount = 0;
 
         bool    m_isDiseased = false;
         bool    m_isAlive    = false;

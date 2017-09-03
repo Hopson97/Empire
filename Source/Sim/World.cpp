@@ -101,12 +101,17 @@ void World::update(sf::Image& image)
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y)
     {
         auto& person = m_people(x, y);
+
         if (!person.isAlive())
             return;
 
         person.update();
 
-        if (!person.isAlive()) return;
+        if (!person.isAlive())
+        {
+            image.setPixel(x, y, getColorAt(x, y));
+            return;
+        }
 
         unsigned colonyID  = person.getColony();
         unsigned strength  = person.getStrength();
@@ -134,14 +139,30 @@ void World::update(sf::Image& image)
         //Grid square to move to
         auto& movePerson = m_people(xMoveTo, yMoveTo);
 
-        //If trying to move onto water or onto square where person of same colony is
-        //, stay put
         if (m_map.isWaterAt(xMoveTo, yMoveTo))
         {
-            endAlive();
-            return;
+            //endAlive();
+            //return;
+
+            if (!person.isSwimming())
+            {
+                if (Random::get().intInRange(0, 1000) < 900 )
+                {
+                    person.startSwim(nextMove);
+                }
+                else
+                {
+                    endAlive();
+                    return;
+                }
+            }
         }
-        else if (movePerson.getColony() == colonyID)
+        else
+        {
+            person.endSwim();
+        }
+
+        if (movePerson.getColony() == colonyID) //disease will spread
         {
             if (movePerson.isDiseased())
             {
@@ -151,10 +172,7 @@ void World::update(sf::Image& image)
             endAlive();
             return;
         }
-
-        //Try move to new spot
-        //Fight other person if need be
-        if (movePerson.getColony() != colonyID)
+        else
         {
             if (movePerson.isAlive())
             {
@@ -166,20 +184,27 @@ void World::update(sf::Image& image)
                 }
             }
         }
-        //if the fight is survived, then good news!
-        newPeople(xMoveTo, yMoveTo) = person;
 
-        //try give birth
-        if (person.getProduction() >= (unsigned)m_pConfig->reproductionThreshold)
+        //if the person survived, then move to the next place
+        newPeople(xMoveTo, yMoveTo) = person;
+        if (person.isSwimming())
         {
-            //The person itself has moved to a new spot, so it is ok to mess with it's data now
-            person.init(person.getChild());
+            //person.init(person.getChild());
+            person.kill();
         }
         else
         {
-            //Kill the old person, the current person has now moved.
-            //I know this is weird, but it works :^)
-            person.kill();
+            if ((person.getProduction() >= (unsigned)m_pConfig->reproductionThreshold))
+            {
+                //The person itself has moved to a new spot, so it is ok to mess with it's data now
+                person.init(person.getChild());
+            }
+            else
+            {
+                //Kill the old person, the current person has now moved.
+                //I know this is weird, but it works :^)
+                person.kill();
+            }
         }
 
         endAlive();
