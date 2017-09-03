@@ -14,7 +14,18 @@ void Person::init(const ChildData& data)
     m_kills             = 0;
 }
 
-bool Person::update()
+void Person::startSwim(sf::Vector2<int8_t>dir)
+{
+
+}
+
+void Person::endSwim()
+{
+
+}
+
+
+void Person::update()
 {
     m_age++;
     m_productionCount++;
@@ -28,7 +39,6 @@ bool Person::update()
     {
         m_age *= 1.5;
     }
-    return true;
 }
 
 void Person::fight(Person& other)
@@ -49,9 +59,11 @@ void Person::fight(Person& other)
 
 sf::Vector2<int8_t> Person::getNextMove() const
 {
+    if (m_isSwimming)
+        return m_swimDir;
 
-    return { (int8_t)Random::get().intInRange(-1, 1),
-             (int8_t)Random::get().intInRange(-1, 1)};
+    return {(int8_t)Random::get().intInRange(-1, 1),
+            (int8_t)Random::get().intInRange(-1, 1)};
 }
 
 
@@ -99,7 +111,7 @@ ChildData Person::getChild()
     }
     else if (mutation >= 900'000) //Small mutation
     {
-        child.strength  *= Random::get().floatInRange(0.5, 1);
+        child.strength  *= Random::get().floatInRange(0.1, 1);
     }
 
     return child;

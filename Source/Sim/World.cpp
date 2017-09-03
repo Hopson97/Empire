@@ -104,10 +104,9 @@ void World::update(sf::Image& image)
         if (!person.isAlive())
             return;
 
-        bool shouldUpdate = person.update();
+        person.update();
 
-        if (!person.isAlive() || !shouldUpdate) return;
-
+        if (!person.isAlive()) return;
 
         unsigned colonyID  = person.getColony();
         unsigned strength  = person.getStrength();

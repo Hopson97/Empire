@@ -5,7 +5,7 @@
 #include <vector>
 #include <SFML/System/Vector2.hpp>
 
-using data_t        =   uint16_t;
+using data_t = uint16_t;
 
 //Simply, this is a struct for new people aka "children"
 struct ChildData
@@ -21,7 +21,10 @@ class Person
     public:
         void init   (const ChildData& data);
 
-        bool update();
+        void update();
+
+        void startSwim(sf::Vector2<int8_t> dir);
+        void endSwim();
 
         void kill();
         void giveDisease();
@@ -31,11 +34,12 @@ class Person
 
         ChildData getChild();
 
-        data_t getStrength  ()  const   { return m_strength;        }
-        data_t getProduction()  const   { return m_productionCount; }
-        data_t getColony    ()  const   { return m_colony;          }
-        bool   isAlive      ()  const   { return m_isAlive;         }
-        bool   isDiseased   ()  const   { return m_isDiseased;      }
+        data_t  getStrength     ()  const   { return m_strength;        }
+        data_t  getProduction   ()  const   { return m_productionCount; }
+        data_t  getColony       ()  const   { return m_colony;          }
+        bool    isAlive         ()  const   { return m_isAlive;         }
+        bool    isDiseased      ()  const   { return m_isDiseased;      }
+        bool    isSwimming      ()  const   { return m_isSwimming;      }
 
     private:
         data_t  m_age        = 0;
@@ -44,8 +48,11 @@ class Person
         data_t  m_productionCount  = 0;
         data_t  m_kills = 0;
 
+        sf::Vector2<int8_t> m_swimDir;
+
         bool    m_isDiseased = false;
         bool    m_isAlive    = false;
+        bool    m_isSwimming = false;
 };
 
 
