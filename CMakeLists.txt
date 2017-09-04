@@ -25,4 +25,6 @@ file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Screenshots)
 find_package(Threads)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 find_package(SFML 2.4 REQUIRED network audio graphics window system)
+option(SFML_STATIC_LIBRARIES "Set to TRUE to link libraries statically. Requires statically built SFML." FALSE)
 target_link_libraries(empire Threads::Threads ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} )
+
