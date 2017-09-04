@@ -149,7 +149,7 @@ void World::update(sf::Image& image)
             return;
             #endif // SWIMMING_ENABLED
 ///@SWIMMING
-/*  SWIMMING enabling code. If you want to see it, then #define SWIMMING_ENABLED somewhere
+/*  SWIMMING enabling code. If you want to see it, then #define SWIMMING_ENABLED at the top of this file
 
     I commented this out as it didn't have results in spirit of the goals of this application
     As, with swimming, you end up with two colonies in equilibrium, twisted amongst each other
@@ -178,6 +178,7 @@ void World::update(sf::Image& image)
         }
         #endif // SWIMMING_ENABLED
 
+        //For encounters with people of the same colony or others
         if (movePerson.getColony() == colonyID) //disease will spread
         {
             if (movePerson.isDiseased())
@@ -208,6 +209,8 @@ void World::update(sf::Image& image)
 
         //if the person survived, then move to the next place
         newPeople(xMoveTo, yMoveTo) = person;
+
+        //Only reproduce over land
         if (person.isSwimming())
         {
             //Kill the old person, the current person has now moved.
