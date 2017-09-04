@@ -37,8 +37,8 @@ class Person
         ChildData getChild();
 
         data_t  getStrength     ()  const   { return m_strength;        }
-        data_t  getProduction   ()  const   { return m_productionCount; }
         data_t  getColony       ()  const   { return m_colony;          }
+        uint8_t getProduction   ()  const   { return m_productionCount; }
         bool    isAlive         ()  const   { return m_isAlive;         }
         bool    isDiseased      ()  const   { return m_isDiseased;      }
         bool    isSwimming      ()  const   { return m_isSwimming;      }
@@ -49,12 +49,12 @@ class Person
         data_t  m_age        = 0;
         data_t  m_strength   = 0;
         data_t  m_colony     = 0;
-        data_t  m_productionCount  = 0;
-        data_t  m_stopSwimCount = 0;
+        uint8_t m_productionCount   = 0;
+        uint8_t m_stopSwimCount     = 0;
 
-        bool    m_isDiseased = false;
-        bool    m_isAlive    = false;
-        bool    m_isSwimming = false;
+        bool    m_isDiseased    : 1;
+        bool    m_isAlive       : 1;
+        bool    m_isSwimming    : 1;
 };
 
 

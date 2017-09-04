@@ -11,6 +11,7 @@ void Person::init(const ChildData& data)
     m_colony        = data.colony;
     m_isDiseased    = data.isDiseased;
     m_isAlive       = true;
+    m_isSwimming    = false;
     m_age               = 0;
     m_productionCount   = 0;
     m_stopSwimCount     = 0;
@@ -89,6 +90,7 @@ void Person::kill()
 
     m_isDiseased = false;
     m_isAlive    = false;
+    m_isSwimming = false;
 }
 
 void Person::giveDisease()
