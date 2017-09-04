@@ -152,7 +152,7 @@ void World::update(sf::Image& image)
     on every island, whereas the spirit is huge colonies. Hence, I removed it.
             if (!person.isSwimming())
             {
-                if ((Random::get().intInRange(0, 10000) < 5) || (person.getStrength() >= 250))
+                if ((Random::get().intInRange(0, 10000) < 3))
                 {
                     person.startSwim(nextMove);
                 }

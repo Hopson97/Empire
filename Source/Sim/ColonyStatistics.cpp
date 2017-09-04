@@ -81,7 +81,7 @@ void ColonyStatsManager::initText(const std::vector<Colony>& colonies)
     m_colonyStatsBg.setOutlineColor(sf::Color::Black);
     m_colonyStatsBg.setOutlineThickness(3);
 
-    for (int i = 0; i < colonies.size(); i++)
+    for (unsigned i = 0; i < colonies.size(); i++)
     {
         auto& stats = m_colonyStats[i];
         stats.name  = "Colony " + std::to_string(i) + ": ";

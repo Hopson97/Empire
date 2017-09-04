@@ -8,8 +8,6 @@
 #include "Native/Native.h"
 
 void parseConfig    (std::ifstream& inFile, Config& configFile);
-void printConfigTips();
-void printControls  ();
 
 int main()
 {
@@ -31,8 +29,7 @@ int main()
         parseConfig(inFile, configFile);
     }
 
-    printConfigTips ();
-    printControls   ();
+    std::cout << TextColour::Cyan << "Please view the Instructions file for controls and how to\ncustomise your experience.\n\n" << TextColour::Default;
 
     configFile.width    = configFile.image.getSize().x;
     configFile.height   = configFile.image.getSize().y;
@@ -95,25 +92,4 @@ void parseConfig(std::ifstream& inFile, Config& configFile)
             }
         }
     }
-}
-
-void printConfigTips()
-{
-    std::cout   << TextColour::DarkCyan <<  "\nIf you want to customise your experience, then simply edit the values in config.txt. \nRecommended:\n"
-                << TextColour::Cyan     <<  "Image:          world_map_full.png [Put a pic in the Res/Maps/ folder, must be green and blue]\n"
-                <<                          "Reproduction:   8  [This is the threshold of reproduction, lower = higher birthrate]\n"
-                <<                          "Colonies:       10 [This is the number of colonies the simulation begins with]\n"
-                << TextColour::Red     <<   "PLEASE NOTE, setting the colony count too high can cause CRASHES, hence it will check your number, and change it if you set it too high\n"
-                << TextColour::Default <<   "Enjoy!\n\n";
-}
-
-void printControls  ()
-{
-    std::cout   << TextColour::Red << "Controls:\n" << TextColour::Cyan
-                << "P -> Prints a screenshot of the people (without the background).\n"
-                << "See console window for the location and image name.\n"
-                << TextColour::Red << "Taking screenshots in future sessions WILL OVERWRITE your screenshots from previous sessions!!\n\n" << TextColour::Cyan
-                << "WASD -> Pans Camera around.\n\n"
-                << "Up/ Down Arrow Keys -> Zooms camera in and out.\n\n"
-                << "\n\n" << TextColour::Default;
 }

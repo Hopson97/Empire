@@ -7,9 +7,9 @@ add_executable (empire
 ./Source/Sim/World.cpp
 ./Source/Sim/Person.cpp
 ./Source/Sim/Colony.cpp
-./Source/Sim/ColonyCreator.cpp
+./Source/Sim/ColonyStatistics.cpp
 ./Source/Sim/CustomColonyCreator.cpp
-./Source/Sim/RandomColonyCreator.cpp
+./Source/Sim/ColonyCreator.cpp
 ./Source/Sim/Map.cpp
 ./Source/Util/Common.cpp
 ./Source/Util/Random.cpp

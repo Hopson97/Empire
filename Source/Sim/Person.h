@@ -5,15 +5,18 @@
 #include <vector>
 #include <SFML/System/Vector2.hpp>
 
-using vect_t = sf::Vector2<int8_t>;
-using data_t = uint16_t;
+struct Vect2
+{
+    int8_t x : 2;
+    int8_t y : 2;
+};
 
 //Simply, this is a struct for new people aka "children"
 struct ChildData
 {
-    data_t strength;
-    data_t colony;
-    data_t isDiseased;
+    uint16_t strength;
+    uint16_t colony;
+    uint16_t isDiseased;
 };
 
 //Represents one person on the map
@@ -24,7 +27,7 @@ class Person
 
         void update();
 
-        void startSwim(vect_t dir);
+        void startSwim(Vect2 dir);
         void endSwim();
         void turnAround();
 
@@ -32,25 +35,24 @@ class Person
         void giveDisease();
         void fight(Person& other);
 
-        vect_t getNextMove() const;
+        Vect2 getNextMove() const;
 
         ChildData getChild();
 
-        data_t  getStrength     ()  const   { return m_strength;        }
-        data_t  getColony       ()  const   { return m_colony;          }
+        uint16_t  getStrength   ()  const   { return m_strength;        }
+        uint16_t  getColony     ()  const   { return m_colony;          }
         uint8_t getProduction   ()  const   { return m_productionCount; }
         bool    isAlive         ()  const   { return m_isAlive;         }
         bool    isDiseased      ()  const   { return m_isDiseased;      }
         bool    isSwimming      ()  const   { return m_isSwimming;      }
 
     private:
-        vect_t m_swimDir;
-
         uint16_t    m_age               = 0;
         uint16_t    m_strength          = 0;
         uint16_t    m_colony            = 0;
         uint8_t     m_productionCount   = 0;
         uint8_t     m_stopSwimCount     = 0;
+        Vect2       m_swimDir;
 
         bool    m_isDiseased    : 1;
         bool    m_isAlive       : 1;
