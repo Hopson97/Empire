@@ -16,7 +16,7 @@ void Person::init(const ChildData& data)
     m_stopSwimCount     = 0;
 }
 
-void Person::startSwim(const sf::Vector2i& dir)
+void Person::startSwim(vect_t dir)
 {
     m_swimDir = dir;
     m_isSwimming = true;
@@ -33,7 +33,8 @@ void Person::endSwim()
 
 void Person::turnAround()
 {
-    m_swimDir *= -1;
+    m_swimDir.x *= -1;
+    m_swimDir.y *= -1;
 }
 
 
@@ -68,7 +69,7 @@ void Person::fight(Person& other)
     }
 }
 
-sf::Vector2i Person::getNextMove() const
+vect_t Person::getNextMove() const
 {
     if (m_isSwimming)
         return m_swimDir;

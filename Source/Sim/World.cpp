@@ -203,7 +203,13 @@ void World::update(sf::Image& image)
         newPeople(xMoveTo, yMoveTo) = person;
         if (person.isSwimming())
         {
+            //Turning this on causes "laser people"(assuming swimming is enabled)
             //person.init(person.getChild());
+
+
+
+            //Kill the old person, the current person has now moved.
+            //I know this is weird, but it works :^)
             person.kill();
         }
         else

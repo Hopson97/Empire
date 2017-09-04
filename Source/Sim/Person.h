@@ -5,6 +5,7 @@
 #include <vector>
 #include <SFML/System/Vector2.hpp>
 
+using vect_t = sf::Vector2<int8_t>;
 using data_t = uint16_t;
 
 //Simply, this is a struct for new people aka "children"
@@ -23,7 +24,7 @@ class Person
 
         void update();
 
-        void startSwim(const sf::Vector2i& dir);
+        void startSwim(vect_t dir);
         void endSwim();
         void turnAround();
 
@@ -31,7 +32,7 @@ class Person
         void giveDisease();
         void fight(Person& other);
 
-        sf::Vector2i getNextMove() const;
+        vect_t getNextMove() const;
 
         ChildData getChild();
 
@@ -43,7 +44,7 @@ class Person
         bool    isSwimming      ()  const   { return m_isSwimming;      }
 
     private:
-        sf::Vector2i m_swimDir;
+        vect_t m_swimDir;
 
         data_t  m_age        = 0;
         data_t  m_strength   = 0;
