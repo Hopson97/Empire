@@ -46,11 +46,11 @@ class Person
     private:
         vect_t m_swimDir;
 
-        data_t  m_age        = 0;
-        data_t  m_strength   = 0;
-        data_t  m_colony     = 0;
-        uint8_t m_productionCount   = 0;
-        uint8_t m_stopSwimCount     = 0;
+        uint16_t    m_age               = 0;
+        uint16_t    m_strength          = 0;
+        uint16_t    m_colony            = 0;
+        uint8_t     m_productionCount   = 0;
+        uint8_t     m_stopSwimCount     = 0;
 
         bool    m_isDiseased    : 1;
         bool    m_isAlive       : 1;
