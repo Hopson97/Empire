@@ -1,5 +1,5 @@
 IMAGE
-world_map.png
+world_discrete_connect.png
 
 CUSTOM_START
 0

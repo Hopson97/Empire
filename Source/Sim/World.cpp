@@ -141,12 +141,18 @@ void World::update(sf::Image& image)
 
         if (m_map.isWaterAt(xMoveTo, yMoveTo))
         {
-            //endAlive();
-            //return;
+            endAlive();
+            return;
+///@SWIMMING
+/*  SWIMMING enabling code. If you want to see it, then remove
+    the two lines of code above and remove this comment block.
 
+    I commented this out as it didn't have results in spirit of the goals of this application
+    As, with swimming, you end up with two colonies in equilibrium, twisted amongst each other
+    on every island, whereas the spirit is huge colonies. Hence, I removed it.
             if (!person.isSwimming())
             {
-                if (Random::get().intInRange(0, 1000) < 900 )
+                if ((Random::get().intInRange(0, 10000) < 5) || (person.getStrength() >= 250))
                 {
                     person.startSwim(nextMove);
                 }
@@ -156,17 +162,25 @@ void World::update(sf::Image& image)
                     return;
                 }
             }
+*/
         }
+        /*
         else
         {
             person.endSwim();
         }
+        */
 
         if (movePerson.getColony() == colonyID) //disease will spread
         {
             if (movePerson.isDiseased())
             {
                 person.giveDisease();
+            }
+
+            if (person.isSwimming())
+            {
+                person.turnAround();
             }
 
             endAlive();

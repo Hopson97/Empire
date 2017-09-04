@@ -49,7 +49,6 @@ class Person
         data_t  m_strength   = 0;
         data_t  m_colony     = 0;
         data_t  m_productionCount  = 0;
-        data_t  m_kills = 0;
         data_t  m_stopSwimCount = 0;
 
         bool    m_isDiseased = false;
