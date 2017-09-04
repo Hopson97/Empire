@@ -14,6 +14,8 @@
 #include "RandomColonyCreator.h"
 #include "CustomColonyCreator.h"
 
+#define SWIMMING_ENABLED
+
 constexpr int CHAR_SIZE = 14;
 
 World::World(const Config& config)
@@ -141,15 +143,18 @@ void World::update(sf::Image& image)
 
         if (m_map.isWaterAt(xMoveTo, yMoveTo))
         {
+            #ifndef SWIMMING_ENABLED
             endAlive();
             return;
+            #endif // SWIMMING_ENABLED
 ///@SWIMMING
-/*  SWIMMING enabling code. If you want to see it, then remove
-    the two lines of code above and remove this comment block.
+/*  SWIMMING enabling code. If you want to see it, then #define SWIMMING_ENABLED somewhere
 
     I commented this out as it didn't have results in spirit of the goals of this application
     As, with swimming, you end up with two colonies in equilibrium, twisted amongst each other
     on every island, whereas the spirit is huge colonies. Hence, I removed it.
+*/
+            #ifdef SWIMMING_ENABLED
             if (!person.isSwimming())
             {
                 if ((Random::get().intInRange(0, 10000) < 3))
@@ -162,14 +167,15 @@ void World::update(sf::Image& image)
                     return;
                 }
             }
-*/
+            #endif // SWIMMING_ENABLED
         }
-        /*
+
+        #ifdef SWIMMING_ENABLED
         else
         {
             person.endSwim();
         }
-        */
+        #endif // SWIMMING_ENABLED
 
         if (movePerson.getColony() == colonyID) //disease will spread
         {
@@ -203,14 +209,15 @@ void World::update(sf::Image& image)
         newPeople(xMoveTo, yMoveTo) = person;
         if (person.isSwimming())
         {
-            //Turning this on causes "laser people"(assuming swimming is enabled)
-            //person.init(person.getChild());
-
-
-
             //Kill the old person, the current person has now moved.
             //I know this is weird, but it works :^)
             person.kill();
+
+            //Turning this on causes "laser people"(assuming swimming is enabled)
+            person.init(person.getChild());
+
+
+
         }
         else
         {
