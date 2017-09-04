@@ -16,7 +16,8 @@ CustomColonyCreator::CustomColonyCreator(const std::string& fileName)
 
     if (!inFile.is_open())
     {
-        std::cout << "Unable to open" << fileName << '\n';
+        std::cout << "Unable to open custom colonies for: " << fileName << '\n';
+        exit(-1);
     }
 
     std::string line;

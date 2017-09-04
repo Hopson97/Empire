@@ -15,8 +15,6 @@ Application::Application(const Config& config)
 ,   m_world     (config)
 ,   m_pConfig   (&config)
 {
-    m_window.setFramerateLimit(100);
-
     m_view.setCenter({(float)config.width / 2, (float)config.height / 2});
     m_view.setSize  ({(float)config.width,     (float)config.height});
 
@@ -51,7 +49,7 @@ void Application::run()
         update  ();
         render  ();
         pollEvents();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(2));
     }
 }
 
@@ -146,8 +144,8 @@ void Application::render()
     m_window.clear(sf::Color::Blue);
 
     m_window.setView(m_view);
-    m_world.getMap().draw(m_window);
-    m_window.draw(m_pixelSurface);
+    m_world .draw (m_window);
+    m_window.draw (m_pixelSurface);
     m_window.setView(m_window.getDefaultView());
 
     auto pos = sf::Mouse::getPosition(m_window);

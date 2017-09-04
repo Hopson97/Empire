@@ -20,7 +20,7 @@ class World
 
         const sf::Color& getColorAt(unsigned x, unsigned y) const;
 
-        const Map& getMap() const;
+        void draw(sf::RenderWindow& window);
 
     private:
         void tryWrap(int& x, int& y) const;

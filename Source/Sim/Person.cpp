@@ -1,5 +1,7 @@
 #include "Person.h"
 
+#include <iostream>
+
 #include "../Util/Random.h"
 
 void Person::init(const ChildData& data)
@@ -9,11 +11,33 @@ void Person::init(const ChildData& data)
     m_colony        = data.colony;
     m_isDiseased    = data.isDiseased;
     m_isAlive       = true;
+    m_isSwimming    = false;
     m_age               = 0;
     m_productionCount   = 0;
-    m_kills             = 0;
-    m_moveState         = MoveState::Walking;
+    m_stopSwimCount     = 0;
 }
+
+void Person::startSwim(vect_t dir)
+{
+    m_swimDir = dir;
+    m_isSwimming = true;
+}
+
+void Person::endSwim()
+{
+    if (m_stopSwimCount++ > 10)
+    {
+        m_stopSwimCount = 0;
+        m_isSwimming = false;
+    }
+}
+
+void Person::turnAround()
+{
+    m_swimDir.x *= -1;
+    m_swimDir.y *= -1;
+}
+
 
 void Person::update()
 {
@@ -31,18 +55,6 @@ void Person::update()
     }
 }
 
-void Person::startSwim(const MoveVector& dir)
-{
-    m_moveState = MoveState::Swimming;
-    m_swimVector = dir;
-}
-
-void Person::endSwim()
-{
-    m_moveState = MoveState::Walking;
-}
-
-
 void Person::fight(Person& other)
 {
     if (other.m_colony == 0)
@@ -54,25 +66,17 @@ void Person::fight(Person& other)
     }
     else
     {
-        m_kills++;
         other.kill();
     }
 }
 
-MoveVector Person::getNextMove() const
+vect_t Person::getNextMove() const
 {
-    switch (m_moveState)
-    {
-        case MoveState::Walking:
-            return { (int8_t)Random::get().intInRange(-1, 1),
-                     (int8_t)Random::get().intInRange(-1, 1)};
-
-        case MoveState::Swimming:
-            return m_swimVector;
-
-        default:
-            return {0, 0};
-    }
+    if (m_isSwimming)
+        return m_swimDir;
+    else
+        return { (int8_t)Random::get().intInRange(-1, 1),
+                 (int8_t)Random::get().intInRange(-1, 1)};
 }
 
 
@@ -82,10 +86,11 @@ void Person::kill()
     m_strength   = 0;
     m_colony     = 0;
     m_productionCount  = 0;
+    m_stopSwimCount    = 0;
 
     m_isDiseased = false;
     m_isAlive    = false;
-    m_moveState  = MoveState::Walking;
+    m_isSwimming = false;
 }
 
 void Person::giveDisease()
@@ -95,16 +100,11 @@ void Person::giveDisease()
 
 ChildData Person::getChild()
 {
-    //static const data_t KILL_THRESHOLD = 15;
-
-    //int killPoints = 0;
-        //std::ceil(KILL_THRESHOLD / std::max((uint16_t)1, std::min(KILL_THRESHOLD, m_kills)));
-
     m_productionCount = 0;
 
     ChildData child;
     child.colony    = m_colony;
-    child.strength  = m_strength;// + killPoints;
+    child.strength  = m_strength;
 
     //chance the child is cured of disease
     if (m_isDiseased)
@@ -119,9 +119,9 @@ ChildData Person::getChild()
         child.isDiseased = true;
         child.strength *= 0.65;
     }
-    else if (mutation >= 800'000) //Small mutation
+    else if (mutation >= 750'000) //Small mutation
     {
-        child.strength  *= Random::get().floatInRange(0.1, 1);
+        child.strength  *= Random::get().floatInRange(0.0, 1);
     }
 
     return child;
