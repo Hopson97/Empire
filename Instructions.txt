@@ -1,0 +1,44 @@
+If you want to customise your experience, then simply edit the values in config.txt.
+
+Recommended:
+Image:          world_map_full.png [Put a pic in the Res/Maps/ folder, must be green and blue]
+Reproduction:   8  [This is the threshold of reproduction, lower = higher birthrate]
+Colonies:       10 [This is the number of colonies the simulation begins with]
+PLEASE NOTE, setting the colony count too high can cause CRASHES, hence it will check your number, and change it if you set it too high!
+
+
+Controls:
+
+    WASD -> Pan Camera
+    Up/Down -> Zoom in/ out
+
+Custom Colonies
+    You must change the value in config.txt CUSTOM_START from 0 to 1
+    You must have a corresponding file for the image in the Res/Starts/ folder with the following format for each colony:
+
+------------------------------------
+    COLONY
+    START
+    x y
+
+    STRENGTH
+    low high
+
+    PEOPLE
+    n
+
+    COLOUR
+    r g b
+    END
+------------------------------------
+
+    Where:
+        START       refers to the start point of the colony
+        STRENGTH    refers to the range of strength values for the colony's pioneers
+        PEOPLE      refers to how many people the colony starts with
+        COLOUR      refers to the RGB colour values of the colony
+
+For an example, view Res/Starts/world_map.txt
+
+
+

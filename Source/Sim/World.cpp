@@ -14,6 +14,9 @@
 #include "RandomColonyCreator.h"
 #include "CustomColonyCreator.h"
 
+//#define SWIMMING_ENABLED
+//#define LASER_SWIMMING
+
 constexpr int CHAR_SIZE = 14;
 
 World::World(const Config& config)
@@ -141,18 +144,21 @@ void World::update(sf::Image& image)
 
         if (m_map.isWaterAt(xMoveTo, yMoveTo))
         {
+            #ifndef SWIMMING_ENABLED
             endAlive();
             return;
+            #endif // SWIMMING_ENABLED
 ///@SWIMMING
-/*  SWIMMING enabling code. If you want to see it, then remove
-    the two lines of code above and remove this comment block.
+/*  SWIMMING enabling code. If you want to see it, then #define SWIMMING_ENABLED at the top of this file
 
     I commented this out as it didn't have results in spirit of the goals of this application
     As, with swimming, you end up with two colonies in equilibrium, twisted amongst each other
     on every island, whereas the spirit is huge colonies. Hence, I removed it.
+*/
+            #ifdef SWIMMING_ENABLED
             if (!person.isSwimming())
             {
-                if ((Random::get().intInRange(0, 10000) < 5) || (person.getStrength() >= 250))
+                if ((Random::get().intInRange(0, 10000) < 30))
                 {
                     person.startSwim(nextMove);
                 }
@@ -162,15 +168,17 @@ void World::update(sf::Image& image)
                     return;
                 }
             }
-*/
+            #endif // SWIMMING_ENABLED
         }
-        /*
+
+        #ifdef SWIMMING_ENABLED
         else
         {
             person.endSwim();
         }
-        */
+        #endif // SWIMMING_ENABLED
 
+        //For encounters with people of the same colony or others
         if (movePerson.getColony() == colonyID) //disease will spread
         {
             if (movePerson.isDiseased())
@@ -201,16 +209,23 @@ void World::update(sf::Image& image)
 
         //if the person survived, then move to the next place
         newPeople(xMoveTo, yMoveTo) = person;
+
+        //Only reproduce over land
         if (person.isSwimming())
         {
-            //Turning this on causes "laser people"(assuming swimming is enabled)
-            //person.init(person.getChild());
-
-
-
             //Kill the old person, the current person has now moved.
             //I know this is weird, but it works :^)
+            #ifndef LASER_SWIMMING
             person.kill();
+            #endif // LASER_SWIMMING
+
+            #ifdef LASER_SWIMMING
+            //Turning this on causes "laser people"(assuming swimming is enabled)
+            person.init(person.getChild());
+            #endif // LASER_SWIMMING
+
+
+
         }
         else
         {

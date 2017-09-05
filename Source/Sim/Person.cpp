@@ -17,7 +17,7 @@ void Person::init(const ChildData& data)
     m_stopSwimCount     = 0;
 }
 
-void Person::startSwim(vect_t dir)
+void Person::startSwim(Vect2 dir)
 {
     m_swimDir = dir;
     m_isSwimming = true;
@@ -70,7 +70,7 @@ void Person::fight(Person& other)
     }
 }
 
-vect_t Person::getNextMove() const
+Vect2 Person::getNextMove() const
 {
     if (m_isSwimming)
         return m_swimDir;
