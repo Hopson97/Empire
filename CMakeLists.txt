@@ -12,19 +12,12 @@ add_executable (empire
 ./Source/Sim/Person.cpp
 ./Source/Sim/Colony.cpp
 ./Source/Sim/ColonyStatistics.cpp
-
 ./Source/Sim/RandomColonyCreator.cpp
 ./Source/main.cpp
 ./Source/Application.cpp
-
-
-
-
-
-
 ./Source/Util/Common.cpp
 ./Source/Util/Random.cpp
-./Source/Util/FPSCounter.cpp)? 
+./Source/Util/FPSCounter.cpp)
 set_property(TARGET empire PROPERTY CXX_STANDARD 14)
 set_property(TARGET empire PROPERTY CXX_STANDARD_REQUIRED ON)
 file(COPY Res colours.txt config.txt DESTINATION ${CMAKE_BINARY_DIR})
