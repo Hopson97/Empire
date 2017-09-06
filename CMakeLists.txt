@@ -12,19 +12,12 @@ add_executable (empire
 ./Source/Sim/Person.cpp
 ./Source/Sim/Colony.cpp
 ./Source/Sim/ColonyStatistics.cpp
-
 ./Source/Sim/RandomColonyCreator.cpp
 ./Source/main.cpp
 ./Source/Application.cpp
-
-
-
-
-
-
 ./Source/Util/Common.cpp
 ./Source/Util/Random.cpp
-./Source/Util/FPSCounter.cpp)? 
+./Source/Util/FPSCounter.cpp)
 set_property(TARGET empire PROPERTY CXX_STANDARD 14)
 set_property(TARGET empire PROPERTY CXX_STANDARD_REQUIRED ON)
 file(COPY Res colours.txt config.txt DESTINATION ${CMAKE_BINARY_DIR})
@@ -34,4 +27,12 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 find_package(SFML 2.4 REQUIRED network audio graphics window system)
 option(SFML_STATIC_LIBRARIES "Set to TRUE to link libraries statically. Requires statically built SFML." FALSE)
 target_link_libraries(empire Threads::Threads ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} )
-
+option(ENABLE_SWIMMING "Set to true to enable swimming (disabled by default due 
+to poor results)" FALSE)
+if(ENABLE_SWIMMING)
+	add_definitions(-DSWIMMING_ENABLED)
+	option(LASER_PEOPLE "swimmers can reproduce" FALSE)
+endif(ENABLE_SWIMMING)
+if(LASER_PEOPLE)
+	add_definitions(-DLASER_SWIMMING)
+endif(LASER_PEOPLE)
