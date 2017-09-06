@@ -72,9 +72,11 @@ CustomColonyCreator::CustomColonyCreator(const std::string& fileName)
             }
             else
             {
-                std::cout   << TextColour::Red
+                #ifndef __APPLE__
+                    std::cout << TextColour::Red
                             << "Failed to load colony, section missing\n"
                             << TextColour::Default;
+                #endif // ndef __APPLE__
             }
         }
     }
@@ -159,9 +161,9 @@ void CustomColonyCreator::loadStrength(ColonyInfo& info, std::ifstream& inFile)
 
 void CustomColonyCreator::printError (const std::string& name)
 {
-    std::cout   << TextColour::Red
+    #ifndef __APPLE__
+        std::cout << TextColour::Red
                 << name << "MUST BE GREATER THAN 0, setting to 100.\n\n"
                 << TextColour::Default;
+    #endif // ndef __APPLE__
 }
-
-

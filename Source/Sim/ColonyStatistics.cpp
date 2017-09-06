@@ -4,6 +4,10 @@
 #include <iomanip>
 #include <functional>
 
+#ifdef __APPLE__
+    #include <sstream>
+#endif // __APPLE__
+
 #include "../ResourceManager/ResourceHolder.h"
 
 constexpr int CHAR_SIZE = 14;
