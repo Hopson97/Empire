@@ -92,11 +92,15 @@ void Application::makeImage()
 
     if (m_pixelBuffer.saveToFile(fileName))
     {
-        std::cout << TextColour::Green << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n\n" << TextColour::Default;
+        #ifndef __APPLE__
+            std::cout << TextColour::Green << "Saved, to file " << fileName << "! Be aware, future sessions WILL OVERRIDE these images\n\n" << TextColour::Default;
+        #endif // ndef __APPLE__
     }
     else
     {
-        std::cout << TextColour::Red << "Failed to save!\n\n" << TextColour::Default;
+        #ifndef __APPLE__
+            std::cout << TextColour::Red << "Failed to save!\n\n" << TextColour::Default;
+        #endif // ndef __APPLE__
     }
     m_imageMutex.unlock();
 }
@@ -162,4 +166,3 @@ void Application::render()
 
     m_window.display();
 }
-

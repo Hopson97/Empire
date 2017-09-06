@@ -33,3 +33,6 @@ empire
 
 #Screenshots
 Screenshots/
+
+#Vscode
+.vscode/settings.json
