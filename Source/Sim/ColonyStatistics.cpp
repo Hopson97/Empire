@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <functional>
 
+#include <sstream>
+
 #include "../ResourceManager/ResourceHolder.h"
 
 constexpr int CHAR_SIZE = 14;
