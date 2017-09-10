@@ -1,6 +1,6 @@
 #include "Unix.h"
 
-#if defined(__unix__) || defined(__unix)
+#if defined(__unix__) || defined(__unix) || defined(__APPLE__)
 
     std::ostream& operator<< (std::ostream& stream, TextColour t)
     {

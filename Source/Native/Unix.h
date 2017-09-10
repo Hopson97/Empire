@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-#if defined(__unix__) || defined(__unix)
+#if defined(__unix__) || defined(__unix) || defined(__APPLE__)
 
     enum class TextColour
     {
