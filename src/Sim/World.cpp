@@ -31,7 +31,7 @@ World::World(const Config& config)
 
 const sf::Color& World::getColorAt(unsigned x, unsigned y) const
 {
-    return m_colonies[m_people(x, y).getColony()].colour;
+    return m_colonies[m_people(x, y).colony].colour;
 }
 
 void World::tryWrap(int& x, int& y) const
@@ -106,18 +106,18 @@ void World::update(sf::Image& image)
     randomCellForEach(*m_pConfig, [&](unsigned x, unsigned y) {
         auto& person = m_people(x, y);
 
-        if (!person.isAlive())
+        if (!person.isAlive)
             return;
 
         person.update();
 
-        if (!person.isAlive()) {
+        if (!person.isAlive) {
             image.setPixel(x, y, getColorAt(x, y));
             return;
         }
 
-        unsigned colonyID = person.getColony();
-        unsigned strength = person.getStrength();
+        auto colonyID = person.colony;
+        auto strength = person.strength;
 
         // Sometimes the loop will return early.
         // If it does, then it can call these functions
@@ -153,7 +153,7 @@ void World::update(sf::Image& image)
                is huge colonies. Hence, I removed it.
             */
 #ifdef SWIMMING_ENABLED
-            if (!person.isSwimming()) {
+            if (!person.isSwimming) {
                 if ((Random::get().intInRange(0, 10000) < 30)) {
                     person.startSwim(nextMove);
                 }
@@ -172,13 +172,13 @@ void World::update(sf::Image& image)
 #endif // SWIMMING_ENABLED
 
         // For encounters with people of the same colony or others
-        if (movePerson.getColony() == colonyID) // disease will spread
+        if (movePerson.colony == colonyID) // disease will spread
         {
-            if (movePerson.isDiseased()) {
+            if (movePerson.isDiseased) {
                 person.giveDisease();
             }
 
-            if (person.isSwimming()) {
+            if (person.isSwimming) {
                 person.turnAround();
             }
 
@@ -186,9 +186,9 @@ void World::update(sf::Image& image)
             return;
         }
         else {
-            if (movePerson.isAlive()) {
+            if (movePerson.isAlive) {
                 person.fight(movePerson);
-                if (!person.isAlive()) {
+                if (!person.isAlive) {
                     endDead();
                     return;
                 }
@@ -199,7 +199,7 @@ void World::update(sf::Image& image)
         newPeople(xMoveTo, yMoveTo) = person;
 
         // Only reproduce over land
-        if (person.isSwimming()) {
+        if (person.isSwimming) {
 // Kill the old person, the current person has now moved.
 // I know this is weird, but it works :^)
 #ifndef LASER_SWIMMING
@@ -212,7 +212,7 @@ void World::update(sf::Image& image)
 #endif // LASER_SWIMMING
         }
         else {
-            if ((person.getProduction() >= (unsigned)m_pConfig->reproductionThreshold)) {
+            if ((person.productionCount >= (unsigned)m_pConfig->reproductionThreshold)) {
                 // The person itself has moved to a new spot, so it is ok to mess with
                 // it's data now
                 person.init(person.getChild());

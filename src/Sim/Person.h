@@ -18,8 +18,7 @@ struct ChildData {
 };
 
 // Represents one person on the map
-class Person {
-  public:
+struct Person {
     void init(const ChildData& data);
 
     void update();
@@ -36,42 +35,16 @@ class Person {
 
     ChildData getChild();
 
-    uint16_t getStrength() const
-    {
-        return m_strength;
-    }
-    uint16_t getColony() const
-    {
-        return m_colony;
-    }
-    uint8_t getProduction() const
-    {
-        return m_productionCount;
-    }
-    bool isAlive() const
-    {
-        return m_isAlive;
-    }
-    bool isDiseased() const
-    {
-        return m_isDiseased;
-    }
-    bool isSwimming() const
-    {
-        return m_isSwimming;
-    }
+    uint16_t age = 0;
+    uint16_t strength = 0;
+    uint16_t colony = 0;
+    uint8_t productionCount = 0;
+    uint8_t stopSwimCount = 0;
+    Vect2 swimDir;
 
-  private:
-    uint16_t m_age = 0;
-    uint16_t m_strength = 0;
-    uint16_t m_colony = 0;
-    uint8_t m_productionCount = 0;
-    uint8_t m_stopSwimCount = 0;
-    Vect2 m_swimDir;
-
-    bool m_isDiseased : 1;
-    bool m_isAlive : 1;
-    bool m_isSwimming : 1;
+    bool isDiseased : 1;
+    bool isAlive : 1;
+    bool isSwimming : 1;
 };
 
 #endif // PERSON_H_INCLUDED

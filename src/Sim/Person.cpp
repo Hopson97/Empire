@@ -7,56 +7,56 @@
 void Person::init(const ChildData& data)
 {
 
-    m_strength = data.strength;
-    m_colony = data.colony;
-    m_isDiseased = data.isDiseased;
-    m_isAlive = true;
-    m_isSwimming = false;
-    m_age = 0;
-    m_productionCount = 0;
-    m_stopSwimCount = 0;
+    strength = data.strength;
+    colony = data.colony;
+    isDiseased = data.isDiseased;
+    isAlive = true;
+    isSwimming = false;
+    age = 0;
+    productionCount = 0;
+    stopSwimCount = 0;
 }
 
 void Person::startSwim(Vect2 dir)
 {
-    m_swimDir = dir;
-    m_isSwimming = true;
+    swimDir = dir;
+    isSwimming = true;
 }
 
 void Person::endSwim()
 {
-    if (m_stopSwimCount++ > 10) {
-        m_stopSwimCount = 0;
-        m_isSwimming = false;
+    if (stopSwimCount++ > 10) {
+        stopSwimCount = 0;
+        isSwimming = false;
     }
 }
 
 void Person::turnAround()
 {
-    m_swimDir.x *= -1;
-    m_swimDir.y *= -1;
+    swimDir.x *= -1;
+    swimDir.y *= -1;
 }
 
 void Person::update()
 {
-    m_age++;
-    m_productionCount++;
+    age++;
+    productionCount++;
 
-    if (m_age > m_strength) {
+    if (age > strength) {
         kill();
     }
 
-    if (m_isDiseased) {
-        m_age *= 1.5;
+    if (isDiseased) {
+        age *= 1.5;
     }
 }
 
 void Person::fight(Person& other)
 {
-    if (other.m_colony == 0)
+    if (other.colony == 0)
         return;
 
-    if (other.m_strength >= m_strength) {
+    if (other.strength >= strength) {
         kill();
     }
     else {
@@ -66,8 +66,8 @@ void Person::fight(Person& other)
 
 Vect2 Person::getNextMove() const
 {
-    if (m_isSwimming)
-        return m_swimDir;
+    if (isSwimming)
+        return swimDir;
     else
         return {(int8_t)Random::get().intInRange(-1, 1),
                 (int8_t)Random::get().intInRange(-1, 1)};
@@ -75,32 +75,32 @@ Vect2 Person::getNextMove() const
 
 void Person::kill()
 {
-    m_age = 0;
-    m_strength = 0;
-    m_colony = 0;
-    m_productionCount = 0;
-    m_stopSwimCount = 0;
+    age = 0;
+    strength = 0;
+    colony = 0;
+    productionCount = 0;
+    stopSwimCount = 0;
 
-    m_isDiseased = false;
-    m_isAlive = false;
-    m_isSwimming = false;
+    isDiseased = false;
+    isAlive = false;
+    isSwimming = false;
 }
 
 void Person::giveDisease()
 {
-    m_isDiseased = true;
+    isDiseased = true;
 }
 
 ChildData Person::getChild()
 {
-    m_productionCount = 0;
+    productionCount = 0;
 
     ChildData child;
-    child.colony = m_colony;
-    child.strength = m_strength;
+    child.colony = colony;
+    child.strength = strength;
 
     // chance the child is cured of disease
-    if (m_isDiseased) {
+    if (isDiseased) {
         child.isDiseased = Random::get().intInRange(0, 100) >= 85;
     }
 
