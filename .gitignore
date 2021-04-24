@@ -1,35 +1,22 @@
-#Cmake stuff
-CmakeFiles/
-CmakeCache.txt
-cmake_install.cmake
-
-#CodeBLocks stuff
-*.layout
-*.depend
-*.cbp
-bin/
-obj/
-
-#Makefile stuff
-Makefile
-*.o
-Empire/
-
-#.dll stuff
-*.dll
-
-#Builds
-*.7z
-Project/
-
-#Profiler
-*.out
-
-#exe
-*.exe
-
-#unix
+# Linux
+/bin
 empire
 
-#Screenshots
-Screenshots/
+# Windows
+*.dll
+*.exe
+*.sln
+*.vcxproj
+*.filters
+*.user
+*.vs
+.vscode
+Debug/
+Release/
+
+# Misc
+*.zip
+*.temp
+*.srctrlprj
+*.srctrldb
+*.srctrlbm
