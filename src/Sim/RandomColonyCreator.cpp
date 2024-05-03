@@ -37,8 +37,8 @@ std::vector<sf::Vector2i> RandomColonyCreator::createColonyLocations(const Confi
         int x, y;
         // Loops until land is found
         while (true) {
-            x = Random::get().intInRange(0, config.width);
-            y = Random::get().intInRange(0, config.height);
+            x = Random::get().intInRange(0, config.width - 1);
+            y = Random::get().intInRange(0, config.height - 1);
             if (map.isLandAt(x, y)) {
                 locations[i] = {x, y};
                 break;
