@@ -8,13 +8,13 @@ struct Config;
 class Map;
 
 struct Colony {
-    unsigned id;
+    unsigned id = 0;
     unsigned startPeople = 50;
 
     sf::Color colour;
 
-    unsigned strLow;
-    unsigned strHigh;
+    unsigned strLow = 0;
+    unsigned strHigh = 0;
 };
 
 #endif // COLONY_H_INCLUDED

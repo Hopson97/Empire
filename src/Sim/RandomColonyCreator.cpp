@@ -19,9 +19,9 @@ RandomColonyCreator::RandomColonyCreator(int numColonies)
 
     int r, g, b;
     while (inFile >> r >> g >> b) {
-        sf::Uint8 red = (sf::Uint8)r;
-        sf::Uint8 green = (sf::Uint8)g;
-        sf::Uint8 blue = (sf::Uint8)b;
+        auto red = (uint8_t)r;
+        auto green = (uint8_t)g;
+        auto blue = (uint8_t)b;
 
         m_colours.push_back({red, green, blue});
     }
@@ -65,9 +65,9 @@ std::vector<Colony> RandomColonyCreator::createColonyStats() const
         col.strHigh = 650;
 
         if (i > (int)m_colours.size() - 1) {
-            sf::Uint8 r = Random::get().intInRange(0, 255);
-            sf::Uint8 g = Random::get().intInRange(0, 255);
-            sf::Uint8 b = Random::get().intInRange(0, 255);
+            uint8_t r = Random::get().intInRange(0, 255);
+            uint8_t g = Random::get().intInRange(0, 255);
+            uint8_t b = Random::get().intInRange(0, 255);
             col.colour = {r, g, b};
         }
         else {

@@ -10,14 +10,15 @@
 #include "ResourceManager/ResourceHolder.h"
 
 Application::Application(const Config& config)
-    : m_window({config.width, config.height}, "Empire")
+    : m_window(sf::VideoMode{{config.width, config.height}}, "Empire")
     , m_world(config)
     , m_pConfig(&config)
+    , m_GUIText(ResourceHolder::get().fonts.get("arial"))
+    , m_pixelBuffer({m_pConfig->width, m_pConfig->height}, sf::Color::Black)
 {
     m_view.setCenter({(float)config.width / 2, (float)config.height / 2});
     m_view.setSize({(float)config.width, (float)config.height});
 
-    m_pixelBuffer.create(m_pConfig->width, m_pConfig->height);
     updateImage();
 
     m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
@@ -26,10 +27,10 @@ Application::Application(const Config& config)
 
     m_GUIText.setFont(ResourceHolder::get().fonts.get("arial"));
     m_GUIText.setCharacterSize(15);
-    m_GUIText.move(10, 3);
+    m_GUIText.move({10, 3});
 
     m_button.setSize({32, 32});
-    m_button.setPosition(8, 8);
+    m_button.setPosition({8, 8});
 
     m_button.setTexture(&ResourceHolder::get().textures.get("sigma"));
 }
@@ -50,21 +51,56 @@ void Application::run()
     }
 }
 
+// void Application::pollEvents()
+//{
+//     sf::Event e;
+//     while (m_window.pollEvent(e)) {
+//         if (e.type == sf::Event::Closed) {
+//             m_window.close();
+//         }
+//         else if (e.type == sf::Event::KeyPressed) {
+//             if (e.key.code == sf::Keyboard::P) {
+//                 std::thread(&Application::makeImage, this).detach();
+//             }
+//             if (e.key.code == sf::Keyboard::Up) {
+//                 m_view.zoom(0.99);
+//             }
+//             if (e.key.code == sf::Keyboard::Down) {
+//                 m_view.zoom(1.01);
+//             }
+//         }
+//     }
+// }
+
 void Application::pollEvents()
 {
-    sf::Event e;
-    while (m_window.pollEvent(e)) {
-        if (e.type == sf::Event::Closed) {
+    float zoomFactor = 0.2f;
+    while (auto e = m_window.pollEvent()) {
+        if (e->is<sf::Event::Closed>()) {
             m_window.close();
         }
-        else if (e.type == sf::Event::KeyPressed) {
-            if (e.key.code == sf::Keyboard::P) {
+        if (auto wheel = e->getIf<sf::Event::MouseWheelScrolled>()) {
+            auto mousePixel = wheel->position;
+
+            auto before = m_window.mapPixelToCoords(mousePixel, m_view);
+            if (wheel->delta > 0) {
+                m_view.zoom(1.f - zoomFactor);
+            }
+            else if (wheel->delta < 0) {
+                m_view.zoom(1.f + zoomFactor);
+            }
+
+            auto after = m_window.mapPixelToCoords(mousePixel, m_view);
+            m_view.move(before - after);
+        }
+        if (auto key = e->getIf<sf::Event::KeyPressed>()) {
+            if (key->code == sf::Keyboard::Key::P) {
                 std::thread(&Application::makeImage, this).detach();
             }
-            if (e.key.code == sf::Keyboard::Up) {
+            if (key->code == sf::Keyboard::Key::Up) {
                 m_view.zoom(0.99);
             }
-            if (e.key.code == sf::Keyboard::Down) {
+            if (key->code == sf::Keyboard::Key::Down) {
                 m_view.zoom(1.01);
             }
         }
@@ -94,7 +130,7 @@ void Application::makeImage()
 void Application::updateImage()
 {
     cellForEach(*m_pConfig, [&](unsigned x, unsigned y) {
-        m_pixelBuffer.setPixel(x, y, m_world.getColorAt(x, y));
+        m_pixelBuffer.setPixel({x, y}, m_world.getColorAt(x, y));
     });
 }
 
@@ -102,16 +138,16 @@ void Application::input(float dt)
 {
     float speed = 100;
     sf::Vector2f change;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
         change.y -= speed;
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
         change.y += speed;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
         change.x -= speed;
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
         change.x += speed;
     }
 
@@ -133,8 +169,8 @@ void Application::render()
     m_window.draw(m_pixelSurface);
     m_window.setView(m_window.getDefaultView());
 
-    auto pos = sf::Mouse::getPosition(m_window);
-    if (m_button.getGlobalBounds().contains(pos.x, pos.y)) {
+    auto pos = sf::Vector2f{sf::Mouse::getPosition(m_window)};
+    if (m_button.getGlobalBounds().contains(pos)) {
         m_world.drawText(m_window);
         m_window.draw(m_GUIText);
         m_fpsCounter.draw(m_window);

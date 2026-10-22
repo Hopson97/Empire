@@ -19,10 +19,10 @@ void Map::draw(sf::RenderWindow& window) const
 
 bool Map::isWaterAt(unsigned x, unsigned y) const
 {
-    return m_pConfig->image.getPixel(x, y).b >= COLOUR_RECOGNISE_THRESHOLD;
+    return m_pConfig->image.getPixel({x, y}).b >= COLOUR_RECOGNISE_THRESHOLD;
 }
 
 bool Map::isLandAt(unsigned x, unsigned y) const
 {
-    return m_pConfig->image.getPixel(x, y).g >= COLOUR_RECOGNISE_THRESHOLD;
+    return m_pConfig->image.getPixel({x, y}).g >= COLOUR_RECOGNISE_THRESHOLD;
 }

@@ -112,7 +112,7 @@ void World::update(sf::Image& image)
         person.update();
 
         if (!person.isAlive) {
-            image.setPixel(x, y, getColorAt(x, y));
+            image.setPixel({x, y}, getColorAt(x, y));
             return;
         }
 
@@ -124,10 +124,10 @@ void World::update(sf::Image& image)
         auto endAlive = [&]() {
             newPeople(x, y) = person;
             m_colonyStatsManager.update(colonyID, strength);
-            image.setPixel(x, y, getColorAt(x, y));
+            image.setPixel({x, y}, getColorAt(x, y));
         };
 
-        auto endDead = [&]() { image.setPixel(x, y, getColorAt(x, y)); };
+        auto endDead = [&]() { image.setPixel({x, y}, getColorAt(x, y)); };
 
         // Get new location to move to
         auto nextMove = person.getNextMove();

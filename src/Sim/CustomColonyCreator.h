@@ -6,7 +6,9 @@
 class CustomColonyCreator : public ColonyCreator {
     struct ColonyInfo {
         sf::Vector2i startPoint;
-        int strLow, strHigh, people;
+        int strLow = 0;
+        int strHigh = 0;
+        int people = 0;
 
         sf::Color colour;
     };

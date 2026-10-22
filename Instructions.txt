@@ -11,6 +11,7 @@ Controls:
 
     WASD -> Pan Camera
     Up/Down -> Zoom in/ out
+    Mouse Wheel -> Zoom in/ Out
 
 Custom Colonies
     You must change the value in config.txt CUSTOM_START from 0 to 1

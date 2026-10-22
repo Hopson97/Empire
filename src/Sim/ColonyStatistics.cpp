@@ -12,6 +12,7 @@ constexpr int CHAR_SIZE = 14;
 
 ColonyStatsManager::ColonyStatsManager(unsigned colonyCount)
     : m_colonyStats(colonyCount)
+    , m_totalPopText(ResourceHolder::get().fonts.get("arial"))
 {
 }
 
@@ -45,7 +46,7 @@ void ColonyStatsManager::drawStats(sf::RenderWindow& window)
         if (stats.members == 0)
             continue;
 
-        stats.text.setPosition(10, i++ * CHAR_SIZE + 30);
+        stats.text.setPosition({10, (float)(i++ * CHAR_SIZE + 30)});
 
         std::ostringstream stream;
 
@@ -62,7 +63,7 @@ void ColonyStatsManager::drawStats(sf::RenderWindow& window)
     }
 
     m_totalPopText.setString("Total Population: " + std::to_string(totalMembers));
-    m_totalPopText.setPosition(10, CHAR_SIZE + 30);
+    m_totalPopText.setPosition({10, CHAR_SIZE + 30});
     window.draw(m_totalPopText);
 
     m_colonyStatsBg.setSize({355, float(i * CHAR_SIZE + 30)});
@@ -70,7 +71,7 @@ void ColonyStatsManager::drawStats(sf::RenderWindow& window)
 
 void ColonyStatsManager::initText(const std::vector<Colony>& colonies)
 {
-    m_colonyStatsBg.move(4, 4);
+    m_colonyStatsBg.move({4, 4});
     m_colonyStatsBg.setFillColor({128, 128, 128, 230});
     m_colonyStatsBg.setOutlineColor(sf::Color::Black);
     m_colonyStatsBg.setOutlineThickness(3);
@@ -83,12 +84,15 @@ void ColonyStatsManager::initText(const std::vector<Colony>& colonies)
         stats.text.setOutlineColor(sf::Color::Black);
         stats.text.setFillColor(colonies[i].colour);
         stats.text.setOutlineThickness(1);
-        stats.text.setFont(ResourceHolder::get().fonts.get("arial"));
     }
 
     m_totalPopText.setCharacterSize(CHAR_SIZE);
     m_totalPopText.setOutlineColor(sf::Color::Black);
     m_totalPopText.setFillColor(sf::Color::White);
     m_totalPopText.setOutlineThickness(1);
-    m_totalPopText.setFont(ResourceHolder::get().fonts.get("arial"));
+}
+
+ColonyStatistics::ColonyStatistics():
+    text(ResourceHolder::get().fonts.get("arial"))
+{
 }

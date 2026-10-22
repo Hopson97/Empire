@@ -33,14 +33,25 @@ class ResourceManager {
     {
         Resource r;
 
-        // if the resource fails to load, then it adds a default "fail" resource
-        if (!r.loadFromFile(getFullname(name))) {
-            Resource fail;
-            fail.loadFromFile(m_folder + "_fail_" + m_extention);
-            m_resources.insert(std::make_pair(name, fail));
+        if constexpr (requires { r.loadFromFile(name); }) {
+            if (!r.loadFromFile(getFullname(name))) {
+                Resource fail;
+                fail.loadFromFile(m_folder + "_fail_" + m_extention);
+                m_resources.insert(std::make_pair(name, fail));
+            }
+            else {
+                m_resources.insert(std::make_pair(name, r));
+            }
         }
         else {
-            m_resources.insert(std::make_pair(name, r));
+            if (!r.openFromFile(getFullname(name))) {
+                Resource fail;
+                fail.openFromFile(m_folder + "_fail_" + m_extention);
+                m_resources.insert(std::make_pair(name, fail));
+            }
+            else {
+                m_resources.insert(std::make_pair(name, r));
+            }
         }
     }
 

@@ -7,6 +7,7 @@
 #include "Colony.h"
 
 struct ColonyStatistics {
+    ColonyStatistics();
     unsigned highestStrength = 0;
     unsigned strength = 0;
     unsigned members = 0;
